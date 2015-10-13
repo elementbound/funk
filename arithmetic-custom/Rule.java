@@ -1,3 +1,6 @@
+import java.util.List; 
+import java.util.ArrayList; 
+
 public class Rule {
 	private List<IMatchable> ruleItems = new ArrayList<IMatchable>(); 
 	private String consumedString; 
@@ -20,5 +23,11 @@ public class Rule {
 	
 	public String consume() {
 		return consumedString; 
+	}
+	
+	public void add(IMatchable... items)
+	{
+		for(IMatchable item : items)
+			ruleItems.add(item); 
 	}
 }
