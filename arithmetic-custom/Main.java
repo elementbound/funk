@@ -9,11 +9,15 @@ public class Main {
 		Regex LPAR = new Regex("\\(");
 		Regex RPAR = new Regex("\\)");
 		
+		Nonterminal Value = new Nonterminal(
+			new Rule(NUM), 
+			new Rule(VAR)
+		);
+		
 		Nonterminal Expression = new Nonterminal();
-		Expression.add(new Rule(LPAR, Expression, RPAR));
-		Expression.add(new Rule(VAR));
-		Expression.add(new Rule(NUM));
-		Expression.add(new Rule(Expression, OP, Expression));
+		Expression.add(new Rule(LPAR, Value, RPAR));
+		Expression.add(new Rule(Value, OP, Value));
+		Expression.add(new Rule(Value));
 
 		//Validate lines 
 		Scanner sc = new Scanner(System.in); 

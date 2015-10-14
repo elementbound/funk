@@ -19,15 +19,12 @@ public class Nonterminal implements IMatchable
 	public boolean match(String s){
 
 		for(Rule rule:rules){
-			if(rule.match(s))
-				s=rule.consume();			
+			if(rule.match(s)) {
+				consumedString = rule.consume();
+				return true; 
+			}
 		}
-
-		consumedString = s;
 		
-		if(s.isEmpty())
-			return true;
-
 		return false;
 	}
 	
