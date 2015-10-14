@@ -6,7 +6,7 @@ public class Rule {
 	private String consumedString; 
 	
 	public boolean match(String s) {
-		s = ""; 
+		//s = ""; 
 		
 		for(IMatchable item : ruleItems)
 		{
