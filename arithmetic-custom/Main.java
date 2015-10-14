@@ -3,21 +3,22 @@ import java.util.Scanner;
 public class Main {
 	public static void main(String... args)
 	{
-		Regex NUM  = new Regex("[1-9][0-9]*|0");
-		Regex VAR  = new Regex("[_a-zA-Z][a-zA-Z]*");
-		Regex OP   = new Regex("\\+ | \\-");
-		Regex LPAR = new Regex("\\(");
-		Regex RPAR = new Regex("\\)");
+		Regex NUM  = new Regex("NUM", "[1-9][0-9]*|0");
+		Regex VAR  = new Regex("VAR", "[_a-zA-Z][a-zA-Z]*");
+		Regex OP   = new Regex("OP", "\\+ | \\-");
+		Regex LPAR = new Regex("LPAR", "\\(");
+		Regex RPAR = new Regex("RPAR", "\\)");
 		
 		Nonterminal Value = new Nonterminal(
-			new Rule(NUM), 
-			new Rule(VAR)
+			"Value", 
+			new Rule("num", NUM), 
+			new Rule("var", VAR)
 		);
 		
-		Nonterminal Expression = new Nonterminal();
-		Expression.add(new Rule(LPAR, Value, RPAR));
-		Expression.add(new Rule(Value, OP, Value));
-		Expression.add(new Rule(Value));
+		Nonterminal Expression = new Nonterminal("Expression");
+		Expression.add(new Rule("(a)", LPAR, Value, RPAR));
+		Expression.add(new Rule("a+b", Value, OP, Value));
+		Expression.add(new Rule("a", Value));
 
 		//Validate lines 
 		Scanner sc = new Scanner(System.in); 
