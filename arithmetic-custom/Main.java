@@ -9,16 +9,21 @@ public class Main {
 		Regex LPAR = new Regex("LPAR", "\\(");
 		Regex RPAR = new Regex("RPAR", "\\)");
 		
-		Nonterminal Value = new Nonterminal(
-			"Value", 
-			new Rule("num", NUM), 
-			new Rule("var", VAR)
+		Nonterminal ExprHead = new Nonterminal("ExprHead"); 
+		Nonterminal ExprTail = new Nonterminal("ExprTail"); 
+		
+		ExprHead.add(
+			new Rule("(a)", LPAR, ExprHead, RPAR), 
+			new Rule("9Tail", NUM, ExprTail),
+			new Rule("aTail", VAR, ExprTail)
 		);
 		
-		Nonterminal Expression = new Nonterminal("Expression");
-		Expression.add(new Rule("(a)", LPAR, Value, RPAR));
-		Expression.add(new Rule("a+b", Value, OP, Value));
-		Expression.add(new Rule("a", Value));
+		ExprTail.add(
+			new Rule("+E", OP, ExprHead), 
+			new Rule("e")
+		);
+		
+		Nonterminal Expression = ExprHead; 
 
 		//Validate lines 
 		Scanner sc = new Scanner(System.in); 
