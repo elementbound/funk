@@ -3,7 +3,7 @@ import java.util.Scanner;
 public class Main {
 	public static void main(String... args)
 	{
-		Regex NUM  = new Regex("NUM", "[1-9][0-9]*|0");
+		Regex NUM  = new Regex("NUM", "[1-9][0-9]*");
 		Regex VAR  = new Regex("VAR", "[_a-zA-Z][a-zA-Z]*");
 		Regex OP   = new Regex("OP", "\\+ | \\-");
 		Regex LPAR = new Regex("LPAR", "\\(");

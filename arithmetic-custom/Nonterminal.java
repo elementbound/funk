@@ -35,7 +35,7 @@ public class Nonterminal implements IMatchable
 	}
 	
 	public String consume(String s){
-		System.out.printf("[%s]consuming\n\t%s\n\t%s", this.name, s, this.consumedString);
+		System.out.printf("[%s]consuming\n\t%s\n\t%s\n", this.name, s, this.consumedString);
 		return consumedString;
 	}
 

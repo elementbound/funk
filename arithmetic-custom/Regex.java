@@ -7,12 +7,12 @@ class Regex implements IMatchable{
 	public String name;
 
 	public Regex(String name, String exp) {
-		this.exp = "^(" + exp + ")";
+		this.exp = "^(" + exp + ").*";
 		this.name = name; 
 	}
 
 	public boolean match(String s){
-		System.out.printf("[%s]matching %s... %s\n", this.name, s, Pattern.matches(exp, s) ? "y" : "n");
+		System.out.printf("[%s]matching %s vs. %s... %s\n", this.name, s, this.exp, Pattern.matches(exp, s) ? "y" : "n");
 		return Pattern.matches(exp, s);
 	}
 
