@@ -5,7 +5,7 @@ public class Main {
 	{
 		Regex NUM  = new Regex("NUM", "[1-9][0-9]*");
 		Regex VAR  = new Regex("VAR", "[_a-zA-Z][a-zA-Z]*");
-		Regex OP   = new Regex("OP", "\\+ | \\-");
+		Regex OP   = new Regex("OP", "(\\+)|(\\-)");
 		Regex LPAR = new Regex("LPAR", "\\(");
 		Regex RPAR = new Regex("RPAR", "\\)");
 		
@@ -26,10 +26,14 @@ public class Main {
 		{	String nextLine=sc.nextLine();
 			nextLine=nextLine.replaceAll("\\s","");
 
-			if(!Expression.match(nextLine))
-				System.out.println("Nope");
-			else 
-				System.out.println("Is ok");
+			if(Expression.match(nextLine))
+				if(Expression.consume(nextLine).isEmpty())
+				{
+					System.out.println("Is ok");
+					continue;
+				}
+			
+			System.out.println("Nope");
 		}
 	}
 }

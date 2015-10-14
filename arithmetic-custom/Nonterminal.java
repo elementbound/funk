@@ -26,6 +26,7 @@ public class Nonterminal implements IMatchable
 			if(rule.match(s)) {
 				consumedString = rule.consume();
 				System.out.printf("[%s]matching success\n", this.name);
+				
 				return true; 
 			}
 		}
