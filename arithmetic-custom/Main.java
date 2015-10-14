@@ -14,11 +14,11 @@ public class Main {
 		Expression.addRules(rule);
 
 		rule= new Rule();
-		rule.add(new Regex("^[a-zA-Z0-9]*((\\+|\\-)[a-zA-Z0-9]+)*"));
+		rule.add(new Regex("^[a-zA-Z0-9]+((\\+|\\-)[a-zA-Z0-9]+)*"));
 		Expression.addRules(rule);
 
 		rule= new Rule();
-		rule.add(new Regex("^\\([a-zA-Z0-9]*((\\+|\\-)[a-zA-Z0-9]+)*\\)"));
+		rule.add(new Regex("^\\([a-zA-Z0-9]+((\\+|\\-)[a-zA-Z0-9]+)*\\)"));
 		Expression.addRules(rule);
 
 		//Validate lines 
