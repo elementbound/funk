@@ -4,6 +4,16 @@ import java.util.ArrayList;
 public class Nonterminal implements IMatchable
 {
 	private List<Rule> rules = new ArrayList<Rule>(); 
+	
+	public Nonterminal() {
+		super();
+	}
+	
+	public Nonterminal(Rule... rules)
+	{
+		super();
+		this.add(rules); 
+	}
 
 	public boolean match(String s){
 
@@ -22,10 +32,8 @@ public class Nonterminal implements IMatchable
 		return null;//i have no idea what i'm doing
 	}
 
-	public boolean addRules(Rule... rules){
+	public void add(Rule... rules){
 		for(Rule temprule:rules)
 			this.rules.add(temprule);
-				//TODO error handling
-		return true;
 	} 
 }

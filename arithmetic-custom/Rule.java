@@ -5,6 +5,15 @@ public class Rule {
 	private List<IMatchable> ruleItems = new ArrayList<IMatchable>(); 
 	private String consumedString; 
 	
+	public Rule() {
+		super();
+	}
+	
+	public Rule(IMatchable... items) {
+		super(); 
+		this.add(items); 
+	}
+	
 	public boolean match(String s) {
 		//s = ""; 
 		
