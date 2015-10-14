@@ -1,7 +1,7 @@
 import java.util.List;
 import java.util.ArrayList; 
 
-public class Nonterminal
+public class Nonterminal implements IMatchable
 {
 	private List<Rule> rules = new ArrayList<Rule>(); 
 	private String consumedString;
@@ -31,7 +31,7 @@ public class Nonterminal
 		return false;
 	}
 	
-	public String consume(){
+	public String consume(String s){
 		return consumedString;
 	}
 
