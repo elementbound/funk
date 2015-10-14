@@ -25,7 +25,6 @@ public class Nonterminal implements IMatchable
 	public boolean addRules(Rule... rules){
 		for(Rule temprule:rules)
 			this.rules.add(temprule);
-				//TODO error handling
 		return true;
 	} 
 }
