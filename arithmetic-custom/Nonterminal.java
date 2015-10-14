@@ -19,7 +19,7 @@ public class Nonterminal implements IMatchable
 	}
 	
 	public String consume(String s){
-		return null;//i have no idea what i'm doing
+		return null;
 	}
 
 	public boolean addRules(Rule... rules){
