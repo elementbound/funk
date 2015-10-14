@@ -1,9 +1,10 @@
 import java.util.List;
 import java.util.ArrayList; 
 
-public class Nonterminal implements IMatchable
+public class Nonterminal
 {
 	private List<Rule> rules = new ArrayList<Rule>(); 
+	private String consumedString;
 	
 	public Nonterminal() {
 		super();
@@ -22,14 +23,16 @@ public class Nonterminal implements IMatchable
 				s=rule.consume();			
 		}
 
+		consumedString = s;
+		
 		if(s.isEmpty())
 			return true;
 
 		return false;
 	}
 	
-	public String consume(String s){
-		return null;//i have no idea what i'm doing
+	public String consume(){
+		return consumedString;
 	}
 
 	public void add(Rule... rules){
