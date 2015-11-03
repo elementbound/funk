@@ -1,5 +1,17 @@
 import java.util.Scanner;
 
+import org.antlr.v4.runtime.CharStream;
+import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.ANTLRInputStream;
+
+class Visitor extends logicBaseVisitor<Integer>{
+	public Integer visitExpr(logicParser.ExprContext ctx) 
+	{ 
+		System.out.println("Oh hey, an expr! " + ctx.getText());
+		return visitChildren(ctx); 
+	}
+}
+
 public class Main {
 
 	public static void main(String[] args) {
@@ -10,7 +22,12 @@ public class Main {
 		{
 			line = sc.nextLine(); 
 			
-			System.out.println(line); 
+			CharStream stream = new ANTLRInputStream(line);
+			logicLexer lexer = new logicLexer(stream);
+			CommonTokenStream tokens = new CommonTokenStream(lexer); 
+			logicParser parser = new logicParser(tokens);
+			logicVisitor<Integer> visitor = new Visitor();
+			visitor.visit(parser.expr());
 		}
 		
 		sc.close();
