@@ -27,7 +27,7 @@ public class Main {
 			CommonTokenStream tokens = new CommonTokenStream(lexer); 
 			logicParser parser = new logicParser(tokens);
 			logicVisitor<Integer> visitor = new Visitor();
-			visitor.visit(parser.expr());
+			visitor.visit(parser.line());
 		}
 		
 		sc.close();
