@@ -22,6 +22,18 @@ public class logicBaseListener implements logicListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitExpr(logicParser.ExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterLine(logicParser.LineContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitLine(logicParser.LineContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

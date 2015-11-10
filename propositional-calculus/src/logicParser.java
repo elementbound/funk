@@ -18,9 +18,9 @@ public class logicParser extends Parser {
 	public static final int
 		ATOM=1, OP=2, NEG=3, OPEN=4, CLOSE=5, WS=6;
 	public static final int
-		RULE_expr = 0;
+		RULE_expr = 0, RULE_line = 1;
 	public static final String[] ruleNames = {
-		"expr"
+		"expr", "line"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
@@ -113,51 +113,51 @@ public class logicParser extends Parser {
 		ExprContext _localctx = new ExprContext(_ctx, getState());
 		enterRule(_localctx, 0, RULE_expr);
 		try {
-			setState(18);
+			setState(20);
 			switch ( getInterpreter().adaptivePredict(_input,0,_ctx) ) {
 			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(2);
+				setState(4);
 				match(ATOM);
 				}
 				break;
 			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(3);
-				match(OPEN);
-				setState(4);
-				expr();
 				setState(5);
+				match(OPEN);
+				setState(6);
+				expr();
+				setState(7);
 				match(CLOSE);
 				}
 				break;
 			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(7);
-				match(OPEN);
-				setState(8);
-				expr();
 				setState(9);
-				match(OP);
+				match(OPEN);
 				setState(10);
 				expr();
 				setState(11);
+				match(OP);
+				setState(12);
+				expr();
+				setState(13);
 				match(CLOSE);
 				}
 				break;
 			case 4:
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(13);
-				match(OPEN);
-				setState(14);
-				match(NEG);
 				setState(15);
-				expr();
+				match(OPEN);
 				setState(16);
+				match(NEG);
+				setState(17);
+				expr();
+				setState(18);
 				match(CLOSE);
 				}
 				break;
@@ -174,14 +174,76 @@ public class logicParser extends Parser {
 		return _localctx;
 	}
 
+	public static class LineContext extends ParserRuleContext {
+		public List<ExprContext> expr() {
+			return getRuleContexts(ExprContext.class);
+		}
+		public ExprContext expr(int i) {
+			return getRuleContext(ExprContext.class,i);
+		}
+		public LineContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_line; }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof logicListener ) ((logicListener)listener).enterLine(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof logicListener ) ((logicListener)listener).exitLine(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof logicVisitor ) return ((logicVisitor<? extends T>)visitor).visitLine(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+
+	public final LineContext line() throws RecognitionException {
+		LineContext _localctx = new LineContext(_ctx, getState());
+		enterRule(_localctx, 2, RULE_line);
+		int _la;
+		try {
+			enterOuterAlt(_localctx, 1);
+			{
+			setState(25);
+			_errHandler.sync(this);
+			_la = _input.LA(1);
+			while (_la==ATOM || _la==OPEN) {
+				{
+				{
+				setState(22);
+				expr();
+				}
+				}
+				setState(27);
+				_errHandler.sync(this);
+				_la = _input.LA(1);
+			}
+			}
+		}
+		catch (RecognitionException re) {
+			_localctx.exception = re;
+			_errHandler.reportError(this, re);
+			_errHandler.recover(this, re);
+		}
+		finally {
+			exitRule();
+		}
+		return _localctx;
+	}
+
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\b\27\4\2\t\2\3\2"+
-		"\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5\2\25\n"+
-		"\2\3\2\2\2\3\2\2\2\30\2\24\3\2\2\2\4\25\7\3\2\2\5\6\7\6\2\2\6\7\5\2\2"+
-		"\2\7\b\7\7\2\2\b\25\3\2\2\2\t\n\7\6\2\2\n\13\5\2\2\2\13\f\7\4\2\2\f\r"+
-		"\5\2\2\2\r\16\7\7\2\2\16\25\3\2\2\2\17\20\7\6\2\2\20\21\7\5\2\2\21\22"+
-		"\5\2\2\2\22\23\7\7\2\2\23\25\3\2\2\2\24\4\3\2\2\2\24\5\3\2\2\2\24\t\3"+
-		"\2\2\2\24\17\3\2\2\2\25\3\3\2\2\2\3\24";
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\b\37\4\2\t\2\4\3"+
+		"\t\3\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5"+
+		"\2\27\n\2\3\3\7\3\32\n\3\f\3\16\3\35\13\3\3\3\2\2\4\2\4\2\2 \2\26\3\2"+
+		"\2\2\4\33\3\2\2\2\6\27\7\3\2\2\7\b\7\6\2\2\b\t\5\2\2\2\t\n\7\7\2\2\n\27"+
+		"\3\2\2\2\13\f\7\6\2\2\f\r\5\2\2\2\r\16\7\4\2\2\16\17\5\2\2\2\17\20\7\7"+
+		"\2\2\20\27\3\2\2\2\21\22\7\6\2\2\22\23\7\5\2\2\23\24\5\2\2\2\24\25\7\7"+
+		"\2\2\25\27\3\2\2\2\26\6\3\2\2\2\26\7\3\2\2\2\26\13\3\2\2\2\26\21\3\2\2"+
+		"\2\27\3\3\2\2\2\30\32\5\2\2\2\31\30\3\2\2\2\32\35\3\2\2\2\33\31\3\2\2"+
+		"\2\33\34\3\2\2\2\34\5\3\2\2\2\35\33\3\2\2\2\4\26\33";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

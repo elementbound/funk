@@ -15,4 +15,10 @@ public interface logicVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitExpr(logicParser.ExprContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link logicParser#line}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLine(logicParser.LineContext ctx);
 }
