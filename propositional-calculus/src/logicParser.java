@@ -18,9 +18,9 @@ public class logicParser extends Parser {
 	public static final int
 		ATOM=1, OP=2, NEG=3, OPEN=4, CLOSE=5, WS=6;
 	public static final int
-		RULE_expr = 0, RULE_line = 1;
+		RULE_expr = 0, RULE_s = 1;
 	public static final String[] ruleNames = {
-		"expr", "line"
+		"expr", "s"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
@@ -87,9 +87,8 @@ public class logicParser extends Parser {
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
-		public TerminalNode CLOSE() { return getToken(logicParser.CLOSE, 0); }
 		public TerminalNode OP() { return getToken(logicParser.OP, 0); }
-		public TerminalNode NEG() { return getToken(logicParser.NEG, 0); }
+		public TerminalNode CLOSE() { return getToken(logicParser.CLOSE, 0); }
 		public ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -113,16 +112,16 @@ public class logicParser extends Parser {
 		ExprContext _localctx = new ExprContext(_ctx, getState());
 		enterRule(_localctx, 0, RULE_expr);
 		try {
-			setState(20);
-			switch ( getInterpreter().adaptivePredict(_input,0,_ctx) ) {
-			case 1:
+			setState(11);
+			switch (_input.LA(1)) {
+			case ATOM:
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(4);
 				match(ATOM);
 				}
 				break;
-			case 2:
+			case OPEN:
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(5);
@@ -130,37 +129,15 @@ public class logicParser extends Parser {
 				setState(6);
 				expr();
 				setState(7);
-				match(CLOSE);
-				}
-				break;
-			case 3:
-				enterOuterAlt(_localctx, 3);
-				{
-				setState(9);
-				match(OPEN);
-				setState(10);
-				expr();
-				setState(11);
 				match(OP);
-				setState(12);
+				setState(8);
 				expr();
-				setState(13);
+				setState(9);
 				match(CLOSE);
 				}
 				break;
-			case 4:
-				enterOuterAlt(_localctx, 4);
-				{
-				setState(15);
-				match(OPEN);
-				setState(16);
-				match(NEG);
-				setState(17);
-				expr();
-				setState(18);
-				match(CLOSE);
-				}
-				break;
+			default:
+				throw new NoViableAltException(this);
 			}
 		}
 		catch (RecognitionException re) {
@@ -174,53 +151,40 @@ public class logicParser extends Parser {
 		return _localctx;
 	}
 
-	public static class LineContext extends ParserRuleContext {
-		public List<ExprContext> expr() {
-			return getRuleContexts(ExprContext.class);
+	public static class SContext extends ParserRuleContext {
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
 		}
-		public ExprContext expr(int i) {
-			return getRuleContext(ExprContext.class,i);
-		}
-		public LineContext(ParserRuleContext parent, int invokingState) {
+		public TerminalNode EOF() { return getToken(logicParser.EOF, 0); }
+		public SContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
-		@Override public int getRuleIndex() { return RULE_line; }
+		@Override public int getRuleIndex() { return RULE_s; }
 		@Override
 		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof logicListener ) ((logicListener)listener).enterLine(this);
+			if ( listener instanceof logicListener ) ((logicListener)listener).enterS(this);
 		}
 		@Override
 		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof logicListener ) ((logicListener)listener).exitLine(this);
+			if ( listener instanceof logicListener ) ((logicListener)listener).exitS(this);
 		}
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof logicVisitor ) return ((logicVisitor<? extends T>)visitor).visitLine(this);
+			if ( visitor instanceof logicVisitor ) return ((logicVisitor<? extends T>)visitor).visitS(this);
 			else return visitor.visitChildren(this);
 		}
 	}
 
-	public final LineContext line() throws RecognitionException {
-		LineContext _localctx = new LineContext(_ctx, getState());
-		enterRule(_localctx, 2, RULE_line);
-		int _la;
+	public final SContext s() throws RecognitionException {
+		SContext _localctx = new SContext(_ctx, getState());
+		enterRule(_localctx, 2, RULE_s);
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(25);
-			_errHandler.sync(this);
-			_la = _input.LA(1);
-			while (_la==ATOM || _la==OPEN) {
-				{
-				{
-				setState(22);
-				expr();
-				}
-				}
-				setState(27);
-				_errHandler.sync(this);
-				_la = _input.LA(1);
-			}
+			setState(13);
+			expr();
+			setState(14);
+			match(EOF);
 			}
 		}
 		catch (RecognitionException re) {
@@ -235,15 +199,11 @@ public class logicParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\b\37\4\2\t\2\4\3"+
-		"\t\3\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5"+
-		"\2\27\n\2\3\3\7\3\32\n\3\f\3\16\3\35\13\3\3\3\2\2\4\2\4\2\2 \2\26\3\2"+
-		"\2\2\4\33\3\2\2\2\6\27\7\3\2\2\7\b\7\6\2\2\b\t\5\2\2\2\t\n\7\7\2\2\n\27"+
-		"\3\2\2\2\13\f\7\6\2\2\f\r\5\2\2\2\r\16\7\4\2\2\16\17\5\2\2\2\17\20\7\7"+
-		"\2\2\20\27\3\2\2\2\21\22\7\6\2\2\22\23\7\5\2\2\23\24\5\2\2\2\24\25\7\7"+
-		"\2\2\25\27\3\2\2\2\26\6\3\2\2\2\26\7\3\2\2\2\26\13\3\2\2\2\26\21\3\2\2"+
-		"\2\27\3\3\2\2\2\30\32\5\2\2\2\31\30\3\2\2\2\32\35\3\2\2\2\33\31\3\2\2"+
-		"\2\33\34\3\2\2\2\34\5\3\2\2\2\35\33\3\2\2\2\4\26\33";
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\b\23\4\2\t\2\4\3"+
+		"\t\3\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5\2\16\n\2\3\3\3\3\3\3\3\3\2\2\4\2\4"+
+		"\2\2\21\2\r\3\2\2\2\4\17\3\2\2\2\6\16\7\3\2\2\7\b\7\6\2\2\b\t\5\2\2\2"+
+		"\t\n\7\4\2\2\n\13\5\2\2\2\13\f\7\7\2\2\f\16\3\2\2\2\r\6\3\2\2\2\r\7\3"+
+		"\2\2\2\16\3\3\2\2\2\17\20\5\2\2\2\20\21\7\2\2\3\21\5\3\2\2\2\3\r";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

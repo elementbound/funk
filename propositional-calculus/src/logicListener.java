@@ -17,13 +17,13 @@ public interface logicListener extends ParseTreeListener {
 	 */
 	void exitExpr(logicParser.ExprContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link logicParser#line}.
+	 * Enter a parse tree produced by {@link logicParser#s}.
 	 * @param ctx the parse tree
 	 */
-	void enterLine(logicParser.LineContext ctx);
+	void enterS(logicParser.SContext ctx);
 	/**
-	 * Exit a parse tree produced by {@link logicParser#line}.
+	 * Exit a parse tree produced by {@link logicParser#s}.
 	 * @param ctx the parse tree
 	 */
-	void exitLine(logicParser.LineContext ctx);
+	void exitS(logicParser.SContext ctx);
 }

@@ -9,6 +9,5 @@ CLOSE: ')';
 
 WS: [ \t\r\n] -> skip; 
 
-expr: ATOM | OPEN expr CLOSE | OPEN expr OP expr CLOSE | OPEN NEG expr CLOSE;
-
-line: expr*;
+expr: ATOM | OPEN expr OP expr CLOSE;
+s: expr EOF; 

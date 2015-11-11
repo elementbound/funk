@@ -27,13 +27,13 @@ public class logicBaseListener implements logicListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterLine(logicParser.LineContext ctx) { }
+	@Override public void enterS(logicParser.SContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitLine(logicParser.LineContext ctx) { }
+	@Override public void exitS(logicParser.SContext ctx) { }
 
 	/**
 	 * {@inheritDoc}

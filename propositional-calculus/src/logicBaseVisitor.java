@@ -23,5 +23,5 @@ public class logicBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements 
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
-	@Override public T visitLine(logicParser.LineContext ctx) { return visitChildren(ctx); }
+	@Override public T visitS(logicParser.SContext ctx) { return visitChildren(ctx); }
 }
