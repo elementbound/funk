@@ -16,7 +16,7 @@ public class logicParser extends Parser {
 	protected static final PredictionContextCache _sharedContextCache =
 		new PredictionContextCache();
 	public static final int
-		ATOM=1, OP=2, NEG=3, OPEN=4, CLOSE=5, WS=6;
+		T__0=1, ATOM=2, OP=3, NEG=4, OPEN=5, CLOSE=6, WS=7;
 	public static final int
 		RULE_expr = 0, RULE_s = 1;
 	public static final String[] ruleNames = {
@@ -24,10 +24,10 @@ public class logicParser extends Parser {
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, null, null, "'!'", "'('", "')'"
+		null, "'#'", null, null, "'!'", "'('", "')'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
-		null, "ATOM", "OP", "NEG", "OPEN", "CLOSE", "WS"
+		null, null, "ATOM", "OP", "NEG", "OPEN", "CLOSE", "WS"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -74,6 +74,14 @@ public class logicParser extends Parser {
 	@Override
 	public ATN getATN() { return _ATN; }
 
+
+	  @Override
+	  public void notifyErrorListeners(Token offendingToken, String msg, RecognitionException ex)
+	  {
+	    System.out.println("WRONG INPUT");
+	    throw new RuntimeException(msg); 
+	  }
+
 	public logicParser(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
@@ -87,8 +95,8 @@ public class logicParser extends Parser {
 		public ExprContext expr(int i) {
 			return getRuleContext(ExprContext.class,i);
 		}
-		public TerminalNode OP() { return getToken(logicParser.OP, 0); }
 		public TerminalNode CLOSE() { return getToken(logicParser.CLOSE, 0); }
+		public TerminalNode OP() { return getToken(logicParser.OP, 0); }
 		public TerminalNode NEG() { return getToken(logicParser.NEG, 0); }
 		public ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
@@ -113,16 +121,16 @@ public class logicParser extends Parser {
 		ExprContext _localctx = new ExprContext(_ctx, getState());
 		enterRule(_localctx, 0, RULE_expr);
 		try {
-			setState(13);
-			switch (_input.LA(1)) {
-			case ATOM:
+			setState(20);
+			switch ( getInterpreter().adaptivePredict(_input,0,_ctx) ) {
+			case 1:
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(4);
 				match(ATOM);
 				}
 				break;
-			case OPEN:
+			case 2:
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(5);
@@ -130,24 +138,37 @@ public class logicParser extends Parser {
 				setState(6);
 				expr();
 				setState(7);
-				match(OP);
-				setState(8);
-				expr();
-				setState(9);
 				match(CLOSE);
 				}
 				break;
-			case NEG:
+			case 3:
 				enterOuterAlt(_localctx, 3);
 				{
+				setState(9);
+				match(OPEN);
+				setState(10);
+				expr();
 				setState(11);
-				match(NEG);
+				match(OP);
 				setState(12);
 				expr();
+				setState(13);
+				match(CLOSE);
 				}
 				break;
-			default:
-				throw new NoViableAltException(this);
+			case 4:
+				enterOuterAlt(_localctx, 4);
+				{
+				setState(15);
+				match(OPEN);
+				setState(16);
+				match(NEG);
+				setState(17);
+				expr();
+				setState(18);
+				match(CLOSE);
+				}
+				break;
 			}
 		}
 		catch (RecognitionException re) {
@@ -165,7 +186,6 @@ public class logicParser extends Parser {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
-		public TerminalNode EOF() { return getToken(logicParser.EOF, 0); }
 		public SContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -191,10 +211,10 @@ public class logicParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(15);
+			setState(22);
 			expr();
-			setState(16);
-			match(EOF);
+			setState(23);
+			match(T__0);
 			}
 		}
 		catch (RecognitionException re) {
@@ -209,12 +229,14 @@ public class logicParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\b\25\4\2\t\2\4\3"+
-		"\t\3\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5\2\20\n\2\3\3\3\3\3\3\3\3\2"+
-		"\2\4\2\4\2\2\24\2\17\3\2\2\2\4\21\3\2\2\2\6\20\7\3\2\2\7\b\7\6\2\2\b\t"+
-		"\5\2\2\2\t\n\7\4\2\2\n\13\5\2\2\2\13\f\7\7\2\2\f\20\3\2\2\2\r\16\7\5\2"+
-		"\2\16\20\5\2\2\2\17\6\3\2\2\2\17\7\3\2\2\2\17\r\3\2\2\2\20\3\3\2\2\2\21"+
-		"\22\5\2\2\2\22\23\7\2\2\3\23\5\3\2\2\2\3\17";
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\t\34\4\2\t\2\4\3"+
+		"\t\3\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5"+
+		"\2\27\n\2\3\3\3\3\3\3\3\3\2\2\4\2\4\2\2\34\2\26\3\2\2\2\4\30\3\2\2\2\6"+
+		"\27\7\4\2\2\7\b\7\7\2\2\b\t\5\2\2\2\t\n\7\b\2\2\n\27\3\2\2\2\13\f\7\7"+
+		"\2\2\f\r\5\2\2\2\r\16\7\5\2\2\16\17\5\2\2\2\17\20\7\b\2\2\20\27\3\2\2"+
+		"\2\21\22\7\7\2\2\22\23\7\6\2\2\23\24\5\2\2\2\24\25\7\b\2\2\25\27\3\2\2"+
+		"\2\26\6\3\2\2\2\26\7\3\2\2\2\26\13\3\2\2\2\26\21\3\2\2\2\27\3\3\2\2\2"+
+		"\30\31\5\2\2\2\31\32\7\3\2\2\32\5\3\2\2\2\3\26";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

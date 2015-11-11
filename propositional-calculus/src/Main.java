@@ -49,6 +49,7 @@ public class Main {
 		{
 			line = sc.nextLine(); 
 			System.out.println("Parsing line: " + line);
+			line+="#";
 			
 			CharStream stream = new ANTLRInputStream(line);
 			logicLexer lexer = new logicLexer(stream);
