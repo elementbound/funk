@@ -89,6 +89,7 @@ public class logicParser extends Parser {
 		}
 		public TerminalNode OP() { return getToken(logicParser.OP, 0); }
 		public TerminalNode CLOSE() { return getToken(logicParser.CLOSE, 0); }
+		public TerminalNode NEG() { return getToken(logicParser.NEG, 0); }
 		public ExprContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
@@ -112,7 +113,7 @@ public class logicParser extends Parser {
 		ExprContext _localctx = new ExprContext(_ctx, getState());
 		enterRule(_localctx, 0, RULE_expr);
 		try {
-			setState(11);
+			setState(13);
 			switch (_input.LA(1)) {
 			case ATOM:
 				enterOuterAlt(_localctx, 1);
@@ -134,6 +135,15 @@ public class logicParser extends Parser {
 				expr();
 				setState(9);
 				match(CLOSE);
+				}
+				break;
+			case NEG:
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(11);
+				match(NEG);
+				setState(12);
+				expr();
 				}
 				break;
 			default:
@@ -181,9 +191,9 @@ public class logicParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(13);
+			setState(15);
 			expr();
-			setState(14);
+			setState(16);
 			match(EOF);
 			}
 		}
@@ -199,11 +209,12 @@ public class logicParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\b\23\4\2\t\2\4\3"+
-		"\t\3\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5\2\16\n\2\3\3\3\3\3\3\3\3\2\2\4\2\4"+
-		"\2\2\21\2\r\3\2\2\2\4\17\3\2\2\2\6\16\7\3\2\2\7\b\7\6\2\2\b\t\5\2\2\2"+
-		"\t\n\7\4\2\2\n\13\5\2\2\2\13\f\7\7\2\2\f\16\3\2\2\2\r\6\3\2\2\2\r\7\3"+
-		"\2\2\2\16\3\3\2\2\2\17\20\5\2\2\2\20\21\7\2\2\3\21\5\3\2\2\2\3\r";
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\b\25\4\2\t\2\4\3"+
+		"\t\3\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5\2\20\n\2\3\3\3\3\3\3\3\3\2"+
+		"\2\4\2\4\2\2\24\2\17\3\2\2\2\4\21\3\2\2\2\6\20\7\3\2\2\7\b\7\6\2\2\b\t"+
+		"\5\2\2\2\t\n\7\4\2\2\n\13\5\2\2\2\13\f\7\7\2\2\f\20\3\2\2\2\r\16\7\5\2"+
+		"\2\16\20\5\2\2\2\17\6\3\2\2\2\17\7\3\2\2\2\17\r\3\2\2\2\20\3\3\2\2\2\21"+
+		"\22\5\2\2\2\22\23\7\2\2\3\23\5\3\2\2\2\3\17";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

@@ -73,10 +73,17 @@ public class Main {
 	
 	public static void printNode(ParseTree node) {
 		if(node.getChildCount() != 0) {
-			RuleContext ctx = (RuleContext)node.getPayload();
+			ParserRuleContext ctx = (ParserRuleContext)node.getPayload();
+			String ruleStr = "";
+			if(ctx.getToken(logicParser.NEG, 0) != null)
+				ruleStr = "neg";
+			else if(ctx.getToken(logicParser.OP,0) != null)
+				ruleStr = "op";
+			else 
+				ruleStr = "meh";
 			
 			Util.Indent(ctx.depth() * 2);
-			System.out.printf("%s [%d]\n", node.getText(), node.getChildCount());
+			System.out.printf("%s [%d][%s]\n", node.getText(), node.getChildCount(), ruleStr);
 			
 			for(int i = 0; i < node.getChildCount(); i++)
 				printNode(node.getChild(i));
