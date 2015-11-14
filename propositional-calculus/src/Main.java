@@ -50,7 +50,7 @@ public class Main {
 			line = sc.nextLine(); 
 			System.out.println("Parsing line: " + line);
 			line+="#";
-			
+			try{
 			CharStream stream = new ANTLRInputStream(line);
 			logicLexer lexer = new logicLexer(stream);
 			CommonTokenStream tokens = new CommonTokenStream(lexer); 
@@ -66,6 +66,9 @@ public class Main {
 			}
 			else {
 				printNode(tree);
+			}
+			}catch(RuntimeException re){
+				System.out.println(re.getMessage());
 			}
 		}
 		
