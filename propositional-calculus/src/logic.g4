@@ -18,6 +18,6 @@ CLOSE: ')';
 
 WS: [ \t\r\n] -> skip; 
 
-expr: ATOM | OPEN expr CLOSE | OPEN expr OP expr CLOSE | OPEN NEG expr CLOSE;
+expr: ATOM | OPEN expr OP expr CLOSE | OPEN NEG expr CLOSE;
 
 s: expr '#';

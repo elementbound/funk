@@ -42,26 +42,41 @@ public class Main {
 		sc.close();
 	}
 	
+	public static final int RULE_ATOM = 0;
+	public static final int RULE_NEGATION = 1;
+	public static final int RULE_BINARY_OP = 2;
+	
+	public static int classifyNode(ParseTree node) {
+		ParserRuleContext ctx = (ParserRuleContext)node.getPayload();
+
+		if(ctx.getToken(logicParser.NEG, 0) != null)
+			return RULE_NEGATION; 
+		else if(ctx.getToken(logicParser.OP,0) != null)
+			return RULE_BINARY_OP; 
+		else 
+			return RULE_ATOM; 
+	}
+	
 	public static void printNode(ParseTree node) {
-		if(node.getChildCount() != 0) {
-			ParserRuleContext ctx = (ParserRuleContext)node.getPayload();
-			String ruleStr = "";
-			if(ctx.getToken(logicParser.NEG, 0) != null)
-				ruleStr = "neg";
-			else if(ctx.getToken(logicParser.OP,0) != null)
-				ruleStr = "op";
-			else 
-				ruleStr = "meh";
-			
-			Util.Indent(ctx.depth() * 2);
-			System.out.printf("%s [%d][%s]\n", node.getText(), node.getChildCount(), ruleStr);
+		if(node.getPayload() instanceof ParserRuleContext) {
+			if(classifyNode(node) == RULE_NEGATION) {
+				//if(az egyel lejjebbi szabály RULE_BINARY_OP)
+					//GO GO DESCARTES SAN 
+				//else if(az egyel lejjebbi szabály RULE_NEGATION)
+					//GO GO NEGATE SAN
+				//else
+					//print children
+			}
 			
 			for(int i = 0; i < node.getChildCount(); i++)
 				printNode(node.getChild(i));
 		}
-		else {
+		else if(node.getPayload() instanceof Token) {
 			Token t = (Token)node.getPayload();
-			//System.out.printf("%s\n", t.getText());
+			System.out.printf("%s", t.getText());
+		}
+		else {
+			//???!
 		}
 	}
 }
