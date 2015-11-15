@@ -5,7 +5,6 @@ grammar logic;
   @Override
   public void notifyErrorListeners(Token offendingToken, String msg, RecognitionException ex)
   {
-    System.out.println("WRONG INPUT");
     throw new RuntimeException(msg); 
   }
 }

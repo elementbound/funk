@@ -3,34 +3,9 @@ import java.util.Scanner;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.ParserRuleContext;
-import org.antlr.v4.runtime.RuleContext;
 import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.atn.ParseInfo;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.ANTLRInputStream;
-
-class ErrorVisitor extends logicBaseVisitor<Void>{
-	private int errors = 0;
-	
-	public Void visitExpr(logicParser.ExprContext ctx) 
-	{
-		if(ctx.exception != null)
-			errors++;
-		
-		return visitChildren(ctx); 
-	}
-	
-	public int getErrors() {
-		return errors; 
-	}
-}
-
-class PrintVisitor extends logicBaseVisitor<Void>{
-	public Void visitExpr(logicParser.ExprContext ctx) 
-	{
-		return visitChildren(ctx); 
-	}
-}
 
 class Util {
 	public static void Indent(int n) {
@@ -47,28 +22,20 @@ public class Main {
 		String line; 
 		while(sc.hasNext())
 		{
-			line = sc.nextLine(); 
-			System.out.println("Parsing line: " + line);
-			line+="#";
+			line = sc.nextLine() + "#"; 
+
 			try{
-			CharStream stream = new ANTLRInputStream(line);
-			logicLexer lexer = new logicLexer(stream);
-			CommonTokenStream tokens = new CommonTokenStream(lexer); 
-			
-			logicParser parser = new logicParser(tokens);
-			ErrorVisitor visitor = new ErrorVisitor();
-			ParseTree tree = parser.s();
-			
-			visitor.visit(tree);
-			
-			if(visitor.getErrors() != 0) {
-				System.out.printf("Found %d error(s)\n", visitor.getErrors());
-			}
-			else {
+				CharStream stream = new ANTLRInputStream(line);
+				logicLexer lexer = new logicLexer(stream);
+				CommonTokenStream tokens = new CommonTokenStream(lexer); 
+				
+				logicParser parser = new logicParser(tokens);
+				ParseTree tree = parser.s();
+				
 				printNode(tree);
 			}
-			}catch(RuntimeException re){
-				System.out.println(re.getMessage());
+			catch(RuntimeException re) {
+				System.out.printf("Error: %s\n", re.getMessage());
 			}
 		}
 		
