@@ -1,3 +1,5 @@
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -34,7 +36,11 @@ public class Main {
 				logicParser parser = new logicParser(tokens);
 				ParseTree tree = parser.s();
 				
-				printNode(tree);
+				ByteArrayOutputStream baos = new ByteArrayOutputStream();
+				PrintStream ps = new PrintStream(baos);
+				printNode(tree, ps);
+				
+				System.out.println(baos.toString());
 			}
 			catch(RuntimeException re) {
 				System.out.printf("Error: %s\n", re.getMessage());
@@ -88,16 +94,13 @@ public class Main {
 		return ret; 
 	}
 	
-	//((!(A & B)) | (!(A | B)))
-	//((!<A>) | (!<B>)|(!<A>) & (!<B>))#
-	
-	public static void negateNode(ParseTree node) {
-		System.out.print("(!<");
-		printNode(node);
-		System.out.print(">)");
+	public static void negateNode(ParseTree node, PrintStream out) {
+		out.print("(!<");
+		printNode(node, out);
+		out.print(">) ");
 	}
 	
-	public static void printNode(ParseTree node) {
+	public static void printNode(ParseTree node, PrintStream out) {
 		if(node.getPayload() instanceof ParserRuleContext) {
 			if(classifyNode(node) == RULE_NEGATION) {
 				ParseTree subnode = extractNodes(node).get(0);
@@ -109,35 +112,35 @@ public class Main {
 					Token operator = tokens.get(1);
 					
 					if(operator.getText().equals("&")) {
-						negateNode(nodes.get(0));
-						System.out.print(" | ");
-						negateNode(nodes.get(1));
+						out.print("( ");
+						negateNode(nodes.get(0), out);
+						out.print(" | ");
+						negateNode(nodes.get(1), out);
+						out.print(") ");
 					}
 					else if(operator.getText().equals("|")) {
-						negateNode(nodes.get(0));
-						System.out.print(" & ");
-						negateNode(nodes.get(1));
+						out.print("( ");
+						negateNode(nodes.get(0), out);
+						out.print(" & ");
+						negateNode(nodes.get(1), out);
+						out.print(") ");
 					}
 					else 
 						; //???!
 				}
-				else if(classifyNode(subnode) == RULE_NEGATION) {
-					//GO GO NEGATE SAN
-					for(int i = 0; i < node.getChildCount(); i++)
-						printNode(node.getChild(i));
-				}
+				//No need to handle the negation(subnode) case here, that will be handled by pruneNegations
 				else 
 					for(int i = 0; i < node.getChildCount(); i++)
-						printNode(node.getChild(i));
+						printNode(node.getChild(i), out);
 			}
 			else {
 				for(int i = 0; i < node.getChildCount(); i++)
-					printNode(node.getChild(i));
+					printNode(node.getChild(i), out);
 			}
 		}
 		else if(node.getPayload() instanceof Token) {
 			Token t = (Token)node.getPayload();
-			System.out.printf("%s ", t.getText());
+			out.printf("%s ", t.getText());
 		}
 		else {
 			//???!
