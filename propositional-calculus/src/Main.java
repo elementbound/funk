@@ -29,15 +29,10 @@ public class Main {
 			line = sc.nextLine() + "#"; 
 
 			try{
-				CharStream stream = new ANTLRInputStream(line);
-				logicLexer lexer = new logicLexer(stream);
-				CommonTokenStream tokens = new CommonTokenStream(lexer); 
+				line = atomizeNegations(line);
+				line = pruneNegations(line);
 				
-				logicParser parser = new logicParser(tokens);
-				ParseTree tree = parser.s();
-				
-				pruneNegations(tree, System.out);
-				System.out.println();
+				System.out.println(line);
 			}
 			catch(RuntimeException re) {
 				System.out.printf("Error: %s\n", re.getMessage());
@@ -94,16 +89,17 @@ public class Main {
 		return ret; 
 	}
 	
-	public static void negateNode(ParseTree node, PrintStream out) {
-		out.print("(!");
-		atomizeNegationsOnNode(node, out); //TODO!
-		out.print(") ");
+	public static String negate(String str) {
+		StringBuilder strb = new StringBuilder();
+		return strb.append("( ! ").append(str).append(") ").toString(); 
 	}
 	
 	//=========================================================================================
 	// Atomize negations
 	
-	public static void atomizeNegationsOnNode(ParseTree node, PrintStream out) {
+	public static String atomizeNegationsOnNode(ParseTree node) {
+		StringBuilder strb = new StringBuilder();
+		
 		if(node.getPayload() instanceof ParserRuleContext) {
 			if(classifyNode(node) == RULE_NEGATION) {
 				ParseTree subnode = extractNodes(node).get(0);
@@ -115,18 +111,18 @@ public class Main {
 					Token operator = tokens.get(1);
 					
 					if(operator.getText().equals("&")) {
-						out.print("( ");
-						negateNode(nodes.get(0), out);
-						out.print(" | ");
-						negateNode(nodes.get(1), out);
-						out.print(") ");
+						strb.append("( ")
+							.append(negate(atomizeNegationsOnNode(nodes.get(0))))
+							.append(" | ")
+							.append(negate(atomizeNegationsOnNode(nodes.get(1))))
+							.append(") ") ;
 					}
 					else if(operator.getText().equals("|")) {
-						out.print("( ");
-						negateNode(nodes.get(0), out);
-						out.print(" & ");
-						negateNode(nodes.get(1), out);
-						out.print(") ");
+						strb.append("( ")
+						.append(negate(atomizeNegationsOnNode(nodes.get(0))))
+						.append(" & ")
+						.append(negate(atomizeNegationsOnNode(nodes.get(1))))
+						.append(") ") ;
 					}
 					else 
 						; //???!
@@ -134,25 +130,27 @@ public class Main {
 				//No need to handle the negation(subnode) case here, that will be handled by pruneNegations
 				else 
 					for(int i = 0; i < node.getChildCount(); i++)
-						atomizeNegationsOnNode(node.getChild(i), out);
+						strb.append(atomizeNegationsOnNode(node.getChild(i)));
 			}
 			else {
 				for(int i = 0; i < node.getChildCount(); i++)
-					atomizeNegationsOnNode(node.getChild(i), out);
+					strb.append(atomizeNegationsOnNode(node.getChild(i)));
 			}
 		}
 		else if(node.getPayload() instanceof Token) {
 			Token t = (Token)node.getPayload();
-			out.printf("%s ", t.getText());
+			strb.append(t.getText()).append(' ');
 		}
 		else {
 			//???!
 		}
+		
+		return strb.toString();
 	}
 	
-	public static void atomizeNegations(ParseTree tree, PrintStream out) {
+	public static String atomizeNegations(String str) {
 		String prevLine = "";
-		String line = tree.getText();
+		String line = str;
 		
 		while(true) {
 			CharStream stream = new ANTLRInputStream(line);
@@ -162,11 +160,7 @@ public class Main {
 			logicParser parser = new logicParser(tokens);
 			ParseTree ntree = parser.s();
 			
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			PrintStream ps = new PrintStream(baos);
-			atomizeNegationsOnNode(ntree, ps);
-			
-			line = baos.toString();
+			line = atomizeNegationsOnNode(ntree);
 			if(line.equals(prevLine))
 				break;
 			
@@ -174,15 +168,15 @@ public class Main {
 			System.out.printf("Iter: %s\n", line);
 		}
 		
-		out.print(line);
+		return line;
 	}
 	
 	//=========================================================================================
 	// Prune negations
 	
-	public static void pruneNegations(ParseTree tree, PrintStream out) {
+	public static String pruneNegations(String str) {
 		String prevLine = "";
-		String line = tree.getText();
+		String line = str;
 		
 		while(true) {
 			CharStream stream = new ANTLRInputStream(line);
@@ -191,12 +185,8 @@ public class Main {
 			
 			logicParser parser = new logicParser(tokens);
 			ParseTree ntree = parser.s();
-			
-			ByteArrayOutputStream baos = new ByteArrayOutputStream();
-			PrintStream ps = new PrintStream(baos);
-			pruneNegationsOnNode(ntree, ps);
-			
-			line = baos.toString();
+
+			line = pruneNegationsOnNode(ntree);
 			if(line.equals(prevLine))
 				break;
 			
@@ -204,32 +194,36 @@ public class Main {
 			System.out.printf("NegIter: %s\n", line);
 		}
 		
-		out.print(line);
+		return line; 
 	}
 	
-	public static void pruneNegationsOnNode(ParseTree node, PrintStream out) {
+	public static String pruneNegationsOnNode(ParseTree node) {
+		StringBuilder strb = new StringBuilder();
+		
 		if(node.getPayload() instanceof ParserRuleContext) {
 			if(classifyNode(node) == RULE_NEGATION) {
 				ParseTree subnode = extractNodes(node).get(0);
 				
 				if(classifyNode(subnode) == RULE_NEGATION) {
-					pruneNegationsOnNode(extractNodes(subnode).get(0), out);
+					strb.append(pruneNegationsOnNode(extractNodes(subnode).get(0)));
 				}
 				else 
 					for(int i = 0; i < node.getChildCount(); i++)
-						pruneNegationsOnNode(node.getChild(i), out);
+						strb.append(pruneNegationsOnNode(node.getChild(i)));
 			}
 			else {
 				for(int i = 0; i < node.getChildCount(); i++)
-					pruneNegationsOnNode(node.getChild(i), out);
+					strb.append(pruneNegationsOnNode(node.getChild(i)));
 			}
 		}
 		else if(node.getPayload() instanceof Token) {
 			Token t = (Token)node.getPayload();
-			out.printf("%s ", t.getText());
+			strb.append(t.getText()).append(' ');
 		}
 		else {
 			//???!
 		}
+		
+		return strb.toString();
 	}
 }
