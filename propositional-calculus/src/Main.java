@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 import org.antlr.v4.runtime.CharStream;
@@ -57,15 +59,32 @@ public class Main {
 			return RULE_ATOM; 
 	}
 	
+	public static List<ParseTree> extractNodes(ParseTree node) {
+		List<ParseTree> ret = new ArrayList<>();
+		
+		for(int i = 0; i < node.getChildCount(); i++)
+		{
+			ParseTree c = node.getChild(i);
+			if(c.getPayload() instanceof ParserRuleContext)
+				ret.add(c);
+		}
+		
+		return ret; 
+	}
+	
 	public static void printNode(ParseTree node) {
 		if(node.getPayload() instanceof ParserRuleContext) {
 			if(classifyNode(node) == RULE_NEGATION) {
-				//if(az egyel lejjebbi szabály RULE_BINARY_OP)
-					//GO GO DESCARTES SAN 
-				//else if(az egyel lejjebbi szabály RULE_NEGATION)
+				ParseTree subnode = extractNodes(node).get(0);
+				
+				if(classifyNode(subnode) == RULE_BINARY_OP) {
+					//GO GO DESCARTES SAN!
+				}
+				else if(classifyNode(subnode) == RULE_NEGATION) {
 					//GO GO NEGATE SAN
-				//else
-					//print children
+				}
+				else 
+					;//print children
 			}
 			
 			for(int i = 0; i < node.getChildCount(); i++)
