@@ -36,7 +36,7 @@ public class Main {
 				logicParser parser = new logicParser(tokens);
 				ParseTree tree = parser.s();
 				
-				atomizeNegations(tree, System.out);
+				pruneNegations(tree, System.out);
 				System.out.println();
 			}
 			catch(RuntimeException re) {
@@ -46,6 +46,9 @@ public class Main {
 		
 		sc.close();
 	}
+	
+	//=========================================================================================
+	// Node utils 
 	
 	public static final int RULE_ATOM = 0;
 	public static final int RULE_NEGATION = 1;
@@ -93,9 +96,12 @@ public class Main {
 	
 	public static void negateNode(ParseTree node, PrintStream out) {
 		out.print("(!");
-		atomizeNegationsOnNode(node, out);
+		atomizeNegationsOnNode(node, out); //TODO!
 		out.print(") ");
 	}
+	
+	//=========================================================================================
+	// Atomize negations
 	
 	public static void atomizeNegationsOnNode(ParseTree node, PrintStream out) {
 		if(node.getPayload() instanceof ParserRuleContext) {
@@ -169,5 +175,61 @@ public class Main {
 		}
 		
 		out.print(line);
+	}
+	
+	//=========================================================================================
+	// Prune negations
+	
+	public static void pruneNegations(ParseTree tree, PrintStream out) {
+		String prevLine = "";
+		String line = tree.getText();
+		
+		while(true) {
+			CharStream stream = new ANTLRInputStream(line);
+			logicLexer lexer = new logicLexer(stream);
+			CommonTokenStream tokens = new CommonTokenStream(lexer); 
+			
+			logicParser parser = new logicParser(tokens);
+			ParseTree ntree = parser.s();
+			
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			PrintStream ps = new PrintStream(baos);
+			pruneNegationsOnNode(ntree, ps);
+			
+			line = baos.toString();
+			if(line.equals(prevLine))
+				break;
+			
+			prevLine = line; 
+			System.out.printf("NegIter: %s\n", line);
+		}
+		
+		out.print(line);
+	}
+	
+	public static void pruneNegationsOnNode(ParseTree node, PrintStream out) {
+		if(node.getPayload() instanceof ParserRuleContext) {
+			if(classifyNode(node) == RULE_NEGATION) {
+				ParseTree subnode = extractNodes(node).get(0);
+				
+				if(classifyNode(subnode) == RULE_NEGATION) {
+					pruneNegationsOnNode(extractNodes(subnode).get(0), out);
+				}
+				else 
+					for(int i = 0; i < node.getChildCount(); i++)
+						pruneNegationsOnNode(node.getChild(i), out);
+			}
+			else {
+				for(int i = 0; i < node.getChildCount(); i++)
+					pruneNegationsOnNode(node.getChild(i), out);
+			}
+		}
+		else if(node.getPayload() instanceof Token) {
+			Token t = (Token)node.getPayload();
+			out.printf("%s ", t.getText());
+		}
+		else {
+			//???!
+		}
 	}
 }
