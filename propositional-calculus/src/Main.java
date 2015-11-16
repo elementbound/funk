@@ -36,11 +36,8 @@ public class Main {
 				logicParser parser = new logicParser(tokens);
 				ParseTree tree = parser.s();
 				
-				ByteArrayOutputStream baos = new ByteArrayOutputStream();
-				PrintStream ps = new PrintStream(baos);
-				printNode(tree, ps);
-				
-				System.out.println(baos.toString());
+				atomizeNegations(tree, System.out);
+				System.out.println();
 			}
 			catch(RuntimeException re) {
 				System.out.printf("Error: %s\n", re.getMessage());
@@ -95,12 +92,12 @@ public class Main {
 	}
 	
 	public static void negateNode(ParseTree node, PrintStream out) {
-		out.print("(!<");
-		printNode(node, out);
-		out.print(">) ");
+		out.print("(!");
+		atomizeNegationsOnNode(node, out);
+		out.print(") ");
 	}
 	
-	public static void printNode(ParseTree node, PrintStream out) {
+	public static void atomizeNegationsOnNode(ParseTree node, PrintStream out) {
 		if(node.getPayload() instanceof ParserRuleContext) {
 			if(classifyNode(node) == RULE_NEGATION) {
 				ParseTree subnode = extractNodes(node).get(0);
@@ -131,11 +128,11 @@ public class Main {
 				//No need to handle the negation(subnode) case here, that will be handled by pruneNegations
 				else 
 					for(int i = 0; i < node.getChildCount(); i++)
-						printNode(node.getChild(i), out);
+						atomizeNegationsOnNode(node.getChild(i), out);
 			}
 			else {
 				for(int i = 0; i < node.getChildCount(); i++)
-					printNode(node.getChild(i), out);
+					atomizeNegationsOnNode(node.getChild(i), out);
 			}
 		}
 		else if(node.getPayload() instanceof Token) {
@@ -145,5 +142,32 @@ public class Main {
 		else {
 			//???!
 		}
+	}
+	
+	public static void atomizeNegations(ParseTree tree, PrintStream out) {
+		String prevLine = "";
+		String line = tree.getText();
+		
+		while(true) {
+			CharStream stream = new ANTLRInputStream(line);
+			logicLexer lexer = new logicLexer(stream);
+			CommonTokenStream tokens = new CommonTokenStream(lexer); 
+			
+			logicParser parser = new logicParser(tokens);
+			ParseTree ntree = parser.s();
+			
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+			PrintStream ps = new PrintStream(baos);
+			atomizeNegationsOnNode(ntree, ps);
+			
+			line = baos.toString();
+			if(line.equals(prevLine))
+				break;
+			
+			prevLine = line; 
+			System.out.printf("Iter: %s\n", line);
+		}
+		
+		out.print(line);
 	}
 }
