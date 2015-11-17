@@ -1,5 +1,3 @@
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -11,28 +9,29 @@ import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.ANTLRInputStream;
 
-class Util {
-	public static void Indent(int n) {
-		for(int i = 0; i < n; i++)
-			System.out.print(" ");
-	}
-}
-
 public class Main {
 
 	public static void main(String[] args) {
 		Scanner sc = new Scanner(System.in); 
-		
+		boolean chose=false;
 		String line; 
+		
 		while(sc.hasNext())
 		{
 			line = sc.nextLine() + "#"; 
 
 			try{
-				line = atomizeNegations(line);
-				line = pruneNegations(line);
-				
-				System.out.println(line);
+				if(chose){
+					line = atomizeNegations(line);
+					line = pruneNegations(line);	
+					
+					System.out.println(line.substring(0, line.length()-2));
+				}
+				else{
+					line = toDisjunction(line);
+					
+					System.out.println(line.substring(0, line.length()-2));
+				}
 			}
 			catch(RuntimeException re) {
 				System.out.printf("Error: %s\n", re.getMessage());
@@ -124,8 +123,13 @@ public class Main {
 						.append(negate(atomizeNegationsOnNode(nodes.get(1))))
 						.append(") ") ;
 					}
-					else 
-						; //???!
+					else if(operator.getText().equals(">")){
+						strb.append("( ")
+						.append(negate(atomizeNegationsOnNode(nodes.get(0))))
+						.append(" | ")
+						.append(atomizeNegationsOnNode(nodes.get(1)))
+						.append(") ") ;
+					}
 				}
 				//No need to handle the negation(subnode) case here, that will be handled by pruneNegations
 				else 
@@ -140,9 +144,6 @@ public class Main {
 		else if(node.getPayload() instanceof Token) {
 			Token t = (Token)node.getPayload();
 			strb.append(t.getText()).append(' ');
-		}
-		else {
-			//???!
 		}
 		
 		return strb.toString();
@@ -220,10 +221,64 @@ public class Main {
 			Token t = (Token)node.getPayload();
 			strb.append(t.getText()).append(' ');
 		}
-		else {
-			//???!
+		
+		return strb.toString();
+	}
+	
+	public static String toDisjunction(String str) {
+		String prevLine = "";
+		String line = str;
+		
+		while(true) {
+			CharStream stream = new ANTLRInputStream(line);
+			logicLexer lexer = new logicLexer(stream);
+			CommonTokenStream tokens = new CommonTokenStream(lexer); 
+			
+			logicParser parser = new logicParser(tokens);
+			ParseTree ntree = parser.s();
+
+			line = toDisjunctionNode(ntree);
+			if(line.equals(prevLine))
+				break;
+			
+			prevLine = line; 
+		}
+		System.out.println("Disjunction: "+line);
+		return line; 
+	}
+	
+	public static String toDisjunctionNode(ParseTree node) {
+		StringBuilder strb = new StringBuilder();
+		
+		if(node.getPayload() instanceof ParserRuleContext) {
+			if(classifyNode(node) == RULE_BINARY_OP) {
+					List<Token> tokens = extractTokens(node);
+					List<ParseTree> nodes = extractNodes(node);
+
+					Token operator = tokens.get(1);
+					
+					if(operator.getText().equals("&")) {
+						strb.append("( !( ")
+							.append(negate(toDisjunctionNode(nodes.get(0))))
+							.append(" | ")
+							.append(negate(toDisjunctionNode(nodes.get(1))))
+							.append(") )") ;
+					}
+				else 
+					for(int i = 0; i < node.getChildCount(); i++)
+						strb.append(toDisjunctionNode(node.getChild(i)));
+			}
+			else {
+				for(int i = 0; i < node.getChildCount(); i++)
+					strb.append(toDisjunctionNode(node.getChild(i)));
+			}
+		}
+		else if(node.getPayload() instanceof Token) {
+			Token t = (Token)node.getPayload();
+			strb.append(t.getText()).append(' ');
 		}
 		
 		return strb.toString();
 	}
+	
 }
