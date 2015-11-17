@@ -21,17 +21,14 @@ public class Main {
 			line = sc.nextLine() + "#"; 
 
 			try{
-				if(chose){
+				if(chose)
 					line = atomizeNegations(line);
-					line = pruneNegations(line);	
-					
-					System.out.println(line.substring(0, line.length()-2));
-				}
-				else{
+				else
 					line = toDisjunction(line);
-					
-					System.out.println(line.substring(0, line.length()-2));
-				}
+				
+				line = pruneNegations(line);	
+				
+				System.out.println(line.substring(0, line.length()-2));
 			}
 			catch(RuntimeException re) {
 				System.out.printf("Error: %s\n", re.getMessage());
@@ -166,7 +163,7 @@ public class Main {
 				break;
 			
 			prevLine = line; 
-			System.out.printf("Iter: %s\n", line);
+			System.out.printf("NegIter: %s\n", line);
 		}
 		
 		return line;
@@ -192,7 +189,7 @@ public class Main {
 				break;
 			
 			prevLine = line; 
-			System.out.printf("NegIter: %s\n", line);
+			System.out.printf("PruneIter: %s\n", line);
 		}
 		
 		return line; 
@@ -225,6 +222,9 @@ public class Main {
 		return strb.toString();
 	}
 	
+	//=========================================================================================
+	// To disjunctions
+	
 	public static String toDisjunction(String str) {
 		String prevLine = "";
 		String line = str;
@@ -242,8 +242,10 @@ public class Main {
 				break;
 			
 			prevLine = line; 
+			
+			System.out.println("DisIter: "+line);
 		}
-		System.out.println("Disjunction: "+line);
+		
 		return line; 
 	}
 	
@@ -258,11 +260,11 @@ public class Main {
 					Token operator = tokens.get(1);
 					
 					if(operator.getText().equals("&")) {
-						strb.append("( !( ")
+						strb.append("( ! ( ")
 							.append(negate(toDisjunctionNode(nodes.get(0))))
 							.append(" | ")
 							.append(negate(toDisjunctionNode(nodes.get(1))))
-							.append(") )") ;
+							.append(") ) ") ;
 					}
 				else 
 					for(int i = 0; i < node.getChildCount(); i++)
