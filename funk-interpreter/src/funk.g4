@@ -10,15 +10,21 @@ grammar funk;
   }
 }
 
+WS: [ \t\r\n] -> skip; 
+
 NUMBER: [0-9]+;
 STRING: '\'' (~'\'')* '\'';
 ID: [_a-zA-Z][a-zA-Z0-9]*;
 
-expr: ID | 
-	  STRING | NUMBER |
+id: ID;
+literal: STRING | NUMBER;
+object: id | literal;
+memberCall: object '.' ID '(' args? ')';
+
+expr: id | literal |
+	  memberCall |
 	  expr '+' expr | 
-	  ID '=' expr | 
-	  ID '.' ID '(' args ')';
+	  ID '=' expr;
 
 args: expr | args ',' expr;
 statement: expr ';';

@@ -7,6 +7,46 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface funkListener extends ParseTreeListener {
 	/**
+	 * Enter a parse tree produced by {@link funkParser#id}.
+	 * @param ctx the parse tree
+	 */
+	void enterId(funkParser.IdContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link funkParser#id}.
+	 * @param ctx the parse tree
+	 */
+	void exitId(funkParser.IdContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link funkParser#literal}.
+	 * @param ctx the parse tree
+	 */
+	void enterLiteral(funkParser.LiteralContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link funkParser#literal}.
+	 * @param ctx the parse tree
+	 */
+	void exitLiteral(funkParser.LiteralContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link funkParser#object}.
+	 * @param ctx the parse tree
+	 */
+	void enterObject(funkParser.ObjectContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link funkParser#object}.
+	 * @param ctx the parse tree
+	 */
+	void exitObject(funkParser.ObjectContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link funkParser#memberCall}.
+	 * @param ctx the parse tree
+	 */
+	void enterMemberCall(funkParser.MemberCallContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link funkParser#memberCall}.
+	 * @param ctx the parse tree
+	 */
+	void exitMemberCall(funkParser.MemberCallContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link funkParser#expr}.
 	 * @param ctx the parse tree
 	 */
