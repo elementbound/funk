@@ -11,6 +11,29 @@ public class Object {
 	}
 	
 	//=========================================================================================
+	// Constructors
+	
+	public Object() {
+		type = Type.Boolean;
+		asBoolean = false;
+	}
+	
+	public Object(boolean b) {
+		type = Type.Boolean;
+		asBoolean = b;
+	}
+	
+	public Object(int n) {
+		type = Type.Number;
+		asNumber = n;
+	}
+	
+	public Object(String str) {
+		type = Type.String;
+		asString = str;
+	}
+	
+	//=========================================================================================
 	// Get value
 	
 	public String asString() throws IllegalCastException {
@@ -82,5 +105,24 @@ public class Object {
 	public void assign(String str) {
 		this.type = Type.String;
 		this.asString = str;
+	}
+	
+	//=========================================================================================
+	// Builtin operators
+	
+	public Object add(Object rhs) throws IllegalCastException {
+		switch(type) {
+			case Boolean: 
+				return new Object(this.asBoolean || rhs.asBoolean());
+				
+			case Number: 
+				return new Object(this.asNumber + rhs.asNumber());
+				
+			case String: 
+				return new Object(this.asString + rhs.asString());
+				
+			default:
+				return new Object();
+		}
 	}
 }
