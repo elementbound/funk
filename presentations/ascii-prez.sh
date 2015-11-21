@@ -28,7 +28,7 @@ function bullet {
 	format_reset
 
 	echo $1
-	echo 
+	echo ""
 }
 
 function subblet {
@@ -37,7 +37,7 @@ function subblet {
 		printf "  "
 	done
 
-	bullet $1
+	bullet "$1"
 }
 
 function page_end {

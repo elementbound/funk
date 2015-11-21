@@ -27,7 +27,6 @@ public class Main {
 					line = toDisjunction(line);
 				
 				line = pruneNegations(line);	
-				
 				System.out.println(line.substring(0, line.length()-2));
 			}
 			catch(RuntimeException re) {
