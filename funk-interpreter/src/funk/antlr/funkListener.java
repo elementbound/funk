@@ -1,4 +1,5 @@
 // Generated from funk.g4 by ANTLR 4.5.1
+package funk.antlr;
 import org.antlr.v4.runtime.tree.ParseTreeListener;
 
 /**
@@ -46,6 +47,16 @@ public interface funkListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitMemberCall(funkParser.MemberCallContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link funkParser#assign}.
+	 * @param ctx the parse tree
+	 */
+	void enterAssign(funkParser.AssignContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link funkParser#assign}.
+	 * @param ctx the parse tree
+	 */
+	void exitAssign(funkParser.AssignContext ctx);
 	/**
 	 * Enter a parse tree produced by {@link funkParser#expr}.
 	 * @param ctx the parse tree

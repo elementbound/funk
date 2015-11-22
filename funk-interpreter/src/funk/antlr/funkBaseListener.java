@@ -1,4 +1,5 @@
 // Generated from funk.g4 by ANTLR 4.5.1
+package funk.antlr;
 
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ErrorNode;
@@ -58,6 +59,18 @@ public class funkBaseListener implements funkListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitMemberCall(funkParser.MemberCallContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterAssign(funkParser.AssignContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitAssign(funkParser.AssignContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

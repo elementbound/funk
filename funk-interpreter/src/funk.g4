@@ -20,11 +20,12 @@ id: ID;
 literal: STRING | NUMBER;
 object: id | literal;
 memberCall: object '.' ID '(' args? ')';
+assign: ID '=' expr;
 
 expr: id | literal |
 	  memberCall |
-	  expr '+' expr | 
-	  ID '=' expr;
+	  assign |
+	  expr '+' expr;
 
 args: expr | args ',' expr;
 statement: expr ';';
