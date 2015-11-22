@@ -36,7 +36,7 @@ public class Object {
 	//=========================================================================================
 	// Get value
 	
-	public String asString() throws IllegalCastException {
+	public String asString() {
 		switch(type)  {
 			case Number: 
 				return Integer.toString(this.asNumber);
@@ -48,7 +48,7 @@ public class Object {
 				return this.asString;
 				
 			default: 
-				throw new IllegalCastException(this.type, Type.String);
+				return "???";
 		}
 	}
 	
@@ -80,6 +80,12 @@ public class Object {
 			default: 
 				throw new IllegalCastException(type, Type.Number);
 		}
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder strb = new StringBuilder();
+		return strb.append("[").append(this.type).append("] ").append(this.asString()).toString();
 	}
 	
 	//=========================================================================================
