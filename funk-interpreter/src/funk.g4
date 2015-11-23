@@ -25,8 +25,10 @@ literal: STRING | NUMBER | BOOLEAN;
 object: id | literal;
 memberCall: object '.' ID '(' args? ')';
 assign: ID '=' expr;
+closedExpr: '(' expr ')';
 
-expr: id | literal |
+expr: closedExpr | 
+	  id | literal |
 	  expr BINOP expr |
 	  memberCall |
 	  assign;

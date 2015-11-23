@@ -19,6 +19,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 import funk.antlr.funkLexer;
 import funk.antlr.funkParser;
 import funk.antlr.funkParser.AssignContext;
+import funk.antlr.funkParser.ClosedExprContext;
 import funk.antlr.funkParser.CommentContext;
 import funk.antlr.funkParser.ExprContext;
 import funk.antlr.funkParser.IdContext;
@@ -267,6 +268,13 @@ public class Interpreter {
 			
 			//A kapott Object-et visszaadni
 			return result; 
+		}
+		//Ha ( expr ) avagy closedExpr
+		else if(node instanceof ClosedExprContext) {
+			ParseTree subnode = Utils.extractNodes(node).get(0);
+			
+			dbgStream.printf("Closed expr: %s\n", subnode.getText());
+			return eval(subnode);
 		}
 		//Ha expr: 
 		else if(node instanceof ExprContext) {

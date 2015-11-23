@@ -68,6 +68,16 @@ public interface funkListener extends ParseTreeListener {
 	 */
 	void exitAssign(funkParser.AssignContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link funkParser#closedExpr}.
+	 * @param ctx the parse tree
+	 */
+	void enterClosedExpr(funkParser.ClosedExprContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link funkParser#closedExpr}.
+	 * @param ctx the parse tree
+	 */
+	void exitClosedExpr(funkParser.ClosedExprContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link funkParser#expr}.
 	 * @param ctx the parse tree
 	 */
@@ -97,4 +107,34 @@ public interface funkListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitStatement(funkParser.StatementContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link funkParser#ifThen}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfThen(funkParser.IfThenContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link funkParser#ifThen}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfThen(funkParser.IfThenContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link funkParser#ifThenElse}.
+	 * @param ctx the parse tree
+	 */
+	void enterIfThenElse(funkParser.IfThenElseContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link funkParser#ifThenElse}.
+	 * @param ctx the parse tree
+	 */
+	void exitIfThenElse(funkParser.IfThenElseContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link funkParser#scope}.
+	 * @param ctx the parse tree
+	 */
+	void enterScope(funkParser.ScopeContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link funkParser#scope}.
+	 * @param ctx the parse tree
+	 */
+	void exitScope(funkParser.ScopeContext ctx);
 }
