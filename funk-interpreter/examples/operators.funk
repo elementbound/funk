@@ -1,0 +1,13 @@
+a = 5 + 3;
+b = "Hello " + " world!";
+c = True + False; 
+
+d = 7 * 3;
+e = 'lol ' * d;
+f = 'Hello' * False; 
+
+g = True * False;
+h = False / True;
+
+i = 83 / True;
+j = False / 83; 
