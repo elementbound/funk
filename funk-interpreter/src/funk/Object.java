@@ -184,4 +184,23 @@ public class Object {
 				return new Object();
 		}
 	}
+	
+	public Object compare(Object rhs) {
+		if(type != rhs.type)
+			return new Object(false);
+		
+		switch(type) {
+			case Boolean:
+				return new Object(this.asBoolean == rhs.asBoolean);
+						
+			case Number:
+				return new Object(this.asNumber == rhs.asNumber);
+				
+			case String: 
+				return new Object(this.asString.equals(rhs.asString));
+				
+			default: 
+				return new Object();
+		}
+	}
 }
