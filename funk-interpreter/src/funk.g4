@@ -6,7 +6,7 @@ grammar funk;
   @Override
   public void notifyErrorListeners(Token offendingToken, String msg, RecognitionException ex)
   {
-    throw new RuntimeException(msg); 
+    throw ex; 
   }
 }
 
@@ -14,10 +14,12 @@ WS: [ \t\r\n] -> skip;
 
 NUMBER: [0-9]+;
 STRING: '\'' (~'\'')* '\'' | '\"' (~'\"')* '\"';
+BOOLEAN: 'True' | 'False';
 ID: [_a-zA-Z][a-zA-Z0-9]*;
+BINOP: '+' | '-' | '*' | '/';
 
 id: ID;
-literal: STRING | NUMBER;
+literal: STRING | NUMBER | BOOLEAN;
 object: id | literal;
 memberCall: object '.' ID '(' args? ')';
 assign: ID '=' expr;
@@ -25,7 +27,7 @@ assign: ID '=' expr;
 expr: id | literal |
 	  memberCall |
 	  assign |
-	  expr '+' expr;
+	  expr BINOP expr;
 
 args: expr | args ',' expr;
 statement: expr ';';

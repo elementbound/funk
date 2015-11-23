@@ -131,4 +131,57 @@ public class Object {
 				return new Object();
 		}
 	}
+	
+	public Object subtract(Object rhs) throws IllegalCastException {
+		switch(type) {
+			case Boolean: 
+				return new Object(this.asBoolean && !rhs.asBoolean());
+				
+			case Number:
+				return new Object(this.asNumber - rhs.asNumber());
+				
+			case String: 
+				//Todo: throw appropriate exception
+				
+			default: 
+				return new Object();
+		}
+	}
+	
+	public Object multiply(Object rhs) throws IllegalCastException {
+		switch(type) {
+			case Boolean: 
+				return new Object(this.asBoolean && rhs.asBoolean());
+				
+			case Number: 
+				return new Object(this.asNumber * rhs.asNumber());
+				
+			case String: 
+				StringBuilder strb = new StringBuilder();
+				int n = rhs.asNumber();
+				for(int i = 0; i < n; i++)
+					strb.append(this.asString);
+				
+				return new Object(strb.toString());
+				
+			default: 
+				return new Object(); 
+		}
+	}
+	
+	public Object divide(Object rhs) throws IllegalCastException {
+		switch(type) {
+			case Boolean: 
+				return new Object(this.asBoolean || rhs.asBoolean());
+				
+			case Number: 
+				return new Object(this.asNumber / rhs.asNumber());
+				
+			case String: 
+				//Todo: throw appropriate exception
+				
+			default: 
+				return new Object();
+		}
+	}
 }

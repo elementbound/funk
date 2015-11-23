@@ -80,6 +80,10 @@ public class Interpreter {
 			
 			if(literalStr.charAt(0) == '\"' || literalStr.charAt(0) == '\'')
 				result = new Object(literalStr.substring(1, literalStr.length()-1));
+			else if(literalStr.equals("True"))
+				result = new Object(true);
+			else if(literalStr.equals("False"))
+				result = new Object(false);
 			else
 				result = new Object(Integer.parseInt(literalStr));
 			
@@ -120,7 +124,7 @@ public class Interpreter {
 				dbgStream.println("Lone-child expr");
 				return eval(node.getChild(0));
 			}
-			//Különben expr '+' expr: 
+			//Különben expr <op> expr: 
 			else {
 				dbgStream.printf("Possibly addition: %s\n", node.getText());
 				
@@ -138,7 +142,20 @@ public class Interpreter {
 				Object leftResult = eval(leftNode);
 				Object rightResult = eval(rightNode);
 				
-				//A két kapott Object-et összeadni Object.add-al
+				//A két kapott Object-etre alkalmazni a megfelelõ operátort
+				if(operator.getText().equals("+")) {
+					return leftResult.add(rightResult);
+				}
+				else if(operator.getText().equals("-")) {
+					return leftResult.subtract(rightResult);
+				}
+				else if(operator.getText().equals("*")) {
+					return leftResult.multiply(rightResult);
+				}
+				else if(operator.getText().equals("/")) {
+					return leftResult.divide(rightResult);
+				}
+				
 				//A kapott Object-et visszaadni
 				return leftResult.add(rightResult); 
 			}
