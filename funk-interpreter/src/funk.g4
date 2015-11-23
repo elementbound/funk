@@ -17,7 +17,9 @@ STRING: '\'' (~'\'')* '\'' | '\"' (~'\"')* '\"';
 BOOLEAN: 'True' | 'False';
 ID: [_a-zA-Z][a-zA-Z0-9]*;
 BINOP: '+' | '-' | '*' | '/';
+COMMENT: '/*' .*? '*/'; // Non-greedy matching
 
+comment: COMMENT;
 id: ID;
 literal: STRING | NUMBER | BOOLEAN;
 object: id | literal;
@@ -30,4 +32,4 @@ expr: id | literal |
 	  expr BINOP expr;
 
 args: expr | args ',' expr;
-statement: expr ';';
+statement: expr ';' | comment;

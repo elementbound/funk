@@ -10,14 +10,18 @@ import java.util.Map.Entry;
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
+import org.antlr.v4.runtime.NoViableAltException;
 import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import com.sun.xml.internal.ws.util.StringUtils;
+
 import funk.antlr.funkLexer;
 import funk.antlr.funkParser;
 import funk.antlr.funkParser.AssignContext;
+import funk.antlr.funkParser.CommentContext;
 import funk.antlr.funkParser.ExprContext;
 import funk.antlr.funkParser.IdContext;
 import funk.antlr.funkParser.LiteralContext;
@@ -43,10 +47,25 @@ public class Interpreter {
 		funkParser parser = new funkParser(tokens);
 		
 		//Minden utasítást kiértékelni:
-		for(ParseTree node = parser.statement(); 
-				!node.getText().startsWith("<EOF>") && !node.getText().trim().isEmpty(); 
-				node = parser.statement()) 
-			eval(node);
+		try {
+			code = code.replaceAll(" \t\r\n", "");
+			code = code.replaceAll("\t", "");
+			code = code.replaceAll("\r", "");
+			code = code.replaceAll("\n", "");
+			//dbgStream.printf("After replace: %s\n", code);
+			
+			for(ParseTree node = parser.statement(); 
+					!node.getText().startsWith("<EOF>") && !node.getText().trim().equals(""); 
+					node = parser.statement()) 
+				//System.out.println(node.getText());
+				eval(node);
+		}
+		catch(NoViableAltException e) {
+			/*e.printStackTrace(); 
+			dbgStream.printf("Got %s, expected %s\n", e.getOffendingToken(), e.getExpectedTokens());
+			dbgStream.printf("Node text: \"%s\"\n", e.getCtx().getText().trim());*/
+			//Silently continue
+		}
 	}
 	
 	private Object eval(ParseTree node) throws UnknownVariableException, IllegalCastException {
@@ -58,6 +77,13 @@ public class Interpreter {
 			//Kiértékelni az expr részét
 			dbgStream.println("Statement");
 			return eval(Utils.extractNodes(node).get(0));
+		}
+		//Ha komment: 
+		else if(node instanceof CommentContext) {
+			//Nincs nagyon dolgunk vele, de mivel mindig vissza kell dobjunk egy Object-et, 
+			//visszadobjuk magát a szöveget
+			dbgStream.printf("Comment: %s\n", node.getText());
+			return new Object(node.getText());
 		}
 		//Ha id: 
 		else if(node instanceof IdContext) {

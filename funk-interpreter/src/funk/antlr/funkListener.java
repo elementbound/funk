@@ -8,6 +8,16 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface funkListener extends ParseTreeListener {
 	/**
+	 * Enter a parse tree produced by {@link funkParser#comment}.
+	 * @param ctx the parse tree
+	 */
+	void enterComment(funkParser.CommentContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link funkParser#comment}.
+	 * @param ctx the parse tree
+	 */
+	void exitComment(funkParser.CommentContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link funkParser#id}.
 	 * @param ctx the parse tree
 	 */
