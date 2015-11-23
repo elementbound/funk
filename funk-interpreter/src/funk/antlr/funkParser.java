@@ -82,7 +82,7 @@ public class funkParser extends Parser {
 	  @Override
 	  public void notifyErrorListeners(Token offendingToken, String msg, RecognitionException ex)
 	  {
-	    throw new RuntimeException(msg); 
+	    throw ex;//RuntimeException(msg); 
 	  }
 
 	public funkParser(TokenStream input) {

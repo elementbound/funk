@@ -1,6 +1,5 @@
 package funk;
 
-import java.io.File;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +23,6 @@ import funk.antlr.funkParser.IdContext;
 import funk.antlr.funkParser.LiteralContext;
 import funk.antlr.funkParser.MemberCallContext;
 import funk.antlr.funkParser.StatementContext;
-import jdk.nashorn.internal.ir.Assignment;
 
 public class Interpreter {
 	//Változók
@@ -36,7 +34,7 @@ public class Interpreter {
 	//Debug stream
 	public PrintStream dbgStream = new PrintStream(new NullOutputStream());
 	
-	public void execute(String code) {
+	public void execute(String code) throws RecognitionException, UnknownVariableException, IllegalCastException {
 		//Stringbõl fát építeni
 		CharStream stream = new ANTLRInputStream(code);
 		funkLexer lexer = new funkLexer(stream);
@@ -44,20 +42,14 @@ public class Interpreter {
 		
 		funkParser parser = new funkParser(tokens);
 		
-		//Minden csomópontot kiértékelni:
-		try{
-			//while(true) 
-				eval(parser.statement());
-		}
-		//catch(RecognitionException re) {
-			//Silently stop
-		//}
-		catch(Exception e) {
-			e.printStackTrace(dbgStream);
-		}
+		//Minden utasítást kiértékelni:
+		for(ParseTree node = parser.statement(); 
+				!node.getText().startsWith("<EOF>") && !node.getText().trim().isEmpty(); 
+				node = parser.statement()) 
+			eval(node);
 	}
 	
-	private Object eval(ParseTree node) {
+	private Object eval(ParseTree node) throws UnknownVariableException, IllegalCastException {
 		dbgStream.printf("Evaluating node: %s\n", node.getText());
 		
 		//Kideríteni hogy milyen szabályból jött: 
@@ -70,7 +62,15 @@ public class Interpreter {
 		//Ha id: 
 		else if(node instanceof IdContext) {
 			//Megkeresni a változók közt az ID nevût és visszaadni
-			dbgStream.println("id");
+			Token idToken = Utils.extractTokens(node).get(0);
+			String id = idToken.getText();
+			
+			dbgStream.printf("id: %s\n", id);
+			
+			if(!variableTable.containsKey(id))
+				throw new UnknownVariableException(id);
+			
+			return variableTable.get(id);
 		}
 		//Ha literal: 
 		else if(node instanceof LiteralContext) {
@@ -93,7 +93,7 @@ public class Interpreter {
 			//Kiértékelni az arg-okat és az így kapott funk.Object-eket listába tenni
 			//Átadni a listát a kikeresett függvénynek és visszaadni amit ad
 		}
-		//Ha ID '=' expr: 
+		//Ha assign: 
 		else if(node instanceof AssignContext) {
 			ParseTree expr = Utils.extractNodes(node).get(0);
 			Token id = Utils.extractTokens(node).get(0);
@@ -121,12 +121,27 @@ public class Interpreter {
 				return eval(node.getChild(0));
 			}
 			//Különben expr '+' expr: 
-			else 
-				//Kiszedni a két expr-t
+			else {
+				dbgStream.printf("Possibly addition: %s\n", node.getText());
+				
+				List<ParseTree> nodes = Utils.extractNodes(node);
+				List<Token> tokens = Utils.extractTokens(node);
+				
+				//Kiszedni a két expr-t és az operátort
+				ParseTree leftNode = nodes.get(0);
+				ParseTree rightNode = nodes.get(1);
+				Token operator = tokens.get(0);
+				
+				dbgStream.printf("%s %s %s\n", leftNode.getText(), operator.getText(), rightNode.getText());
+				
 				//Mindkettõt kiértékelni
+				Object leftResult = eval(leftNode);
+				Object rightResult = eval(rightNode);
+				
 				//A két kapott Object-et összeadni Object.add-al
 				//A kapott Object-et visszaadni
-				dbgStream.println("Possibly addition");
+				return leftResult.add(rightResult); 
+			}
 		}
 		else {
 			dbgStream.println("The fuck is this");
