@@ -16,8 +16,6 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 
-import com.sun.xml.internal.ws.util.StringUtils;
-
 import funk.antlr.funkLexer;
 import funk.antlr.funkParser;
 import funk.antlr.funkParser.AssignContext;
@@ -28,25 +26,134 @@ import funk.antlr.funkParser.LiteralContext;
 import funk.antlr.funkParser.MemberCallContext;
 import funk.antlr.funkParser.StatementContext;
 
+class reverse implements ICallable{
+
+	@Override
+	public Object call(Object self, Object... args) {
+		switch(self.getType()){
+			case Boolean:
+				return self;
+				
+			case Number:{
+				String number;
+				String temp="";
+				try {
+					number = Integer.toString(self.asNumber());
+					for(int i=number.length();i>0;i--){
+						temp+=number.substring(i-1,i);
+					}
+				} 
+				catch (IllegalCastException e) {
+					e.printStackTrace();
+				}
+				System.out.println("Reverse: "+temp);
+				return new Object(Integer.parseInt(temp));
+			}
+			
+			case String:{
+				String temp="";
+				for(int i=self.asString().length();i>0;i--){
+					temp+=self.asString().substring(i-1, i);
+				}
+				System.out.println("Reverse: "+temp);
+				return new Object(temp);
+			}
+			default:
+				//return new Object();
+				return self;
+		}
+		
+	}
+
+}
+
+class substr implements ICallable{
+
+	@Override
+	public Object call(Object self, Object... args) {
+		switch(self.getType()){
+			case Boolean:
+				return self;
+				
+			case Number:{
+				String number;
+				String temp="";
+			
+				try {
+					number = Integer.toString(self.asNumber());
+					if(args.length>1){
+						for(int i=args[0].asNumber();i<args[1].asNumber() && 
+							i<self.asString().length();i++){
+								temp+=number.substring(i, i-1);
+						}
+					}else if(args.length==1){
+						for(int i=0;i<args[1].asNumber() && 
+							i<self.asString().length();i++){
+								temp+=number.substring(i, i-1);
+						}
+					}
+				} 
+				catch (IllegalCastException e) {
+					e.printStackTrace();//TODO dbgStream
+				}
+		
+				return new Object(Integer.parseInt(temp));
+			}
+			case String:{
+				String temp="";
+				try{
+					if(args.length>1){
+						for(int i=args[0].asNumber();i<args[1].asNumber() && 
+							i<self.asString().length();i++){
+								temp+=self.asString().substring(i, i-1);
+						}
+					}
+					else if(args.length==1){
+						for(int i=0;i<args[1].asNumber() && 
+							i<self.asString().length();i++){
+								temp+=self.asString().substring(i, i-1);
+						}
+					}
+				}
+				catch(IllegalCastException e){
+					e.printStackTrace();
+				}
+				
+				return new Object(temp);
+			}
+			default:
+				//return new Object();
+				return self;
+		}
+	}
+	
+}
+
 public class Interpreter {
-	//Változók
+	//Valtozok
 	public Map<String, Object> variableTable = new HashMap<>();
 	
-	//Függvények
+	//Fuggvenyek
 	public Map<String, ICallable> functionTable = new HashMap<>();
 	
 	//Debug stream
 	public PrintStream dbgStream = new PrintStream(new NullOutputStream());
 	
+	public Interpreter(){
+		functionTable.put("reverse", new reverse());
+		functionTable.put("substr", new substr());
+	}
+	
+	
 	public void execute(String code) throws RecognitionException, UnknownVariableException, IllegalCastException {
-		//Stringbõl fát építeni
+		//Stringbol fat epiteni
 		CharStream stream = new ANTLRInputStream(code);
 		funkLexer lexer = new funkLexer(stream);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		
 		funkParser parser = new funkParser(tokens);
 		
-		//Minden utasítást kiértékelni:
+		//Minden utasitast kiertekelni:
 		try {
 			code = code.replaceAll(" \t\r\n", "");
 			code = code.replaceAll("\t", "");
@@ -71,23 +178,23 @@ public class Interpreter {
 	private Object eval(ParseTree node) throws UnknownVariableException, IllegalCastException {
 		dbgStream.printf("Evaluating node: %s\n", node.getText());
 		
-		//Kideríteni hogy milyen szabályból jött: 
+		//Kideriteni hogy milyen szabalybï¿½l jott: 
 		//Ha statement: 
 		if(node instanceof StatementContext) {
-			//Kiértékelni az expr részét
+			//Kiertekelni az expr reszet
 			dbgStream.println("Statement");
 			return eval(Utils.extractNodes(node).get(0));
 		}
 		//Ha komment: 
 		else if(node instanceof CommentContext) {
 			//Nincs nagyon dolgunk vele, de mivel mindig vissza kell dobjunk egy Object-et, 
-			//visszadobjuk magát a szöveget
+			//visszadobjuk magat a szoveget
 			dbgStream.printf("Comment: %s\n", node.getText());
 			return new Object(node.getText());
 		}
 		//Ha id: 
 		else if(node instanceof IdContext) {
-			//Megkeresni a változók közt az ID nevût és visszaadni
+			//Megkeresni a valtozok kozt az ID nevet es visszaadni
 			Token idToken = Utils.extractTokens(node).get(0);
 			String id = idToken.getText();
 			
@@ -100,7 +207,7 @@ public class Interpreter {
 		}
 		//Ha literal: 
 		else if(node instanceof LiteralContext) {
-			//Megnézni hogy milyen típusú és visszaadni a megfelelõ funk.Object-et
+			//Megnezni hogy milyen tipusu es visszaadni a megfelelo funk.Object-et
 			String literalStr = node.getText();
 			Object result; 
 			
@@ -118,10 +225,28 @@ public class Interpreter {
 		}
 		//Ha memberCall: 
 		else if(node instanceof MemberCallContext) {
-			//Kikeresni a függvények közt a megfelelõ függvényt
-			//Kimásolni az arg-okat
-			//Kiértékelni az arg-okat és az így kapott funk.Object-eket listába tenni
-			//Átadni a listát a kikeresett függvénynek és visszaadni amit ad
+			//Kikeresni a fuggvenyek kozt a megfelelo fuggvenyt
+			//Kimasolni az arg-okat
+			//Kiertekelni az arg-okat es az igy kapott funk.Object-eket listaba tenni
+			//atadni a listat a kikeresett fuggvenynek es visszaadni amit ad
+			
+			List<ParseTree> nodes = Utils.extractNodes(node);
+			List<Token> tokens = Utils.extractTokens(node);
+			Object rev= new Object();
+			
+			dbgStream.printf(tokens.get(1).getText()+" "+nodes.get(0).getText()+"\n");
+			
+			if(variableTable.containsKey(nodes.get(0).getText()))
+				rev=variableTable.get(nodes.get(0).getText());
+			else 
+				rev=new Object(nodes.get(0).getText());
+			
+			if(nodes.size()==1)
+				return functionTable.get(tokens.get(1).getText()).call(rev);//rev=self
+			else if(nodes.size()==2)
+				return functionTable.get(tokens.get(1)).call(rev,rev);
+			
+			return functionTable.get(tokens.get(1).getText()).call(rev);//temp solution
 		}
 		//Ha assign: 
 		else if(node instanceof AssignContext) {
@@ -130,10 +255,10 @@ public class Interpreter {
 			
 			dbgStream.printf("Assignment: %s = %s\n", id.getText(), expr.getText());
 			
-			//Kiértékelni expr-t
+			//Kiertekelni expr-t
 			Object result = eval(expr);
 			
-			//A kapott Object-et eltenni ID nevû változóként
+			//A kapott Object-et eltenni ID neve valtozokent
 			if(variableTable.containsKey(id.getText()))
 				variableTable.remove(id.getText());
 			variableTable.put(id.getText(), result);
@@ -145,30 +270,30 @@ public class Interpreter {
 		}
 		//Ha expr: 
 		else if(node instanceof ExprContext) {
-			//Egytagú, vagyis a fentiek egyike lesz
+			//Egytagu, vagyis a fentiek egyike lesz
 			if(node.getChildCount() == 1) {
 				dbgStream.println("Lone-child expr");
 				return eval(node.getChild(0));
 			}
-			//Különben expr <op> expr: 
+			//Kulonben expr <op> expr: 
 			else {
 				dbgStream.printf("Possibly addition: %s\n", node.getText());
 				
 				List<ParseTree> nodes = Utils.extractNodes(node);
 				List<Token> tokens = Utils.extractTokens(node);
 				
-				//Kiszedni a két expr-t és az operátort
+				//Kiszedni a ket expr-t es az operatort
 				ParseTree leftNode = nodes.get(0);
 				ParseTree rightNode = nodes.get(1);
 				Token operator = tokens.get(0);
 				
 				dbgStream.printf("%s %s %s\n", leftNode.getText(), operator.getText(), rightNode.getText());
 				
-				//Mindkettõt kiértékelni
+				//Mindkettot kiertekelni
 				Object leftResult = eval(leftNode);
 				Object rightResult = eval(rightNode);
 				
-				//A két kapott Object-etre alkalmazni a megfelelõ operátort
+				//A ket kapott Object-etre alkalmazni a megfelelo operatort
 				if(operator.getText().equals("+")) {
 					return leftResult.add(rightResult);
 				}
@@ -205,7 +330,7 @@ public class Interpreter {
 }
 
 class Utils {
-	//Ide mehetnek majd az olyan utility függvények mint amik múltkor történtek
+	//Ide mehetnek majd az olyan utility fuggvenyek mint amik multkor tortentek
 	//Pl. extractNodes, extractTokens, ilyesmik
 	
 	public static int classifyNode(ParseTree node) {
