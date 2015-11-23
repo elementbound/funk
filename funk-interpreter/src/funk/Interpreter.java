@@ -181,9 +181,10 @@ public class Interpreter {
 				else if(operator.getText().equals("/")) {
 					return leftResult.divide(rightResult);
 				}
-				
-				//A kapott Object-et visszaadni
-				return leftResult.add(rightResult); 
+				else if(operator.getText().equals("=="))
+					return leftResult.compare(rightResult);
+				else
+					return new Object("Unknown operator: " + operator.getText());
 			}
 		}
 		else {

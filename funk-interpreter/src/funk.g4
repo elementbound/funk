@@ -16,7 +16,7 @@ NUMBER: '-'? [0-9]+;
 STRING: '\'' (~'\'')* '\'' | '\"' (~'\"')* '\"';
 BOOLEAN: 'True' | 'False';
 ID: [_a-zA-Z][a-zA-Z0-9]*;
-BINOP: '+' | '-' | '*' | '/';
+BINOP: '+' | '-' | '*' | '/' | '==';
 COMMENT: '/*' .*? '*/'; // Non-greedy matching
 
 comment: COMMENT;
@@ -27,12 +27,12 @@ memberCall: object '.' ID '(' args? ')';
 assign: ID '=' expr;
 
 expr: id | literal |
+	  expr BINOP expr |
 	  memberCall |
-	  assign |
-	  expr BINOP expr;
+	  assign;
 
 args: expr | args ',' expr;
-statement: expr ';' | ifThen | ifThenElse | comment;
+statement: expr ';' | comment;
 
 ifThen: 'if' '(' expr ')' scope; 
 ifThenElse: 'if' '(' expr ')' scope 'else' scope; 
