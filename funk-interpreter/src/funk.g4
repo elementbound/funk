@@ -12,7 +12,7 @@ grammar funk;
 
 WS: [ \t\r\n] -> skip; 
 
-NUMBER: [0-9]+;
+NUMBER: '-'? [0-9]+;
 STRING: '\'' (~'\'')* '\'' | '\"' (~'\"')* '\"';
 BOOLEAN: 'True' | 'False';
 ID: [_a-zA-Z][a-zA-Z0-9]*;
@@ -32,4 +32,9 @@ expr: id | literal |
 	  expr BINOP expr;
 
 args: expr | args ',' expr;
-statement: expr ';' | comment;
+statement: expr ';' | ifThen | ifThenElse | comment;
+
+ifThen: 'if' '(' expr ')' scope; 
+ifThenElse: 'if' '(' expr ')' scope 'else' scope; 
+
+scope: statement | '{' statement+ '}';
