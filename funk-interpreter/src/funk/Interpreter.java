@@ -23,8 +23,10 @@ import funk.antlr.funkParser.ClosedExprContext;
 import funk.antlr.funkParser.CommentContext;
 import funk.antlr.funkParser.ExprContext;
 import funk.antlr.funkParser.IdContext;
+import funk.antlr.funkParser.IfThenContext;
 import funk.antlr.funkParser.LiteralContext;
 import funk.antlr.funkParser.MemberCallContext;
+import funk.antlr.funkParser.ScopeContext;
 import funk.antlr.funkParser.StatementContext;
 
 class reverse implements ICallable{
@@ -193,6 +195,18 @@ public class Interpreter {
 			dbgStream.printf("Comment: %s\n", node.getText());
 			return new Object(node.getText());
 		}
+		//Ha scope: 
+		else if(node instanceof ScopeContext) {
+			dbgStream.printf("Scope: %s\n", node.getText());
+			
+			List<ParseTree> nodes = Utils.extractNodes(node);
+			
+			Object result = new Object();
+			for(ParseTree n : nodes)
+				result = eval(n);
+			
+			return result; 
+		}
 		//Ha id: 
 		else if(node instanceof IdContext) {
 			//Megkeresni a valtozok kozt az ID nevet es visszaadni
@@ -275,6 +289,18 @@ public class Interpreter {
 			
 			dbgStream.printf("Closed expr: %s\n", subnode.getText());
 			return eval(subnode);
+		}
+		//Ha if-then 
+		else if(node instanceof IfThenContext) {
+			List<ParseTree> nodes = Utils.extractNodes(node);
+			ParseTree expr = nodes.get(0);
+			ParseTree scope = nodes.get(1);
+			
+			dbgStream.printf("if( %s ) then %s\n", expr.getText(), scope.getText());
+			if(eval(expr).asBoolean())
+				return eval(scope);
+			else
+				return new Object(false);
 		}
 		//Ha expr: 
 		else if(node instanceof ExprContext) {

@@ -622,6 +622,9 @@ public class funkParser extends Parser {
 		public ExprContext expr() {
 			return getRuleContext(ExprContext.class,0);
 		}
+		public IfThenContext ifThen() {
+			return getRuleContext(IfThenContext.class,0);
+		}
 		public CommentContext comment() {
 			return getRuleContext(CommentContext.class,0);
 		}
@@ -643,7 +646,7 @@ public class funkParser extends Parser {
 		StatementContext _localctx = new StatementContext(_ctx, getState());
 		enterRule(_localctx, 18, RULE_statement);
 		try {
-			setState(84);
+			setState(85);
 			switch (_input.LA(1)) {
 			case T__1:
 			case NUMBER:
@@ -658,10 +661,17 @@ public class funkParser extends Parser {
 				match(T__5);
 				}
 				break;
-			case COMMENT:
+			case T__6:
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(83);
+				ifThen();
+				}
+				break;
+			case COMMENT:
+				enterOuterAlt(_localctx, 3);
+				{
+				setState(84);
 				comment();
 				}
 				break;
@@ -707,15 +717,15 @@ public class funkParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(86);
-			match(T__6);
 			setState(87);
-			match(T__1);
+			match(T__6);
 			setState(88);
-			expr(0);
+			match(T__1);
 			setState(89);
-			match(T__2);
+			expr(0);
 			setState(90);
+			match(T__2);
+			setState(91);
 			scope();
 			}
 		}
@@ -760,19 +770,19 @@ public class funkParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(92);
-			match(T__6);
 			setState(93);
-			match(T__1);
+			match(T__6);
 			setState(94);
-			expr(0);
+			match(T__1);
 			setState(95);
-			match(T__2);
+			expr(0);
 			setState(96);
-			scope();
+			match(T__2);
 			setState(97);
-			match(T__7);
+			scope();
 			setState(98);
+			match(T__7);
+			setState(99);
 			scope();
 			}
 		}
@@ -813,9 +823,10 @@ public class funkParser extends Parser {
 		enterRule(_localctx, 24, RULE_scope);
 		int _la;
 		try {
-			setState(109);
+			setState(110);
 			switch (_input.LA(1)) {
 			case T__1:
+			case T__6:
 			case NUMBER:
 			case STRING:
 			case BOOLEAN:
@@ -823,30 +834,30 @@ public class funkParser extends Parser {
 			case COMMENT:
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(100);
+				setState(101);
 				statement();
 				}
 				break;
 			case T__8:
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(101);
+				setState(102);
 				match(T__8);
-				setState(103); 
+				setState(104); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
 				do {
 					{
 					{
-					setState(102);
+					setState(103);
 					statement();
 					}
 					}
-					setState(105); 
+					setState(106); 
 					_errHandler.sync(this);
 					_la = _input.LA(1);
-				} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__1) | (1L << NUMBER) | (1L << STRING) | (1L << BOOLEAN) | (1L << ID) | (1L << COMMENT))) != 0) );
-				setState(107);
+				} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__1) | (1L << T__6) | (1L << NUMBER) | (1L << STRING) | (1L << BOOLEAN) | (1L << ID) | (1L << COMMENT))) != 0) );
+				setState(108);
 				match(T__9);
 				}
 				break;
@@ -890,33 +901,33 @@ public class funkParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\23r\4\2\t\2\4\3\t"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\23s\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13\t\13\4"+
 		"\f\t\f\4\r\t\r\4\16\t\16\3\2\3\2\3\3\3\3\3\4\3\4\3\5\3\5\5\5%\n\5\3\6"+
 		"\3\6\3\6\3\6\3\6\5\6,\n\6\3\6\3\6\3\7\3\7\3\7\3\7\3\b\3\b\3\b\3\b\3\t"+
 		"\3\t\3\t\3\t\3\t\3\t\5\t>\n\t\3\t\3\t\3\t\7\tC\n\t\f\t\16\tF\13\t\3\n"+
-		"\3\n\3\n\3\n\3\n\3\n\7\nN\n\n\f\n\16\nQ\13\n\3\13\3\13\3\13\3\13\5\13"+
-		"W\n\13\3\f\3\f\3\f\3\f\3\f\3\f\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\16\3"+
-		"\16\3\16\6\16j\n\16\r\16\16\16k\3\16\3\16\5\16p\n\16\3\16\2\4\20\22\17"+
-		"\2\4\6\b\n\f\16\20\22\24\26\30\32\2\3\3\2\16\20o\2\34\3\2\2\2\4\36\3\2"+
-		"\2\2\6 \3\2\2\2\b$\3\2\2\2\n&\3\2\2\2\f/\3\2\2\2\16\63\3\2\2\2\20=\3\2"+
-		"\2\2\22G\3\2\2\2\24V\3\2\2\2\26X\3\2\2\2\30^\3\2\2\2\32o\3\2\2\2\34\35"+
-		"\7\23\2\2\35\3\3\2\2\2\36\37\7\21\2\2\37\5\3\2\2\2 !\t\2\2\2!\7\3\2\2"+
-		"\2\"%\5\4\3\2#%\5\6\4\2$\"\3\2\2\2$#\3\2\2\2%\t\3\2\2\2&\'\5\b\5\2\'("+
-		"\7\3\2\2()\7\21\2\2)+\7\4\2\2*,\5\22\n\2+*\3\2\2\2+,\3\2\2\2,-\3\2\2\2"+
-		"-.\7\5\2\2.\13\3\2\2\2/\60\7\21\2\2\60\61\7\6\2\2\61\62\5\20\t\2\62\r"+
-		"\3\2\2\2\63\64\7\4\2\2\64\65\5\20\t\2\65\66\7\5\2\2\66\17\3\2\2\2\678"+
-		"\b\t\1\28>\5\16\b\29>\5\4\3\2:>\5\6\4\2;>\5\n\6\2<>\5\f\7\2=\67\3\2\2"+
-		"\2=9\3\2\2\2=:\3\2\2\2=;\3\2\2\2=<\3\2\2\2>D\3\2\2\2?@\f\5\2\2@A\7\22"+
-		"\2\2AC\5\20\t\6B?\3\2\2\2CF\3\2\2\2DB\3\2\2\2DE\3\2\2\2E\21\3\2\2\2FD"+
-		"\3\2\2\2GH\b\n\1\2HI\5\20\t\2IO\3\2\2\2JK\f\3\2\2KL\7\7\2\2LN\5\20\t\2"+
-		"MJ\3\2\2\2NQ\3\2\2\2OM\3\2\2\2OP\3\2\2\2P\23\3\2\2\2QO\3\2\2\2RS\5\20"+
-		"\t\2ST\7\b\2\2TW\3\2\2\2UW\5\2\2\2VR\3\2\2\2VU\3\2\2\2W\25\3\2\2\2XY\7"+
-		"\t\2\2YZ\7\4\2\2Z[\5\20\t\2[\\\7\5\2\2\\]\5\32\16\2]\27\3\2\2\2^_\7\t"+
-		"\2\2_`\7\4\2\2`a\5\20\t\2ab\7\5\2\2bc\5\32\16\2cd\7\n\2\2de\5\32\16\2"+
-		"e\31\3\2\2\2fp\5\24\13\2gi\7\13\2\2hj\5\24\13\2ih\3\2\2\2jk\3\2\2\2ki"+
-		"\3\2\2\2kl\3\2\2\2lm\3\2\2\2mn\7\f\2\2np\3\2\2\2of\3\2\2\2og\3\2\2\2p"+
-		"\33\3\2\2\2\n$+=DOVko";
+		"\3\n\3\n\3\n\3\n\3\n\7\nN\n\n\f\n\16\nQ\13\n\3\13\3\13\3\13\3\13\3\13"+
+		"\5\13X\n\13\3\f\3\f\3\f\3\f\3\f\3\f\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3\r\3"+
+		"\16\3\16\3\16\6\16k\n\16\r\16\16\16l\3\16\3\16\5\16q\n\16\3\16\2\4\20"+
+		"\22\17\2\4\6\b\n\f\16\20\22\24\26\30\32\2\3\3\2\16\20q\2\34\3\2\2\2\4"+
+		"\36\3\2\2\2\6 \3\2\2\2\b$\3\2\2\2\n&\3\2\2\2\f/\3\2\2\2\16\63\3\2\2\2"+
+		"\20=\3\2\2\2\22G\3\2\2\2\24W\3\2\2\2\26Y\3\2\2\2\30_\3\2\2\2\32p\3\2\2"+
+		"\2\34\35\7\23\2\2\35\3\3\2\2\2\36\37\7\21\2\2\37\5\3\2\2\2 !\t\2\2\2!"+
+		"\7\3\2\2\2\"%\5\4\3\2#%\5\6\4\2$\"\3\2\2\2$#\3\2\2\2%\t\3\2\2\2&\'\5\b"+
+		"\5\2\'(\7\3\2\2()\7\21\2\2)+\7\4\2\2*,\5\22\n\2+*\3\2\2\2+,\3\2\2\2,-"+
+		"\3\2\2\2-.\7\5\2\2.\13\3\2\2\2/\60\7\21\2\2\60\61\7\6\2\2\61\62\5\20\t"+
+		"\2\62\r\3\2\2\2\63\64\7\4\2\2\64\65\5\20\t\2\65\66\7\5\2\2\66\17\3\2\2"+
+		"\2\678\b\t\1\28>\5\16\b\29>\5\4\3\2:>\5\6\4\2;>\5\n\6\2<>\5\f\7\2=\67"+
+		"\3\2\2\2=9\3\2\2\2=:\3\2\2\2=;\3\2\2\2=<\3\2\2\2>D\3\2\2\2?@\f\5\2\2@"+
+		"A\7\22\2\2AC\5\20\t\6B?\3\2\2\2CF\3\2\2\2DB\3\2\2\2DE\3\2\2\2E\21\3\2"+
+		"\2\2FD\3\2\2\2GH\b\n\1\2HI\5\20\t\2IO\3\2\2\2JK\f\3\2\2KL\7\7\2\2LN\5"+
+		"\20\t\2MJ\3\2\2\2NQ\3\2\2\2OM\3\2\2\2OP\3\2\2\2P\23\3\2\2\2QO\3\2\2\2"+
+		"RS\5\20\t\2ST\7\b\2\2TX\3\2\2\2UX\5\26\f\2VX\5\2\2\2WR\3\2\2\2WU\3\2\2"+
+		"\2WV\3\2\2\2X\25\3\2\2\2YZ\7\t\2\2Z[\7\4\2\2[\\\5\20\t\2\\]\7\5\2\2]^"+
+		"\5\32\16\2^\27\3\2\2\2_`\7\t\2\2`a\7\4\2\2ab\5\20\t\2bc\7\5\2\2cd\5\32"+
+		"\16\2de\7\n\2\2ef\5\32\16\2f\31\3\2\2\2gq\5\24\13\2hj\7\13\2\2ik\5\24"+
+		"\13\2ji\3\2\2\2kl\3\2\2\2lj\3\2\2\2lm\3\2\2\2mn\3\2\2\2no\7\f\2\2oq\3"+
+		"\2\2\2pg\3\2\2\2ph\3\2\2\2q\33\3\2\2\2\n$+=DOWlp";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {
