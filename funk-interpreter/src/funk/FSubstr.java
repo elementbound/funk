@@ -8,11 +8,11 @@ public class FSubstr implements ICallable {
 		int from = 0;
 		int to = ret.length();
 		
-		if(args.length >= 1) {
-			from = args[0].asNumber();
+		if(args.length==1){
+			to=args[0].asNumber();;
 		}
-		
-		if(args.length >= 2) { 
+		else if(args.length > 1) {
+			from = args[0].asNumber();
 			to = args[1].asNumber();
 		}
 		
@@ -26,7 +26,7 @@ public class FSubstr implements ICallable {
 			to = from;
 			from = tmp;
 		}
-		
+
 		return new Object(ret.substring(from, to));
 	}
 }
