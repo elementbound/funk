@@ -1,0 +1,75 @@
+/* Learn funk in five or less minutes */
+
+/* Comments look like these things. 
+	They are multiline. */ 
+	
+/* ------------------------------------------------------------
+ 1. - Variables
+------------------------------------------------------------ */
+
+/* Numbers are integers */
+number = 5; 
+
+/* Strings can be anything between two double-quotes or 
+   single-quotes */
+string = "Oooh, shiny!";
+
+/* There are also bool literals! True and False */
+boolean = True;
+
+/* Funk's variables are also global and typeless */ 
+
+/* ------------------------------------------------------------
+ 2. - Operators
+------------------------------------------------------------ */
+
+/* Funk support the usual set: [+, -, *, /] */
+/* The type of an expression depends is the same as the 
+   left-hand operand, see: */ 
+
+whatIsThis = True * 96; 
+isntThisTheSame = 96 * True; 
+
+/* No it isn't. The first one is a bool, since you multiply a 
+   bool with something.  */
+/* The second one is a number, because you are multiyplying a 
+   number with something. */
+   
+wow = "Hello" * whatIsThis; 
+
+/* You can also compare variables in various ways: */
+a = 5 == 3;
+b = 5 < 3;
+c = 5 > 3;
+d = 5 != 3;
+
+/* ------------------------------------------------------------
+ 3. - Flow control
+------------------------------------------------------------ */
+
+/* Your usual if-then-else. */
+
+if(wow) 
+	mood = "omg"; 
+else {
+	mood = "meh"; 
+	mood = mood + "; whatevz"; 
+}
+
+/* Also, possibly, for-loops. If I have the time 'till deadline. */
+
+/*
+	for(i = 99; i > 0; i = i-1) {
+		i + " bottles of beer";
+	}
+*/
+
+/* ------------------------------------------------------------
+ 4. - Functions
+------------------------------------------------------------ */
+
+/* Functions can be called currently on literals and variables. 
+   Not on expressions yet. */
+   
+hi = "Hello " + ("!dlrow".reverse());
+hello = hi.substr(0, -7);

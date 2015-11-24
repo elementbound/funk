@@ -10,13 +10,6 @@ public class FReverse implements ICallable {
 				strb.append(self.asString());
 				strb.reverse();
 				
-				try {
-					System.out.printf("Reversing number: %d\n", self.asNumber());
-				} catch (IllegalCastException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				
 				return new Object(Integer.parseInt(strb.toString()));
 			}
 			
@@ -24,8 +17,6 @@ public class FReverse implements ICallable {
 				StringBuilder strb = new StringBuilder();
 				strb.append(self.asString());
 				strb.reverse();
-
-				System.out.printf("Reversing string: %s\n", self.asString());
 				
 				return new Object(strb.toString());
 			}
