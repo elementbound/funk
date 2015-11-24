@@ -5,5 +5,7 @@ B.reverse();
 
 A.substr(2);
 B.substr(0,2);
-A.pow(3);
-B.pow(2);
+C=A.pow(3);
+D=B.pow(2);
+C.print();
+D.print();
