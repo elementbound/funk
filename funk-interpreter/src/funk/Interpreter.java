@@ -23,7 +23,7 @@ import funk.antlr.funkParser.ClosedExprContext;
 import funk.antlr.funkParser.CommentContext;
 import funk.antlr.funkParser.ExprContext;
 import funk.antlr.funkParser.IdContext;
-import funk.antlr.funkParser.IfThenContext;
+import funk.antlr.funkParser.IfThenElseContext;
 import funk.antlr.funkParser.LiteralContext;
 import funk.antlr.funkParser.MemberCallContext;
 import funk.antlr.funkParser.ScopeContext;
@@ -290,17 +290,27 @@ public class Interpreter {
 			dbgStream.printf("Closed expr: %s\n", subnode.getText());
 			return eval(subnode);
 		}
-		//Ha if-then 
-		else if(node instanceof IfThenContext) {
+		//Ha if-then-else
+		else if(node instanceof IfThenElseContext) {
 			List<ParseTree> nodes = Utils.extractNodes(node);
 			ParseTree expr = nodes.get(0);
-			ParseTree scope = nodes.get(1);
-			
-			dbgStream.printf("if( %s ) then %s\n", expr.getText(), scope.getText());
-			if(eval(expr).asBoolean())
-				return eval(scope);
+			ParseTree thenScope = nodes.get(1);
+			ParseTree elseScope = null;
+			if(nodes.size() >= 3)
+				elseScope = nodes.get(2);
+
+			if(elseScope != null)
+				dbgStream.printf("if( %s ) then %s else %s\n", expr.getText(), thenScope.getText(), elseScope.getText());
 			else
-				return new Object(false);
+				dbgStream.printf("if( %s ) then %s\n", expr.getText(), thenScope.getText());
+			
+			if(eval(expr).asBoolean())
+				return eval(thenScope);
+			else
+				if(elseScope != null)
+					return eval(elseScope);
+				else
+					return new Object();
 		}
 		//Ha expr: 
 		else if(node instanceof ExprContext) {

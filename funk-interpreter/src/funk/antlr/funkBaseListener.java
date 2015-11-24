@@ -136,18 +136,6 @@ public class funkBaseListener implements funkListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterIfThen(funkParser.IfThenContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitIfThen(funkParser.IfThenContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterIfThenElse(funkParser.IfThenElseContext ctx) { }
 	/**
 	 * {@inheritDoc}

@@ -108,16 +108,6 @@ public interface funkListener extends ParseTreeListener {
 	 */
 	void exitStatement(funkParser.StatementContext ctx);
 	/**
-	 * Enter a parse tree produced by {@link funkParser#ifThen}.
-	 * @param ctx the parse tree
-	 */
-	void enterIfThen(funkParser.IfThenContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link funkParser#ifThen}.
-	 * @param ctx the parse tree
-	 */
-	void exitIfThen(funkParser.IfThenContext ctx);
-	/**
 	 * Enter a parse tree produced by {@link funkParser#ifThenElse}.
 	 * @param ctx the parse tree
 	 */
