@@ -1,0 +1,8 @@
+A="forditoprogramok";
+B=2015;
+A.reverse();
+B.reverse();
+asd.reverse();
+
+A.substr(2);
+B.substr(2);

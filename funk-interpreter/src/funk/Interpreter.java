@@ -29,102 +29,6 @@ import funk.antlr.funkParser.MemberCallContext;
 import funk.antlr.funkParser.ScopeContext;
 import funk.antlr.funkParser.StatementContext;
 
-class reverse implements ICallable{
-
-	@Override
-	public Object call(Object self, Object... args) {
-		switch(self.getType()){
-			case Boolean:
-				return self;
-				
-			case Number:{
-				String number;
-				String temp="";
-				
-				try {
-					number = Integer.toString(self.asNumber());
-					for(int i=number.length();i>0;i--){
-						temp+=number.substring(i-1,i);
-					}
-				} 
-				
-				catch (IllegalCastException e) {
-					e.printStackTrace();
-				}
-				
-				System.out.println("Reverse: "+temp);//TODO dbg
-				return new Object(Integer.parseInt(temp));
-			}
-			
-			case String:{
-				String temp="";
-				
-				for(int i=self.asString().length();i>0;i--){
-					temp+=self.asString().substring(i-1, i);
-				}
-				
-				System.out.println("Reverse: "+temp);//TODO dbg
-				return new Object(temp);
-			}
-			default:
-				return self;
-		}
-		
-	}
-
-}
-
-class substr implements ICallable{
-
-	@Override
-	public Object call(Object self, Object... args) {
-		switch(self.getType()){
-			case Boolean:
-				return self;
-				
-			case Number:{
-				String number;
-				String temp="";
-			
-				try {
-					number = Integer.toString(self.asNumber());
-					
-					if(args.length>1){	
-						temp=number.substring(Integer.parseInt(args[0].asString()),
-								Integer.parseInt(args[1].asString()));
-					}
-					else if(args.length==1){
-						temp=number.substring(0,Integer.parseInt(args[0].asString()));
-					}
-				} 
-				catch (IllegalCastException e) {
-					e.printStackTrace();
-				}
-				
-				System.out.println("Substr: "+temp);
-				return new Object(Integer.parseInt(temp));
-			}
-			case String:{
-				String temp="";
-				
-				if(args.length>1){
-					temp=self.asString().substring(Integer.parseInt(args[0].asString()),
-						Integer.parseInt(args[1].asString()));
-				}
-				else if(args.length==1){
-					temp=self.asString().substring(0,Integer.parseInt(args[0].asString()));
-				}
-				System.out.println("Substr: "+temp);
-				
-				return new Object(temp);
-			}
-			default:
-				return self;
-		}
-	}
-	
-}
-
 public class Interpreter {
 	//Valtozok
 	public Map<String, Object> variableTable = new HashMap<>();
@@ -136,8 +40,8 @@ public class Interpreter {
 	public PrintStream dbgStream = new PrintStream(new NullOutputStream());
 	
 	public Interpreter(){
-		functionTable.put("reverse", new reverse());
-		functionTable.put("substr", new substr());
+		functionTable.put("reverse", new FReverse());
+		functionTable.put("substr", new FSubstr());
 	}
 	
 	public void execute(String code) throws RecognitionException, UnknownVariableException, IllegalCastException {

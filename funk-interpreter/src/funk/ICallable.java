@@ -1,5 +1,5 @@
 package funk;
 
 public interface ICallable {
-	public Object call(Object self, Object... args);
+	public Object call(Object self, Object... args) throws IllegalCastException;
 }
