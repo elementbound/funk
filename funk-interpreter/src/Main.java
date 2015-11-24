@@ -12,7 +12,7 @@ import funk.UnknownVariableException;
 public class Main {
 	public static void main(String... args) {
 		Interpreter funk = new Interpreter();
-		//funk.dbgStream = System.out; 
+		funk.dbgStream = System.out; 
 		
 		if(args.length > 0)
 			batch(args[0], funk);
@@ -29,7 +29,7 @@ public class Main {
 			
 			try {
 				funk.execute(line);
-			} catch (RecognitionException | UnknownVariableException | IllegalCastException e) {
+			} catch (RecognitionException | UnknownVariableException | IllegalCastException | UnknownFunctionException e) {
 				e.printStackTrace();
 			}
 		}
@@ -55,7 +55,7 @@ public class Main {
 		
 		try {
 			funk.execute(strb.toString());
-		} catch (RecognitionException | UnknownVariableException | IllegalCastException e) {
+		} catch (RecognitionException | UnknownVariableException | IllegalCastException | UnknownFunctionException e) {
 			e.printStackTrace();
 		}
 	}

@@ -34,8 +34,9 @@ expr: closedExpr |
 	  assign;
 
 args: expr | args ',' expr;
-statement: expr ';' | ifThenElse | comment;
+statement: expr ';' | ifThenElse | forLoop | comment;
 
 ifThenElse: 'if' '(' expr ')' scope ('else' scope)?; 
+forLoop: 'for' '(' expr ';' expr ';' expr ')' scope; 
 
 scope: statement | '{' statement+ '}';

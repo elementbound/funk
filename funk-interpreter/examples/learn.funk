@@ -57,12 +57,10 @@ else {
 }
 
 /* Also, possibly, for-loops. If I have the time 'till deadline. */
-
-/*
-	for(i = 99; i > 0; i = i-1) {
-		i + " bottles of beer";
-	}
-*/
+for(i = 99; i > 0; i = i-1) {
+	l = i + " bottles of beer";
+	l.println();
+}
 
 /* ------------------------------------------------------------
  4. - Functions
