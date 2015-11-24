@@ -57,10 +57,27 @@ else {
 }
 
 /* Also, possibly, for-loops. If I have the time 'till deadline. */
+
+"99 bottles of beer imminent... ".println();
+"".println(); 
+
 for(i = 99; i > 0; i = i-1) {
-	l = i + " bottles of beer";
+	l = ("" + i) + " bottles of beer on the wall, " + i + " bottles of beer. ";
 	l.println();
+	
+	if(i > 1)
+		l = "Take one down and pass it around, " + 
+			(i-1) + " bottles of beer on the wall.";
+	else 
+		l = "Take one down and pass it around, " + 
+			"no more bottles of beer on the wall. ";
+	l.println();
+	"".println();
 }
+
+"No more bottles of beer on the wall, no more bottles of beer. ".println();
+"Go to the store and buy some more, 99 bottles of beer on the wall. ".println();
+"".println(); 
 
 /* ------------------------------------------------------------
  4. - Functions
@@ -70,4 +87,4 @@ for(i = 99; i > 0; i = i-1) {
    Not on expressions yet. */
    
 hi = "Hello " + ("!dlrow".reverse());
-hello = hi.substr(0, -7);
+hello = hi.substr(0, 5);

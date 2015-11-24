@@ -12,7 +12,7 @@ grammar funk;
 
 WS: [ \t\r\n] -> skip; 
 
-NUMBER: '-'? [0-9]+;
+NUMBER: [0-9]+;
 STRING: '\'' (~'\'')* '\'' | '\"' (~'\"')* '\"';
 BOOLEAN: 'True' | 'False';
 ID: [_a-zA-Z][a-zA-Z0-9]*;

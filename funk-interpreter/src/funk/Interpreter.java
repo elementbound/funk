@@ -277,7 +277,7 @@ public class Interpreter {
 			}
 			//Kulonben expr <op> expr: 
 			else {
-				dbgStream.printf("Possibly addition: %s\n", node.getText());
+				dbgStream.printf("Binary operation: %s\n", node.getText());
 				
 				List<ParseTree> nodes = Utils.extractNodes(node);
 				List<Token> tokens = Utils.extractTokens(node);
