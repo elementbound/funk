@@ -29,7 +29,7 @@ public class Main {
 			
 			try {
 				funk.execute(line);
-			} catch (RecognitionException | UnknownVariableException | IllegalCastException e) {
+			} catch (RecognitionException | UnknownVariableException | IllegalCastException | UnknownFunctionException e) {
 				e.printStackTrace();
 			}
 		}
@@ -55,7 +55,7 @@ public class Main {
 		
 		try {
 			funk.execute(strb.toString());
-		} catch (RecognitionException | UnknownVariableException | IllegalCastException e) {
+		} catch (RecognitionException | UnknownVariableException | IllegalCastException | UnknownFunctionException e) {
 			e.printStackTrace();
 		}
 	}

@@ -12,7 +12,7 @@ grammar funk;
 
 WS: [ \t\r\n] -> skip; 
 
-NUMBER: '-'? [0-9]+;
+NUMBER: [0-9]+;
 STRING: '\'' (~'\'')* '\'' | '\"' (~'\"')* '\"';
 BOOLEAN: 'True' | 'False';
 ID: [_a-zA-Z][a-zA-Z0-9]*;
@@ -34,8 +34,9 @@ expr: closedExpr |
 	  assign;
 
 args: expr | args ',' expr;
-statement: expr ';' | ifThenElse | comment;
+statement: expr ';' | ifThenElse | forLoop | comment;
 
 ifThenElse: 'if' '(' expr ')' scope ('else' scope)?; 
+forLoop: 'for' '(' expr ';' expr ';' expr ')' scope; 
 
 scope: statement | '{' statement+ '}';

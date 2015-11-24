@@ -24,6 +24,7 @@ import funk.antlr.funkParser.AssignContext;
 import funk.antlr.funkParser.ClosedExprContext;
 import funk.antlr.funkParser.CommentContext;
 import funk.antlr.funkParser.ExprContext;
+import funk.antlr.funkParser.ForLoopContext;
 import funk.antlr.funkParser.IdContext;
 import funk.antlr.funkParser.IfThenElseContext;
 import funk.antlr.funkParser.LiteralContext;
@@ -45,11 +46,12 @@ public class Interpreter {
 	public Interpreter(){
 		functionTable.put("reverse", new FReverse());
 		functionTable.put("substr", new FSubstr());
+		functionTable.put("println", new FPrintln());
 		functionTable.put("print", new FPrint());
 		functionTable.put("pow", new FPow());
 	}
 	
-	public void execute(String code) throws RecognitionException, UnknownVariableException, IllegalCastException {
+	public void execute(String code) throws RecognitionException, UnknownVariableException, IllegalCastException, UnknownFunctionException {
 		//Stringbol fat epiteni
 		CharStream stream = new ANTLRInputStream(code);
 		funkLexer lexer = new funkLexer(stream);
@@ -79,10 +81,10 @@ public class Interpreter {
 		}
 	}
 	
-	private Object eval(ParseTree node) throws UnknownVariableException, IllegalCastException {
+	private Object eval(ParseTree node) throws UnknownVariableException, IllegalCastException, UnknownFunctionException {
 		dbgStream.printf("Evaluating node: [%s]%s\n", node.getClass().getName(),node.getText());
 		
-		//Kideriteni hogy milyen szabalyb�l jott: 
+		//Kideriteni hogy milyen szabalyol jott: 
 		//Ha statement: 
 		if(node instanceof StatementContext) {
 			//Kiertekelni az expr reszet
@@ -162,7 +164,7 @@ public class Interpreter {
 			dbgStream.printf("Function call: %s . %s(...)\n", selfNode.getText(), functionToken.getText());
 			
 			if(!functionTable.containsKey(functionToken.getText()))
-				return new Object(); //TODO: throw appropriate exception
+				throw new UnknownFunctionException(functionToken.getText());
 
 			List<Object> args = new ArrayList<>();
 			if(argsNode != null) {
@@ -248,6 +250,25 @@ public class Interpreter {
 				else
 					return new Object();
 		}
+		//Ha for loop: 
+		else if(node instanceof ForLoopContext) {
+			List<ParseTree> nodes = Utils.extractNodes(node);
+			
+			ParseTree initNode = nodes.get(0);
+			ParseTree conditionNode = nodes.get(1);
+			ParseTree stepNode = nodes.get(2);
+			ParseTree scopeNode = nodes.get(3);
+			
+			Object result;
+			
+			result = eval(initNode);
+			while(eval(conditionNode).asBoolean()) {
+				result = eval(scopeNode);
+				eval(stepNode);
+			}
+			
+			return result; 
+		}
 		//Ha expr: 
 		else if(node instanceof ExprContext) {
 			//Egytagu, vagyis a fentiek egyike lesz
@@ -257,7 +278,7 @@ public class Interpreter {
 			}
 			//Kulonben expr <op> expr: 
 			else {
-				dbgStream.printf("Possibly addition: %s\n", node.getText());
+				dbgStream.printf("Binary operation: %s\n", node.getText());
 				
 				List<ParseTree> nodes = Utils.extractNodes(node);
 				List<Token> tokens = Utils.extractTokens(node);
