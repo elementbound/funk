@@ -5,4 +5,4 @@ B.reverse();
 asd.reverse();
 
 A.substr(2);
-B.substr(2);
+B.substr(0,2);

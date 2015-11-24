@@ -1,13 +1,10 @@
-a = 5 + 3;
-b = "Hello " + " world!";
-c = True + False; 
-
-d = 7 * 3;
-e = 'lol ' * d;
-f = 'Hello' * False; 
-
-g = True * False;
-h = False / True;
-
-i = 83 / True;
-j = False / 83; 
+a = 5 + 3;                   /* Number a = 8; */
+b = "Hello " + " world!";    /* String b = 'Hello  world!'; */
+c = True + False;            /* Boolean c = True; */
+d = 1 * 3;                   /* Number d = 3; */
+e = 'lol ' * d;              /* String e = 'lol lol lol '; */
+f = 'Hello' * False;         /* String f = ''; */
+g = True * False;            /* Boolean g = False; */
+h = False / True;            /* Boolean h = True; */
+i = 83 / True;               /* Number i = 8; */
+j = False / 83;              /* Boolean j = True; */
