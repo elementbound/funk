@@ -45,6 +45,7 @@ public class Interpreter {
 	public Interpreter(){
 		functionTable.put("reverse", new FReverse());
 		functionTable.put("substr", new FSubstr());
+		functionTable.put("print", new FPrint());
 	}
 	
 	public void execute(String code) throws RecognitionException, UnknownVariableException, IllegalCastException {
