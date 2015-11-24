@@ -2,6 +2,7 @@ package funk;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -18,6 +19,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 
 import funk.antlr.funkLexer;
 import funk.antlr.funkParser;
+import funk.antlr.funkParser.ArgsContext;
 import funk.antlr.funkParser.AssignContext;
 import funk.antlr.funkParser.ClosedExprContext;
 import funk.antlr.funkParser.CommentContext;
@@ -143,25 +145,52 @@ public class Interpreter {
 			
 			List<ParseTree> nodes = Utils.extractNodes(node);
 			List<Token> tokens = Utils.extractTokens(node);
-			List<Object> rev= new ArrayList<Object>();
 			
-			dbgStream.printf(tokens.get(1).getText()+" "+nodes.get(0).getText()+"\n");
+			ParseTree selfNode = nodes.get(0);
+			Token functionToken = tokens.get(1);
+			ParseTree argsNode = null; 
+			if(nodes.size() >= 2)
+				argsNode = nodes.get(1);
 			
-			for(ParseTree tempNode: nodes){
-				if(variableTable.containsKey(tempNode.getText()))
-					rev.add(variableTable.get(tempNode.getText()));
-				else 
-					rev.add(new Object(tempNode.getText()));
+			dbgStream.printf("Function call: %s . %s(...)\n", selfNode.getText(), functionToken.getText());
+			
+			if(!functionTable.containsKey(functionToken.getText()))
+				return new Object(); //TODO: throw appropriate exception
+
+			List<Object> args = new ArrayList<>();
+			if(argsNode != null) {
+				ParseTree at = argsNode;
+				List<ParseTree> subats;
+				
+				while(true) {
+					subats = Utils.extractNodes(at);
+					ParseTree lhs = subats.get(0);
+					ParseTree rhs = null; 
+					if(subats.size() >= 2)
+						rhs = subats.get(1);
+					
+					if(rhs != null) {
+						dbgStream.printf("\t%s , %s\n", lhs.getText(), rhs.getText());
+						dbgStream.printf("\tCollected argument: %s\n", rhs.getText());
+						args.add(eval(rhs));
+					}
+					
+					if(lhs instanceof ArgsContext) {
+						dbgStream.printf("\tMoving on to %s\n", lhs.getText());
+						at = lhs;
+					}
+					else {
+						dbgStream.printf("\tCollected final argument: %s\n", lhs.getText());
+						args.add(eval(lhs.getChild(0)));
+						break;
+					}
+				}
 			}
 			
-			//TODO problema ha tobb paramtere van a fuggvenynek egybe latja a ket parametert
+			Collections.reverse(args);
 			
-			if(nodes.size()==1)
-				return functionTable.get(tokens.get(1).getText()).call(rev.get(0));
-			else if(nodes.size()==2)				
-				return functionTable.get(tokens.get(1).getText()).call(rev.get(0),rev.get(1));
-			
-			return functionTable.get(tokens.get(1).getText()).call(rev.get(0),rev.get(1),rev.get(2));
+			ICallable function = functionTable.get(functionToken.getText());
+			return function.call(eval(selfNode), args.toArray(new Object[args.size()])); //Pass as varargs
 		}
 		//Ha assign: 
 		else if(node instanceof AssignContext) {
