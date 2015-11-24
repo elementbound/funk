@@ -40,29 +40,33 @@ class reverse implements ICallable{
 			case Number:{
 				String number;
 				String temp="";
+				
 				try {
 					number = Integer.toString(self.asNumber());
 					for(int i=number.length();i>0;i--){
 						temp+=number.substring(i-1,i);
 					}
 				} 
+				
 				catch (IllegalCastException e) {
 					e.printStackTrace();
 				}
-				System.out.println("Reverse: "+temp);
+				
+				System.out.println("Reverse: "+temp);//TODO dbg
 				return new Object(Integer.parseInt(temp));
 			}
 			
 			case String:{
 				String temp="";
+				
 				for(int i=self.asString().length();i>0;i--){
 					temp+=self.asString().substring(i-1, i);
 				}
-				System.out.println("Reverse: "+temp);
+				
+				System.out.println("Reverse: "+temp);//TODO dbg
 				return new Object(temp);
 			}
 			default:
-				//return new Object();
 				return self;
 		}
 		
@@ -84,48 +88,37 @@ class substr implements ICallable{
 			
 				try {
 					number = Integer.toString(self.asNumber());
-					if(args.length>1){
-						for(int i=args[0].asNumber();i<args[1].asNumber() && 
-							i<self.asString().length();i++){
-								temp+=number.substring(i, i-1);
-						}
-					}else if(args.length==1){
-						for(int i=0;i<args[1].asNumber() && 
-							i<self.asString().length();i++){
-								temp+=number.substring(i, i-1);
-						}
+					
+					if(args.length>1){	
+						temp=number.substring(Integer.parseInt(args[0].asString()),
+								Integer.parseInt(args[1].asString()));
+					}
+					else if(args.length==1){
+						temp=number.substring(0,Integer.parseInt(args[0].asString()));
 					}
 				} 
 				catch (IllegalCastException e) {
-					e.printStackTrace();//TODO dbgStream
+					e.printStackTrace();
 				}
-		
+				
+				System.out.println("Substr: "+temp);
 				return new Object(Integer.parseInt(temp));
 			}
 			case String:{
 				String temp="";
-				try{
-					if(args.length>1){
-						for(int i=args[0].asNumber();i<args[1].asNumber() && 
-							i<self.asString().length();i++){
-								temp+=self.asString().substring(i, i-1);
-						}
-					}
-					else if(args.length==1){
-						for(int i=0;i<args[1].asNumber() && 
-							i<self.asString().length();i++){
-								temp+=self.asString().substring(i, i-1);
-						}
-					}
+				
+				if(args.length>1){
+					temp=self.asString().substring(Integer.parseInt(args[0].asString()),
+						Integer.parseInt(args[1].asString()));
 				}
-				catch(IllegalCastException e){
-					e.printStackTrace();
+				else if(args.length==1){
+					temp=self.asString().substring(0,Integer.parseInt(args[0].asString()));
 				}
+				System.out.println("Substr: "+temp);
 				
 				return new Object(temp);
 			}
 			default:
-				//return new Object();
 				return self;
 		}
 	}
@@ -146,7 +139,6 @@ public class Interpreter {
 		functionTable.put("reverse", new reverse());
 		functionTable.put("substr", new substr());
 	}
-	
 	
 	public void execute(String code) throws RecognitionException, UnknownVariableException, IllegalCastException {
 		//Stringbol fat epiteni
@@ -247,21 +239,25 @@ public class Interpreter {
 			
 			List<ParseTree> nodes = Utils.extractNodes(node);
 			List<Token> tokens = Utils.extractTokens(node);
-			Object rev= new Object();
+			List<Object> rev= new ArrayList<Object>();
 			
 			dbgStream.printf(tokens.get(1).getText()+" "+nodes.get(0).getText()+"\n");
 			
-			if(variableTable.containsKey(nodes.get(0).getText()))
-				rev=variableTable.get(nodes.get(0).getText());
-			else 
-				rev=new Object(nodes.get(0).getText());
+			for(ParseTree tempNode: nodes){
+				if(variableTable.containsKey(tempNode.getText()))
+					rev.add(variableTable.get(tempNode.getText()));
+				else 
+					rev.add(new Object(tempNode.getText()));
+			}
+			
+			//TODO problema ha tobb paramtere van a fuggvenynek egybe latja a ket parametert
 			
 			if(nodes.size()==1)
-				return functionTable.get(tokens.get(1).getText()).call(rev);//rev=self
-			else if(nodes.size()==2)
-				return functionTable.get(tokens.get(1)).call(rev,rev);
+				return functionTable.get(tokens.get(1).getText()).call(rev.get(0));
+			else if(nodes.size()==2)				
+				return functionTable.get(tokens.get(1).getText()).call(rev.get(0),rev.get(1));
 			
-			return functionTable.get(tokens.get(1).getText()).call(rev);//temp solution
+			return functionTable.get(tokens.get(1).getText()).call(rev.get(0),rev.get(1),rev.get(2));
 		}
 		//Ha assign: 
 		else if(node instanceof AssignContext) {
