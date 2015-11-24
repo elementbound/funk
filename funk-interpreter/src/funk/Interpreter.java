@@ -48,6 +48,7 @@ public class Interpreter {
 		functionTable.put("substr", new FSubstr());
 		functionTable.put("println", new FPrintln());
 		functionTable.put("print", new FPrint());
+		functionTable.put("pow", new FPow());
 	}
 	
 	public void execute(String code) throws RecognitionException, UnknownVariableException, IllegalCastException, UnknownFunctionException {
