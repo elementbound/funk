@@ -28,6 +28,7 @@ import funk.antlr.funkParser.IdContext;
 import funk.antlr.funkParser.IfThenElseContext;
 import funk.antlr.funkParser.LiteralContext;
 import funk.antlr.funkParser.MemberCallContext;
+import funk.antlr.funkParser.ObjectContext;
 import funk.antlr.funkParser.ScopeContext;
 import funk.antlr.funkParser.StatementContext;
 
@@ -77,7 +78,7 @@ public class Interpreter {
 	}
 	
 	private Object eval(ParseTree node) throws UnknownVariableException, IllegalCastException {
-		dbgStream.printf("Evaluating node: %s\n", node.getText());
+		dbgStream.printf("Evaluating node: [%s]%s\n", node.getClass().getName(),node.getText());
 		
 		//Kideriteni hogy milyen szabalyb�l jott: 
 		//Ha statement: 
@@ -135,6 +136,10 @@ public class Interpreter {
 			
 			dbgStream.printf("Literal: %s (%s)\n", result, literalStr);
 			return result; 
+		}
+		//Ha object ( object: id | literal )
+		else if(node instanceof ObjectContext) {
+			return eval(Utils.extractNodes(node).get(0));
 		}
 		//Ha memberCall: 
 		else if(node instanceof MemberCallContext) {

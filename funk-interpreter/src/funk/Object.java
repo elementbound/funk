@@ -42,7 +42,7 @@ public class Object {
 				return Integer.toString(this.asNumber);
 				
 			case Boolean:
-				return Boolean.toString(this.asBoolean);
+				return this.asBoolean ? "True" : "False";
 				
 			case String: 
 				return this.asString;
