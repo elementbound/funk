@@ -16,7 +16,7 @@ NUMBER: '-'? [0-9]+;
 STRING: '\'' (~'\'')* '\'' | '\"' (~'\"')* '\"';
 BOOLEAN: 'True' | 'False';
 ID: [_a-zA-Z][a-zA-Z0-9]*;
-BINOP: '+' | '-' | '*' | '/' | '==';
+BINOP: '+' | '-' | '*' | '/' | '==' | '!=' | '<' | '>';
 COMMENT: '/*' .*? '*/'; // Non-greedy matching
 
 comment: COMMENT;

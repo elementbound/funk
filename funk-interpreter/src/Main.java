@@ -10,7 +10,7 @@ import funk.UnknownVariableException;
 public class Main {
 	public static void main(String... args) {
 		Interpreter funk = new Interpreter();
-		funk.dbgStream = System.out; 
+		//funk.dbgStream = System.out; 
 		
 		Scanner sc = new Scanner(System.in);
 		while(sc.hasNextLine()) {

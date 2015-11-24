@@ -185,7 +185,11 @@ public class Object {
 		}
 	}
 	
-	public Object compare(Object rhs) {
+	//=========================================================================================
+	//Comparisons 
+	
+	//Equal
+	public Object eq(Object rhs) {
 		if(type != rhs.type)
 			return new Object(false);
 		
@@ -198,6 +202,51 @@ public class Object {
 				
 			case String: 
 				return new Object(this.asString.equals(rhs.asString));
+				
+			default: 
+				return new Object();
+		}
+	}
+	
+	//Not equal
+	public Object neq(Object rhs) {
+		return new Object(!this.eq(rhs).asBoolean);
+	}
+	
+	//Lower than 
+	public Object le(Object rhs) {
+		if(type != rhs.type)
+			return new Object(false);
+		
+		switch(type) {
+			case Boolean:
+				return new Object((this.asBoolean?1:0) < (rhs.asBoolean?1:0));
+						
+			case Number:
+				return new Object(this.asNumber < rhs.asNumber);
+				
+			case String: 
+				return new Object(this.asString.compareTo(rhs.asString) < 0);
+				
+			default: 
+				return new Object();
+		}
+	}
+	
+	//Greater than 
+	public Object ge(Object rhs) {
+		if(type != rhs.type)
+			return new Object(false);
+		
+		switch(type) {
+			case Boolean:
+				return new Object((this.asBoolean?1:0) > (rhs.asBoolean?1:0));
+						
+			case Number:
+				return new Object(this.asNumber > rhs.asNumber);
+				
+			case String: 
+				return new Object(this.asString.compareTo(rhs.asString) > 0);
 				
 			default: 
 				return new Object();

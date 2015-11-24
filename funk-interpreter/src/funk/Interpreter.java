@@ -285,7 +285,13 @@ public class Interpreter {
 					return leftResult.divide(rightResult);
 				}
 				else if(operator.getText().equals("=="))
-					return leftResult.compare(rightResult);
+					return leftResult.eq(rightResult);
+				else if(operator.getText().equals("!="))
+					return leftResult.neq(rightResult);
+				else if(operator.getText().equals("<"))
+					return leftResult.le(rightResult);
+				else if(operator.getText().equals(">"))
+					return leftResult.ge(rightResult);
 				else
 					return new Object("Unknown operator: " + operator.getText());
 			}
