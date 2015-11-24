@@ -1,3 +1,16 @@
+/*
+           _________
+	      /--------/                    
+	     /  ______/                    _    _
+ 	    /  /_____                     / / / /
+	   /  + ----/  _   _    ____     / /_/ /
+	  /  /        / / / /  / _  \   / __ <
+	 /  /        / /_/ /  / / / /  / / / / 
+	/__/         \____/  /_/ /_/  /_/ /_/
+	
+	Because it's not Groovy enough
+*/
+
 /* Learn funk in five or less minutes */
 
 /* Comments look like these things. 
@@ -7,7 +20,8 @@
  1. - Variables
 ------------------------------------------------------------ */
 
-/* Numbers are integers */
+/* Numbers are positive integers */
+/* Who needs negatives when you handle strings! */
 number = 5; 
 
 /* Strings can be anything between two double-quotes or 
@@ -88,3 +102,4 @@ for(i = 99; i > 0; i = i-1) {
    
 hi = "Hello " + ("!dlrow".reverse());
 hello = hi.substr(0, 5);
+hello_intensifies = hello.pow(4);
