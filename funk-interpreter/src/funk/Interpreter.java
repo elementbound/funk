@@ -23,6 +23,7 @@ import funk.antlr.funkLexer;
 import funk.antlr.funkParser;
 import funk.antlr.funkParser.ArgsContext;
 import funk.antlr.funkParser.AssignContext;
+import funk.antlr.funkParser.BlockContext;
 import funk.antlr.funkParser.ClosedExprContext;
 import funk.antlr.funkParser.CommentContext;
 import funk.antlr.funkParser.ExprContext;
@@ -136,6 +137,20 @@ public class Interpreter {
 			//visszadobjuk magat a szoveget
 			dbgStream.printf("Comment: %s\n", node.getText());
 			return new Object(node.getText());
+		}
+		else if(node instanceof BlockContext){
+			dbgStream.printf("Block: %s\n", node.getText());
+			
+			variableTable.push(new SymbolTable());
+			
+			List<ParseTree> nodes = Utils.extractNodes(node);
+			Object result = new Object();
+			for(ParseTree n : nodes)
+				result = eval(n);
+			
+			variableTable.pop();
+			
+			return result; 
 		}
 		//Ha scope: 
 		else if(node instanceof ScopeContext) {
