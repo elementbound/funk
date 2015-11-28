@@ -4,9 +4,11 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Stack;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
@@ -35,7 +37,7 @@ import funk.antlr.funkParser.StatementContext;
 
 public class Interpreter {
 	//Valtozok
-	public Map<String, Object> variableTable = new HashMap<>();
+	public Stack<SymbolTable> variableTable= new Stack<SymbolTable>();
 	
 	//Fuggvenyek
 	public Map<String, ICallable> functionTable = new HashMap<>();
@@ -49,6 +51,42 @@ public class Interpreter {
 		functionTable.put("println", new FPrintln());
 		functionTable.put("print", new FPrint());
 		functionTable.put("pow", new FPow());
+		
+		variableTable.push(new SymbolTable());
+	}
+	
+	Map<String,Object> getAllTable(){
+		Map<String, Object> temp= new HashMap<>();
+		
+		for(Iterator<SymbolTable> iterator=variableTable.iterator();iterator.hasNext();){
+			SymbolTable table=iterator.next();
+			temp.putAll(table.table);
+		}
+		
+		return temp;
+	}
+	
+	boolean exists(String key){
+		for(Iterator<SymbolTable> iterator=variableTable.iterator();iterator.hasNext();){
+			SymbolTable table=iterator.next();
+			if(table.exists(key))
+				return true;
+		}
+		
+		return false;
+	}
+	
+	public Object getVariable(String key) {
+		Map<String, Object> temp= getAllTable();
+		
+		return temp.get(key);
+	}
+	
+	public void putToTop(String key, Object val){
+		SymbolTable temp= variableTable.pop();
+		temp.set(key, val);
+		
+		variableTable.push(temp);
 	}
 	
 	public void execute(String code) throws RecognitionException, UnknownVariableException, IllegalCastException, UnknownFunctionException {
@@ -86,6 +124,7 @@ public class Interpreter {
 		
 		//Kideriteni hogy milyen szabalyol jott: 
 		//Ha statement: 
+		
 		if(node instanceof StatementContext) {
 			//Kiertekelni az expr reszet
 			dbgStream.println("Statement");
@@ -103,7 +142,6 @@ public class Interpreter {
 			dbgStream.printf("Scope: %s\n", node.getText());
 			
 			List<ParseTree> nodes = Utils.extractNodes(node);
-			
 			Object result = new Object();
 			for(ParseTree n : nodes)
 				result = eval(n);
@@ -118,10 +156,10 @@ public class Interpreter {
 			
 			dbgStream.printf("id: %s\n", id);
 			
-			if(!variableTable.containsKey(id))
+			if(!exists(id))
 				throw new UnknownVariableException(id);
 			
-			return variableTable.get(id);
+			return getVariable(id);
 		}
 		//Ha literal: 
 		else if(node instanceof LiteralContext) {
@@ -212,9 +250,9 @@ public class Interpreter {
 			Object result = eval(expr);
 			
 			//A kapott Object-et eltenni ID neve valtozokent
-			if(variableTable.containsKey(id.getText()))
-				variableTable.remove(id.getText());
-			variableTable.put(id.getText(), result);
+		//	if(exists(id.getText()))
+		//		variableTable.remove(id.getText());
+			putToTop(id.getText(), result);
 			
 			dbgStream.printf("Saved variable: %s = %s\n", id.getText(), result);
 			
@@ -327,7 +365,7 @@ public class Interpreter {
 	}
 	
 	public void dumpVariables(PrintStream out) {
-		for(Entry<String, Object> p : variableTable.entrySet()) {
+		for(Entry<String, Object> p : getAllTable().entrySet()) {
 			if(p.getValue().getType() != Type.String)
 				out.printf("%s %s = %s;\n", p.getValue().getType(), p.getKey(), p.getValue().asString());
 			else 

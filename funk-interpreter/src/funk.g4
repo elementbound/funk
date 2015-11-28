@@ -38,5 +38,6 @@ statement: expr ';' | ifThenElse | forLoop | comment;
 
 ifThenElse: 'if' '(' expr ')' scope ('else' scope)?; 
 forLoop: 'for' '(' expr ';' expr ';' expr ')' scope; 
+block: '{' statement+ '}';
 
-scope: statement | '{' statement+ '}';
+scope: statement | block;

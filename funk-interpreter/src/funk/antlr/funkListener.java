@@ -128,6 +128,16 @@ public interface funkListener extends ParseTreeListener {
 	 */
 	void exitForLoop(funkParser.ForLoopContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link funkParser#block}.
+	 * @param ctx the parse tree
+	 */
+	void enterBlock(funkParser.BlockContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link funkParser#block}.
+	 * @param ctx the parse tree
+	 */
+	void exitBlock(funkParser.BlockContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link funkParser#scope}.
 	 * @param ctx the parse tree
 	 */
