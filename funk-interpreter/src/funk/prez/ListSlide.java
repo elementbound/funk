@@ -58,23 +58,8 @@ public class ListSlide extends Slide {
 	 * Initialize the contents of the frame.
 	 */
 	public ListSlide() {
-		frame = new JFrame();
-		
-		frame.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent arg0) {
-				if(arg0.getKeyCode() == KeyEvent.VK_ENTER)
-					nextSlide();
-				else if(arg0.getKeyCode() == KeyEvent.VK_UP && arg0.isControlDown())
-					fullscreen();
-				else if(arg0.getKeyCode() == KeyEvent.VK_DOWN && arg0.isControlDown())
-					windowed();
-			}
-		});
-		
-		frame.setTitle("Funk Presentation");
-		frame.getContentPane().setBackground(Color.BLACK);
-		frame.getContentPane().setLayout(new BorderLayout(0, 0));
+		frame = null;
+		resetFrame();
 	}
 	
 	public void show() {
@@ -131,21 +116,47 @@ public class ListSlide extends Slide {
 	
 	//
 	
+	private void resetFrame() {
+		if(frame != null)
+			frame.dispose();
+		
+		frame = new JFrame();
+		frame.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent arg0) {
+				if(arg0.getKeyCode() == KeyEvent.VK_ENTER)
+					nextSlide();
+				else if(arg0.getKeyCode() == KeyEvent.VK_UP && arg0.isControlDown())
+					fullscreen();
+				else if(arg0.getKeyCode() == KeyEvent.VK_DOWN && arg0.isControlDown())
+					windowed();
+			}
+		});
+		
+		frame.setTitle("Funk Presentation");
+		frame.getContentPane().setBackground(Color.BLACK);
+		frame.setBounds(100, 100, 800, 600);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	}
+	
 	@Override
 	public void fullscreen() {
 		super.fullscreen();
 		
+		resetFrame();
 		frame.setUndecorated(true);
-		frame.setBounds(0, 0, 1280, 720);
 		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+		this.show();
 	}
 	
 	@Override
 	public void windowed() {
 		super.windowed();
 		
+		resetFrame();
 		frame.setUndecorated(false);
 		frame.setBounds(0, 0, 800, 600);
 		frame.setExtendedState(JFrame.NORMAL);
+		this.show();
 	}
 }

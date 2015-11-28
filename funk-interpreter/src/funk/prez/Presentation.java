@@ -13,7 +13,7 @@ public class Presentation {
 		Presentation prez = new Presentation();
 		
 		{
-			TitleSide slide = new TitleSide();
+			TitleSlide slide = new TitleSlide();
 			
 			slide.setTitle("Funk Symbol Table Support");
 			slide.setSecondaryTitle("Presentation now with 70% more plot twist!");
@@ -75,6 +75,7 @@ public class Presentation {
 	
 	public void showSlide() {
 		Slide at = slides.get(slideAt);
+		at.attach(this);
 		
 		if(isWindowed)
 			at.windowed();
