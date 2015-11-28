@@ -18,8 +18,7 @@ import javax.swing.BoxLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
-public class TitleSide {
-
+public class TitleSide extends Slide {
 	private JFrame frame;
 
 	private String title = "Page title";
@@ -56,17 +55,17 @@ public class TitleSide {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void show() {
+	public TitleSide() {
 		frame = new JFrame();
 		frame.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				if(arg0.getKeyCode() == KeyEvent.VK_ENTER)
-					System.out.println("Next slide!");
+					nextSlide();
 				else if(arg0.getKeyCode() == KeyEvent.VK_UP && arg0.isControlDown())
-					System.out.println("Fullscreen!");
+					fullscreen();
 				else if(arg0.getKeyCode() == KeyEvent.VK_DOWN && arg0.isControlDown())
-					System.out.println("Windowed!");
+					windowed();
 			}
 		});
 		
@@ -74,7 +73,9 @@ public class TitleSide {
 		frame.getContentPane().setBackground(Color.BLACK);
 		frame.setBounds(100, 100, 800, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
+	}
+
+	public void show() {
 		JLabel lblPageTitle = new JLabel(title);
 		lblPageTitle.setForeground(Color.WHITE);
 		lblPageTitle.setBackground(Color.BLACK);
@@ -90,4 +91,28 @@ public class TitleSide {
 		frame.setVisible(true);
 	}
 
+	public void hide() {
+		frame.getContentPane().removeAll();
+		frame.setVisible(false);
+	}
+	
+	//
+	
+	@Override
+	public void fullscreen() {
+		super.fullscreen();
+		
+		frame.setUndecorated(true);
+		frame.setBounds(0, 0, 1280, 720);
+		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+	}
+	
+	@Override
+	public void windowed() {
+		super.windowed();
+		
+		frame.setUndecorated(false);
+		frame.setBounds(0, 0, 800, 600);
+		frame.setExtendedState(JFrame.NORMAL);
+	}
 }

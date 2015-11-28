@@ -18,8 +18,7 @@ import javax.swing.SwingConstants;
 import java.awt.Component;
 import java.awt.Dimension;
 
-public class ListSlide {
-
+public class ListSlide extends Slide {
 	private JFrame frame;
 	
 	private String title = "Page Title"; 
@@ -58,25 +57,27 @@ public class ListSlide {
 	/**
 	 * Initialize the contents of the frame.
 	 */
-	private void show() {
+	public ListSlide() {
 		frame = new JFrame();
 		
 		frame.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent arg0) {
 				if(arg0.getKeyCode() == KeyEvent.VK_ENTER)
-					System.out.println("Next slide!");
+					nextSlide();
 				else if(arg0.getKeyCode() == KeyEvent.VK_UP && arg0.isControlDown())
-					System.out.println("Fullscreen!");
+					fullscreen();
 				else if(arg0.getKeyCode() == KeyEvent.VK_DOWN && arg0.isControlDown())
-					System.out.println("Windowed!");
+					windowed();
 			}
 		});
 		
 		frame.setTitle("Funk Presentation");
 		frame.getContentPane().setBackground(Color.BLACK);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
-		
+	}
+	
+	public void show() {
 		JLabel lblPageTitle = new JLabel(title);
 		lblPageTitle.setVerticalAlignment(SwingConstants.TOP);
 		lblPageTitle.setFont(new Font("Tahoma", Font.BOLD, 32));
@@ -123,4 +124,28 @@ public class ListSlide {
 		frame.setVisible(true);
 	}
 
+	public void hide() {
+		frame.getContentPane().removeAll();
+		frame.setVisible(false);
+	}
+	
+	//
+	
+	@Override
+	public void fullscreen() {
+		super.fullscreen();
+		
+		frame.setUndecorated(true);
+		frame.setBounds(0, 0, 1280, 720);
+		frame.setExtendedState(JFrame.MAXIMIZED_BOTH);
+	}
+	
+	@Override
+	public void windowed() {
+		super.windowed();
+		
+		frame.setUndecorated(false);
+		frame.setBounds(0, 0, 800, 600);
+		frame.setExtendedState(JFrame.NORMAL);
+	}
 }
