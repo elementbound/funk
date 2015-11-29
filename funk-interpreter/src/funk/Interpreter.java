@@ -33,7 +33,6 @@ import funk.antlr.funkParser.IfThenElseContext;
 import funk.antlr.funkParser.LiteralContext;
 import funk.antlr.funkParser.MemberCallContext;
 import funk.antlr.funkParser.ObjectContext;
-import funk.antlr.funkParser.ScopeContext;
 import funk.antlr.funkParser.StatementContext;
 
 public class Interpreter {
@@ -138,6 +137,7 @@ public class Interpreter {
 			dbgStream.printf("Comment: %s\n", node.getText());
 			return new Object(node.getText());
 		}
+		//Ha block
 		else if(node instanceof BlockContext){
 			dbgStream.printf("Block: %s\n", node.getText());
 			
@@ -149,17 +149,6 @@ public class Interpreter {
 				result = eval(n);
 			
 			variableTable.pop();
-			
-			return result; 
-		}
-		//Ha scope: 
-		else if(node instanceof ScopeContext) {
-			dbgStream.printf("Scope: %s\n", node.getText());
-			
-			List<ParseTree> nodes = Utils.extractNodes(node);
-			Object result = new Object();
-			for(ParseTree n : nodes)
-				result = eval(n);
 			
 			return result; 
 		}

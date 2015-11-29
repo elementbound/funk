@@ -167,18 +167,6 @@ public class funkBaseListener implements funkListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitBlock(funkParser.BlockContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void enterScope(funkParser.ScopeContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitScope(funkParser.ScopeContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
