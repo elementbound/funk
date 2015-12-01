@@ -67,13 +67,9 @@ public class Interpreter {
 	}
 	
 	boolean exists(String key){
-		for(Iterator<SymbolTable> iterator=variableTable.iterator();iterator.hasNext();){
-			SymbolTable table=iterator.next();
-			if(table.exists(key))
-				return true;
-		}
+		Map<String, Object> temp= getAllTable();
 		
-		return false;
+		return temp.containsKey(key);
 	}
 	
 	public Object getVariable(String key) {
