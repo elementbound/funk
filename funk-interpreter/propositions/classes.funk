@@ -1,0 +1,79 @@
+type Foo {
+	a, 
+	b, 
+	c
+};
+
+type Biz {
+	e
+};
+
+function *.print() {
+}
+
+function Foo.bar() {
+	return self.a * 5;
+}
+
+function Foo.bar(val) {
+	/* idgaf */
+}
+
+function Biz.bar() {
+	return 0; /* Guaranteed random */
+}
+
+C = Foo();
+e = C.bar; 
+C.bar = e;
+
+C.b = 4;
+
+E = Biz();
+f = E.bar;
+
+type Ar {
+	dollars
+};
+
+function Ar.forints() {
+	return self.dollars * 250; 
+}
+
+function Ar.forints(val) {
+	self.dollars = val/250;
+}
+
+Void 
+Magic 
+Custom 
+
+type Array {
+	...
+}
+
+function Array.clear() {
+	...
+}
+
+function Array.fill(val) {
+	...
+}
+
+a = Array();
+a.clear; 
+a.fill = 8; 
+a.fill(8); /* ugyanaz */
+
+a.valami = 8; /* a.valami(8) */
+c = a.valami; /* c = a.valami() */
+
+library(Random);
+
+gen = Random();
+gen.seed(16);
+r = gen.string(5); /* asdder */
+r = gen.number; /* 847 */
+r = (gen.string = 5);
+
+gen.string = 5; /* gen.string(5) */
