@@ -1,4 +1,10 @@
 A=10;
 A.print();
-{B=20;A.print();B.print();}
+
+{
+	B=20;
+	A.print();
+	B.print();
+}
+
 B.print();
