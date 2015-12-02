@@ -19,23 +19,19 @@ import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Token;
 import org.antlr.v4.runtime.tree.ParseTree;
 
+import funk.antlr.funkBaseVisitor;
 import funk.antlr.funkLexer;
 import funk.antlr.funkParser;
 import funk.antlr.funkParser.ArgsContext;
 import funk.antlr.funkParser.AssignContext;
 import funk.antlr.funkParser.BlockContext;
-import funk.antlr.funkParser.ClosedExprContext;
 import funk.antlr.funkParser.CommentContext;
 import funk.antlr.funkParser.ExprContext;
 import funk.antlr.funkParser.ForLoopContext;
-import funk.antlr.funkParser.IdContext;
 import funk.antlr.funkParser.IfThenElseContext;
-import funk.antlr.funkParser.LiteralContext;
-import funk.antlr.funkParser.MemberCallContext;
-import funk.antlr.funkParser.ObjectContext;
 import funk.antlr.funkParser.StatementContext;
 
-public class Interpreter {
+public class Interpreter extends funkBaseVisitor<Object> {
 	//Valtozok
 	public Stack<SymbolTable> variableTable= new Stack<SymbolTable>();
 	
@@ -115,6 +111,141 @@ public class Interpreter {
 		}
 	}
 	
+	@Override 
+	public Object defaultResult() {
+		return new Object();
+	}
+	
+	@Override 
+	public Object visitEnclosedExpr(funkParser.EnclosedExprContext ctx) {
+		return visit(ctx.expr());
+	}
+	
+	@Override 
+	public Object visitID(funkParser.IDContext ctx) {
+		String id = ctx.ID().getText();
+		
+		dbgStream.printf("id: %s\n", id);
+		
+		if(!exists(id))
+			return defaultResult(); //throw new UnknownVariableException(id);
+		
+		return getVariable(id);
+	}
+	
+	@Override 
+	public Object visitNumberLiteral(funkParser.NumberLiteralContext ctx) {
+		return new Object(Integer.parseInt(ctx.NUMBER().getText()));
+	}
+	
+	@Override
+	public Object visitStringLiteral(funkParser.StringLiteralContext ctx) {
+		return new Object(ctx.STRING().getText());
+	}
+	
+	@Override 
+	public Object visitUnaryOp(funkParser.UnaryOpContext ctx) {
+		String op = ctx.OP().getText();
+		ExprContext expr = ctx.expr();
+		
+		if(op.equals("+"))
+			return visit(expr);
+		else if(op.equals("-"))
+			return new Object("TODO: funk.Object.negate()"); //TODO: negate
+		else 
+			//throw InvalidUnaryOp(op)
+			return new Object("Unknown unary operator: " + op);
+	}
+	
+	@Override 
+	public Object visitBinaryOp(funkParser.BinaryOpContext ctx) {
+		dbgStream.printf("Binary operation: %s\n", ctx.getText());
+		
+		//Kiszedni a ket expr-t es az operatort
+		ParseTree lhs = ctx.expr(0);
+		ParseTree rhs = ctx.expr(1);
+		String operator = ctx.OP().getText();
+		
+		dbgStream.printf("%s %s %s\n", lhs.getText(), operator, rhs.getText());
+		
+		//A ket kapott Object-etre alkalmazni a megfelelo operatort
+		try {
+			if(operator.equals("+")) 
+				return visit(lhs).add(visit(rhs));
+			else if(operator.equals("-")) 
+				return visit(lhs).subtract(visit(rhs));
+			else if(operator.equals("*")) 
+				return visit(lhs).multiply(visit(rhs));
+			else if(operator.equals("/")) 
+				return visit(lhs).divide(visit(rhs));
+			else if(operator.equals("==")) 
+				return visit(lhs).eq(visit(rhs));
+			else if(operator.equals("!=")) 
+				return visit(lhs).neq(visit(rhs));
+			else if(operator.equals("<")) 
+				return visit(lhs).le(visit(rhs));
+			else if(operator.equals(">")) 
+				return visit(lhs).ge(visit(rhs));
+			else
+				return new Object("Unknown binary operator: " + operator);
+		}
+		catch(IllegalCastException ex) {
+			//TODO: We should REALLY solve throwing exceptions from visitor
+			return new Object(ex.getMessage());
+		}
+	}
+	
+	@Override 
+	public Object visitDirectMemberCall(funkParser.DirectMemberCallContext ctx) {
+		String selfName = ctx.ID(0).getText();
+		String functionName = ctx.ID(1).getText();
+		ArgsContext args = ctx.args();
+		
+		dbgStream.printf("Function call: %s . %s(...)\n", selfName, functionName);
+		
+		if(!functionTable.containsKey(functionName))
+			//throw new UnknownFunctionException(functionName);
+			return new Object("Unknown function: " + functionName);
+
+		Object selfObject = getVariable(selfName);
+		List<Object> argObjects = new ArrayList<>();
+		for(ExprContext arg : args.expr()) 
+			argObjects.add(visit(arg));
+		
+		ICallable function = functionTable.get(functionName);
+		
+		try {
+			//Pass as varargs
+			return function.call(selfObject, argObjects.toArray(new Object[argObjects.size()]));
+		} catch (IllegalCastException e) {
+			return new Object("Illegal cast exception: " + e.getMessage());
+		} 
+	}
+	
+	@Override 
+	public Object visitAssign(funkParser.AssignContext ctx) {
+		String id = ctx.ID().getText();
+		ExprContext expr = ctx.expr();
+		
+		dbgStream.printf("Assignment: %s = %s\n", id, expr.getText());
+		
+		//Kiertekelni expr-t
+		Object result = visit(expr);
+		
+		//A kapott Object-et eltenni ID neve valtozokent
+		putToTop(id, result);
+		
+		dbgStream.printf("Saved variable: %s = %s\n", id, result);
+		
+		//A kapott Object-et visszaadni
+		return result; 
+	}
+	
+	@Override 
+	public Object visitSingleStatement(funkParser.SingleStatementContext ctx) {
+		return visit(ctx.expr());
+	}
+	
 	private Object eval(ParseTree node) throws UnknownVariableException, IllegalCastException, UnknownFunctionException {
 		dbgStream.printf("Evaluating node: [%s]%s\n", node.getClass().getName(),node.getText());
 		
@@ -147,19 +278,6 @@ public class Interpreter {
 			variableTable.pop();
 			
 			return result; 
-		}
-		//Ha id: 
-		else if(node instanceof IdContext) {
-			//Megkeresni a valtozok kozt az ID nevet es visszaadni
-			Token idToken = Utils.extractTokens(node).get(0);
-			String id = idToken.getText();
-			
-			dbgStream.printf("id: %s\n", id);
-			
-			if(!exists(id))
-				throw new UnknownVariableException(id);
-			
-			return getVariable(id);
 		}
 		//Ha literal: 
 		else if(node instanceof LiteralContext) {
@@ -244,20 +362,7 @@ public class Interpreter {
 			ParseTree expr = Utils.extractNodes(node).get(0);
 			Token id = Utils.extractTokens(node).get(0);
 			
-			dbgStream.printf("Assignment: %s = %s\n", id.getText(), expr.getText());
 			
-			//Kiertekelni expr-t
-			Object result = eval(expr);
-			
-			//A kapott Object-et eltenni ID neve valtozokent
-		//	if(exists(id.getText()))
-		//		variableTable.remove(id.getText());
-			putToTop(id.getText(), result);
-			
-			dbgStream.printf("Saved variable: %s = %s\n", id.getText(), result);
-			
-			//A kapott Object-et visszaadni
-			return result; 
 		}
 		//Ha ( expr ) avagy closedExpr
 		else if(node instanceof ClosedExprContext) {
@@ -316,45 +421,7 @@ public class Interpreter {
 			}
 			//Kulonben expr <op> expr: 
 			else {
-				dbgStream.printf("Binary operation: %s\n", node.getText());
 				
-				List<ParseTree> nodes = Utils.extractNodes(node);
-				List<Token> tokens = Utils.extractTokens(node);
-				
-				//Kiszedni a ket expr-t es az operatort
-				ParseTree leftNode = nodes.get(0);
-				ParseTree rightNode = nodes.get(1);
-				Token operator = tokens.get(0);
-				
-				dbgStream.printf("%s %s %s\n", leftNode.getText(), operator.getText(), rightNode.getText());
-				
-				//Mindkettot kiertekelni
-				Object leftResult = eval(leftNode);
-				Object rightResult = eval(rightNode);
-				
-				//A ket kapott Object-etre alkalmazni a megfelelo operatort
-				if(operator.getText().equals("+")) {
-					return leftResult.add(rightResult);
-				}
-				else if(operator.getText().equals("-")) {
-					return leftResult.subtract(rightResult);
-				}
-				else if(operator.getText().equals("*")) {
-					return leftResult.multiply(rightResult);
-				}
-				else if(operator.getText().equals("/")) {
-					return leftResult.divide(rightResult);
-				}
-				else if(operator.getText().equals("=="))
-					return leftResult.eq(rightResult);
-				else if(operator.getText().equals("!="))
-					return leftResult.neq(rightResult);
-				else if(operator.getText().equals("<"))
-					return leftResult.le(rightResult);
-				else if(operator.getText().equals(">"))
-					return leftResult.ge(rightResult);
-				else
-					return new Object("Unknown operator: " + operator.getText());
 			}
 		}
 		else {

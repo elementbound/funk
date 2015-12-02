@@ -11,6 +11,7 @@ COMMENT: '/*' .*? '*/'; // Non-greedy matching
 
 expr: '(' expr ')' 				# EnclosedExpr 
 	 | ID 						# ID
+	 | BOOLEAN 					# BooleanLiteral
 	 | NUMBER 					# NumberLiteral
 	 | STRING 					# StringLiteral
 	 | OP expr 					# UnaryOp
