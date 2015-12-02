@@ -15,6 +15,18 @@ public class smathBaseListener implements smathListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterUnaryOp(smathParser.UnaryOpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitUnaryOp(smathParser.UnaryOpContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterLiteral(smathParser.LiteralContext ctx) { }
 	/**
 	 * {@inheritDoc}

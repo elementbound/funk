@@ -49,6 +49,20 @@ public class SmathEvaluator extends smathBaseVisitor<Double> {
 		return val;
 	}
 	
+	@Override
+	public Double visitUnaryOp(smathParser.UnaryOpContext ctx) {
+		smathParser.ExprContext expr = ctx.expr();
+		String op = ctx.OP().getText();
+		
+		if(op.equals("+"))
+			return visit(expr);
+		else if(op.equals("-"))
+			return -visit(expr);
+		
+		dbgStream.printf("Unknown unary operator: %s\n", op);
+		return defaultResult();
+	}
+	
 	@Override 
 	public Double visitBinaryOp(smathParser.BinaryOpContext ctx) {
 		smathParser.ExprContext lhs = ctx.expr(0);
@@ -65,7 +79,7 @@ public class SmathEvaluator extends smathBaseVisitor<Double> {
 		else if(op.equals("/"))
 			return visit(lhs) / visit(rhs);
 		
-		dbgStream.printf("Unknown operator: \"%s\"\n", op);
+		dbgStream.printf("Unknown binary operator: \"%s\"\n", op);
 		return defaultResult();
 	}
 	

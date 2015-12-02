@@ -7,6 +7,18 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface smathListener extends ParseTreeListener {
 	/**
+	 * Enter a parse tree produced by the {@code UnaryOp}
+	 * labeled alternative in {@link smathParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterUnaryOp(smathParser.UnaryOpContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code UnaryOp}
+	 * labeled alternative in {@link smathParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitUnaryOp(smathParser.UnaryOpContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code Literal}
 	 * labeled alternative in {@link smathParser#expr}.
 	 * @param ctx the parse tree
