@@ -7,18 +7,6 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface smathListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by the {@code EnclosedOp}
-	 * labeled alternative in {@link smathParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterEnclosedOp(smathParser.EnclosedOpContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code EnclosedOp}
-	 * labeled alternative in {@link smathParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitEnclosedOp(smathParser.EnclosedOpContext ctx);
-	/**
 	 * Enter a parse tree produced by the {@code Literal}
 	 * labeled alternative in {@link smathParser#expr}.
 	 * @param ctx the parse tree
@@ -54,6 +42,18 @@ public interface smathListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitID(smathParser.IDContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code EnclosedExpr}
+	 * labeled alternative in {@link smathParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterEnclosedExpr(smathParser.EnclosedExprContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code EnclosedExpr}
+	 * labeled alternative in {@link smathParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitEnclosedExpr(smathParser.EnclosedExprContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code BinaryOp}
 	 * labeled alternative in {@link smathParser#expr}.

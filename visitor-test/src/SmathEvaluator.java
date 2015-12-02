@@ -4,28 +4,23 @@ import java.util.Map;
 import java.util.Scanner;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
+import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
-import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.tree.ParseTree;
-import org.antlr.v4.runtime.tree.RuleNode;
 
 public class SmathEvaluator extends smathBaseVisitor<Double> {
 	private Map<String, Double> variableTable = new HashMap<String, Double>();
 	
 	public PrintStream dbgStream = System.out; 
 	
-	@Override 
-	public Double visit(ParseTree tree) {
-		dbgStream.printf("Visiting tree: %s\n", tree.getText());
-		
-		return super.visit(tree);
+	@Override
+	public Double defaultResult() {
+		return -1.0;
 	}
 	
 	@Override
-	public Double visitChildren(RuleNode node){
-		dbgStream.printf("Eval node: %s\n", node.getText());
-		
-		return visitChildren(node);
+	public Double aggregateResult(Double aggregate, Double next) { 
+		return next; 
 	}
 	
 	@Override 
@@ -51,8 +46,6 @@ public class SmathEvaluator extends smathBaseVisitor<Double> {
 		double val = visit(expr);
 		variableTable.put(id, val);
 		
-		dbgStream.printf("Saved variable %s = %f\n", id, val);
-		
 		return val;
 	}
 	
@@ -63,29 +56,35 @@ public class SmathEvaluator extends smathBaseVisitor<Double> {
 		
 		String op = ctx.OP().getText();
 		
-		if(op.equals('+'))
+		if(op.equals("+"))
 			return visit(lhs) + visit(rhs);
-		else if(op.equals('-'))
+		else if(op.equals("-"))
 			return visit(lhs) - visit(rhs);
-		else if(op.equals('*'))
+		else if(op.equals("*"))
 			return visit(lhs) * visit(rhs);
-		else if(op.equals('/'))
+		else if(op.equals("/"))
 			return visit(lhs) / visit(rhs);
 		
-		return 0.0;
+		dbgStream.printf("Unknown operator: \"%s\"\n", op);
+		return defaultResult();
+	}
+	
+	@Override 
+	public Double visitEnclosedExpr(smathParser.EnclosedExprContext ctx) {
+		return visit(ctx.expr());
 	}
 	
 	//=======================================================================================//
 	
 	public double eval(String line) {
-		dbgStream.printf("Eval line: %s\n", line);
-		
-		ANTLRInputStream stream = new ANTLRInputStream(line);
+		CharStream stream = new ANTLRInputStream(line);
 		smathLexer lexer = new smathLexer(stream);
 		CommonTokenStream tokens = new CommonTokenStream(lexer);
 		
 		smathParser parser = new smathParser(tokens);
-		return this.visit(parser.expr());
+		ParseTree tree = parser.expr();
+
+		return visit(tree);
 	}
 	
 	public static void main(String[] args) {
@@ -94,7 +93,9 @@ public class SmathEvaluator extends smathBaseVisitor<Double> {
 		evaluator.variableTable.put("pi", 3.1415926535897932384626433832795);
 		
 		while(sc.hasNextLine()) {
-			System.out.println(evaluator.eval(sc.nextLine()));
+			String line = sc.nextLine();
+			double result = evaluator.eval(line);
+			System.out.println(result);
 		}
 		
 		sc.close();

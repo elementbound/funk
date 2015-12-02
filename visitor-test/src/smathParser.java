@@ -89,25 +89,6 @@ public class smathParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
-	public static class EnclosedOpContext extends ExprContext {
-		public ExprContext expr() {
-			return getRuleContext(ExprContext.class,0);
-		}
-		public EnclosedOpContext(ExprContext ctx) { copyFrom(ctx); }
-		@Override
-		public void enterRule(ParseTreeListener listener) {
-			if ( listener instanceof smathListener ) ((smathListener)listener).enterEnclosedOp(this);
-		}
-		@Override
-		public void exitRule(ParseTreeListener listener) {
-			if ( listener instanceof smathListener ) ((smathListener)listener).exitEnclosedOp(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof smathVisitor ) return ((smathVisitor<? extends T>)visitor).visitEnclosedOp(this);
-			else return visitor.visitChildren(this);
-		}
-	}
 	public static class LiteralContext extends ExprContext {
 		public TerminalNode NUMBER() { return getToken(smathParser.NUMBER, 0); }
 		public LiteralContext(ExprContext ctx) { copyFrom(ctx); }
@@ -159,6 +140,25 @@ public class smathParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof smathVisitor ) return ((smathVisitor<? extends T>)visitor).visitID(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class EnclosedExprContext extends ExprContext {
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
+		}
+		public EnclosedExprContext(ExprContext ctx) { copyFrom(ctx); }
+		@Override
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof smathListener ) ((smathListener)listener).enterEnclosedExpr(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof smathListener ) ((smathListener)listener).exitEnclosedExpr(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof smathVisitor ) return ((smathVisitor<? extends T>)visitor).visitEnclosedExpr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -214,7 +214,7 @@ public class smathParser extends Parser {
 				setState(4);
 				match(T__0);
 				setState(5);
-				expr(3);
+				expr(2);
 				}
 				break;
 			case 2:
@@ -237,7 +237,7 @@ public class smathParser extends Parser {
 				break;
 			case 4:
 				{
-				_localctx = new EnclosedOpContext(_localctx);
+				_localctx = new EnclosedExprContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(8);
@@ -262,11 +262,11 @@ public class smathParser extends Parser {
 					_localctx = new BinaryOpContext(new ExprContext(_parentctx, _parentState));
 					pushNewRecursionContext(_localctx, _startState, RULE_expr);
 					setState(14);
-					if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
+					if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
 					setState(15);
 					match(OP);
 					setState(16);
-					expr(3);
+					expr(4);
 					}
 					} 
 				}
@@ -297,7 +297,7 @@ public class smathParser extends Parser {
 	private boolean expr_sempred(ExprContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 0:
-			return precpred(_ctx, 2);
+			return precpred(_ctx, 3);
 		}
 		return true;
 	}
@@ -306,10 +306,10 @@ public class smathParser extends Parser {
 		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\t\31\4\2\t\2\3\2"+
 		"\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5\2\17\n\2\3\2\3\2\3\2\7\2\24\n\2"+
 		"\f\2\16\2\27\13\2\3\2\2\3\2\3\2\2\2\33\2\16\3\2\2\2\4\5\b\2\1\2\5\6\7"+
-		"\7\2\2\6\7\7\3\2\2\7\17\5\2\2\5\b\17\7\6\2\2\t\17\7\7\2\2\n\13\7\4\2\2"+
+		"\7\2\2\6\7\7\3\2\2\7\17\5\2\2\4\b\17\7\6\2\2\t\17\7\7\2\2\n\13\7\4\2\2"+
 		"\13\f\5\2\2\2\f\r\7\5\2\2\r\17\3\2\2\2\16\4\3\2\2\2\16\b\3\2\2\2\16\t"+
-		"\3\2\2\2\16\n\3\2\2\2\17\25\3\2\2\2\20\21\f\4\2\2\21\22\7\b\2\2\22\24"+
-		"\5\2\2\5\23\20\3\2\2\2\24\27\3\2\2\2\25\23\3\2\2\2\25\26\3\2\2\2\26\3"+
+		"\3\2\2\2\16\n\3\2\2\2\17\25\3\2\2\2\20\21\f\5\2\2\21\22\7\b\2\2\22\24"+
+		"\5\2\2\6\23\20\3\2\2\2\24\27\3\2\2\2\25\23\3\2\2\2\25\26\3\2\2\2\26\3"+
 		"\3\2\2\2\27\25\3\2\2\2\4\16\25";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());

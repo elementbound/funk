@@ -10,13 +10,6 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public interface smathVisitor<T> extends ParseTreeVisitor<T> {
 	/**
-	 * Visit a parse tree produced by the {@code EnclosedOp}
-	 * labeled alternative in {@link smathParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitEnclosedOp(smathParser.EnclosedOpContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code Literal}
 	 * labeled alternative in {@link smathParser#expr}.
 	 * @param ctx the parse tree
@@ -37,6 +30,13 @@ public interface smathVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitID(smathParser.IDContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code EnclosedExpr}
+	 * labeled alternative in {@link smathParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEnclosedExpr(smathParser.EnclosedExprContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code BinaryOp}
 	 * labeled alternative in {@link smathParser#expr}.

@@ -8,7 +8,7 @@ WS: [ \t\r\n] -> skip;
 
 expr: NUMBER # Literal
 	| ID # ID
-	| ID '=' expr # Assign
 	| expr OP expr # BinaryOp
-	| '(' expr ')' # EnclosedOp
+	| ID '=' expr # Assign
+	| '(' expr ')' # EnclosedExpr
 	;

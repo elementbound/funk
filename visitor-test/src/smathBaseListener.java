@@ -15,18 +15,6 @@ public class smathBaseListener implements smathListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterEnclosedOp(smathParser.EnclosedOpContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
-	@Override public void exitEnclosedOp(smathParser.EnclosedOpContext ctx) { }
-	/**
-	 * {@inheritDoc}
-	 *
-	 * <p>The default implementation does nothing.</p>
-	 */
 	@Override public void enterLiteral(smathParser.LiteralContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -58,6 +46,18 @@ public class smathBaseListener implements smathListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitID(smathParser.IDContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterEnclosedExpr(smathParser.EnclosedExprContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitEnclosedExpr(smathParser.EnclosedExprContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
