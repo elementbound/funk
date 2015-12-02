@@ -1,40 +1,31 @@
 grammar funk; 
 
-// Catch errors 
-@parser::members 
-{
-  @Override
-  public void notifyErrorListeners(Token offendingToken, String msg, RecognitionException ex)
-  {
-    throw ex; 
-  }
-}
-
 WS: [ \t\r\n] -> skip; 
 
 NUMBER: [0-9]+;
 STRING: '\'' (~'\'')* '\'' | '\"' (~'\"')* '\"';
 BOOLEAN: 'True' | 'False';
 ID: [_a-zA-Z][a-zA-Z0-9]*;
-BINOP: '+' | '-' | '*' | '/' | '==' | '!=' | '<' | '>';
+OP: '+' | '-' | '*' | '/' | '==' | '!=' | '<' | '>';
 COMMENT: '/*' .*? '*/'; // Non-greedy matching
 
-comment: COMMENT;
-id: ID;
-literal: STRING | NUMBER | BOOLEAN;
-object: id | literal;
-memberCall: object '.' ID '(' args? ')';
-assign: ID '=' expr;
-closedExpr: '(' expr ')';
+expr: '(' expr ')' 				# EnclosedExpr 
+	 | ID 						# ID
+	 | NUMBER 					# NumberLiteral
+	 | STRING 					# StringLiteral
+	 | OP expr 					# UnaryOp
+	 | expr OP expr 			# BinaryOp
+	 | ID '.' ID '(' args ')' 	# DirectMemberCall
+	 | ID '=' expr 				# Assign
+	 ;
 
-expr: closedExpr | 
-	  id | literal |
-	  expr BINOP expr |
-	  memberCall |
-	  assign;
-
-args: expr | args ',' expr;
-statement: expr ';' | ifThenElse | forLoop | comment|block;
+args: (expr ',')* expr;
+statement: expr ';' 			# SingleStatement
+	| ifThenElse 				# IfStatement
+	| forLoop 					# ForStatement
+	| block 					# BlockStatement
+	| COMMENT					# Comment
+	;
 
 ifThenElse: 'if' '(' expr ')' statement ('else' statement)?; 
 forLoop: 'for' '(' expr ';' expr ';' expr ')' statement; 
