@@ -32,6 +32,13 @@ public interface funkVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitStringLiteral(funkParser.StringLiteralContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code BooleanLiteral}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBooleanLiteral(funkParser.BooleanLiteralContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code Assign}
 	 * labeled alternative in {@link funkParser#expr}.
 	 * @param ctx the parse tree

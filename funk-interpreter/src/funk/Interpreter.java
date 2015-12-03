@@ -14,9 +14,8 @@ import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.NoViableAltException;
 import org.antlr.v4.runtime.RecognitionException;
-import org.antlr.v4.runtime.Token;
-import org.antlr.v4.runtime.misc.IntervalSet;
 import org.antlr.v4.runtime.tree.ParseTree;
+import org.antlr.v4.runtime.tree.RuleNode;
 
 import funk.antlr.funkBaseVisitor;
 import funk.antlr.funkLexer;
@@ -84,7 +83,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		funkParser parser = new funkParser(tokens);
 		
 		//Minden utasitast kiertekelni:
-		
+		try {
 			code = code.replaceAll(" \t\r\n", "");
 			code = code.replaceAll("\t", "");
 			code = code.replaceAll("\r", "");
@@ -94,42 +93,60 @@ public class Interpreter extends funkBaseVisitor<Object> {
 			//dbgStream.printf("Remaining tokens: %s\n", lexer.getAllTokens().size());
 			for(ParseTree node = parser.statement(); 
 					!node.getText().startsWith("<EOF>") && !node.getText().trim().equals(""); 
-					) {
+					node = parser.statement()) {
 				dbgStream.printf("Visiting %s\n", node.getText());
-				visit(node);
-				
-				try {
-					node = parser.statement();
-				}
-				catch(NoViableAltException e) {
-					e.printStackTrace(); 
-					
-					StringBuilder strb = new StringBuilder();
-					strb.append("Got token ").append(e.getOffendingToken().getText()).append(";\n");
-					strb.append("Expected: ");
-
-					for(int t : e.getExpectedTokens().toList()) {
-						strb.append('\n').append(funkParser.VOCABULARY.getDisplayName(t));
-					}
-					
-					dbgStream.println(strb);
-					dbgStream.printf("Node text: \"%s\"\n", e.getCtx().getText().trim());
-					dbgStream.println(e.getLocalizedMessage());
-					//Silently continue
-				}
-
-				dbgStream.printf("Remaining tokens: %s\n", lexer.getAllTokens().size());
+				dbgStream.printf("Return: %s\n", visit(node).toString());
 			}
-		
+		}
+		catch(NoViableAltException e) {
+			if(e.getOffendingToken().getText().equals("<EOF>"))
+				return; 
+			
+			StringBuilder strb = new StringBuilder();
+			strb.append("Got token ").append(e.getOffendingToken().getText()).append(";\n");
+			strb.append("Expected: ");
+
+			for(int t : e.getExpectedTokens().toList()) {
+				strb.append('\n').append(funkParser.VOCABULARY.getDisplayName(t));
+			}
+			
+			dbgStream.println(strb);
+			dbgStream.printf("Node text: \"%s\"\n", e.getCtx().getText().trim());
+			
+			e.printStackTrace(); 
+			//Silently continue
+		}
 	}
 	
 	@Override 
 	public Object defaultResult() {
-		return new Object("The fuck");
+		return null;
+	}
+	
+	@Override 
+	public Object aggregateResult(Object aggregate, Object next) {
+		if(aggregate == null) {
+			//dbgStream.printf("Aggregating null and %s; returning %s\n", next, next);
+			return next;
+		}
+		else {
+			//dbgStream.printf("Aggregating %s and null; returning %s\n", aggregate, aggregate);
+			return aggregate;
+		}
+	}
+	
+	@Override
+	public Object visitChildren(RuleNode node) {
+		dbgStream.printf("Visiting node: %s\n", node.getText());
+		dbgStream.printf("Rule: %s\n", funkParser.ruleNames[node.getRuleContext().getRuleIndex()]);
+		dbgStream.printf("Context type: %s\n\n", node.getRuleContext().getClass().getName());
+		
+		return super.visitChildren(node);
 	}
 	
 	@Override 
 	public Object visitEnclosedExpr(funkParser.EnclosedExprContext ctx) {
+		dbgStream.printf("Enclosed expr: %s\n", ctx.getText());
 		return visit(ctx.expr());
 	}
 	
@@ -147,16 +164,20 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	
 	@Override 
 	public Object visitNumberLiteral(funkParser.NumberLiteralContext ctx) {
+		dbgStream.printf("Number literal: %s\n", ctx.getText());
 		return new Object(Integer.parseInt(ctx.NUMBER().getText()));
 	}
 	
 	@Override
 	public Object visitStringLiteral(funkParser.StringLiteralContext ctx) {
+		dbgStream.printf("String literal: %s\n", ctx.getText());
 		return new Object(ctx.STRING().getText());
 	}
 	
 	@Override 
 	public Object visitUnaryOp(funkParser.UnaryOpContext ctx) {
+		dbgStream.printf("Unary op: %s\n", ctx.getText());
+		
 		String op = ctx.OP().getText();
 		ExprContext expr = ctx.expr();
 		
@@ -171,7 +192,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	
 	@Override 
 	public Object visitBinaryOp(funkParser.BinaryOpContext ctx) {
-		dbgStream.printf("Binary operation: %s\n", ctx.getText());
+		dbgStream.printf("Binary op: %s\n", ctx.getText());
 		
 		//Kiszedni a ket expr-t es az operatort
 		ParseTree lhs = ctx.expr(0);
@@ -209,6 +230,8 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	
 	@Override 
 	public Object visitDirectMemberCall(funkParser.DirectMemberCallContext ctx) {
+		dbgStream.printf("Direct member call: %s\n", ctx.getText());
+		
 		String selfName = ctx.ID(0).getText();
 		String functionName = ctx.ID(1).getText();
 		ArgsContext args = ctx.args();
@@ -250,6 +273,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		dbgStream.printf("Saved variable: %s = %s\n", id, result);
 		
 		//A kapott Object-et visszaadni
+		dbgStream.printf("Returning from assign: %s\n", result);
 		return result; 
 	}
 	

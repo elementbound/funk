@@ -119,6 +119,11 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitDirectMemberCall(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitDirectMemberCall(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class UnaryOpContext extends ExprContext {
 		public TerminalNode OP() { return getToken(funkParser.OP, 0); }
@@ -134,6 +139,11 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitUnaryOp(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitUnaryOp(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class StringLiteralContext extends ExprContext {
 		public TerminalNode STRING() { return getToken(funkParser.STRING, 0); }
@@ -146,6 +156,11 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitStringLiteral(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitStringLiteral(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class BooleanLiteralContext extends ExprContext {
 		public TerminalNode BOOLEAN() { return getToken(funkParser.BOOLEAN, 0); }
@@ -157,6 +172,11 @@ public class funkParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitBooleanLiteral(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitBooleanLiteral(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class AssignContext extends ExprContext {
@@ -173,6 +193,11 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitAssign(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitAssign(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class IDContext extends ExprContext {
 		public TerminalNode ID() { return getToken(funkParser.ID, 0); }
@@ -184,6 +209,11 @@ public class funkParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitID(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitID(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class EnclosedExprContext extends ExprContext {
@@ -199,6 +229,11 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitEnclosedExpr(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitEnclosedExpr(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class NumberLiteralContext extends ExprContext {
 		public TerminalNode NUMBER() { return getToken(funkParser.NUMBER, 0); }
@@ -210,6 +245,11 @@ public class funkParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitNumberLiteral(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitNumberLiteral(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class BinaryOpContext extends ExprContext {
@@ -228,6 +268,11 @@ public class funkParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitBinaryOp(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitBinaryOp(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -399,6 +444,11 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitArgs(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitArgs(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ArgsContext args() throws RecognitionException {
@@ -473,6 +523,11 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitIfStatement(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitIfStatement(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class CommentContext extends StatementContext {
 		public TerminalNode COMMENT() { return getToken(funkParser.COMMENT, 0); }
@@ -484,6 +539,11 @@ public class funkParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitComment(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitComment(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 	public static class SingleStatementContext extends StatementContext {
@@ -499,6 +559,11 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitSingleStatement(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitSingleStatement(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class BlockStatementContext extends StatementContext {
 		public BlockContext block() {
@@ -513,6 +578,11 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitBlockStatement(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitBlockStatement(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 	public static class ForStatementContext extends StatementContext {
 		public ForLoopContext forLoop() {
@@ -526,6 +596,11 @@ public class funkParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitForStatement(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitForStatement(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
@@ -619,6 +694,11 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitIfThenElse(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitIfThenElse(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final IfThenElseContext ifThenElse() throws RecognitionException {
@@ -683,6 +763,11 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitForLoop(this);
 		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitForLoop(this);
+			else return visitor.visitChildren(this);
+		}
 	}
 
 	public final ForLoopContext forLoop() throws RecognitionException {
@@ -740,6 +825,11 @@ public class funkParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitBlock(this);
+		}
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitBlock(this);
+			else return visitor.visitChildren(this);
 		}
 	}
 
