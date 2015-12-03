@@ -171,7 +171,21 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	@Override
 	public Object visitStringLiteral(funkParser.StringLiteralContext ctx) {
 		dbgStream.printf("String literal: %s\n", ctx.getText());
-		return new Object(ctx.STRING().getText());
+		
+		String str = ctx.STRING().getText();
+		str = str.substring(1, str.length()-1);
+		
+		return new Object(str);
+	}
+	
+	@Override 
+	public Object visitBooleanLiteral(funkParser.BooleanLiteralContext ctx) {
+		if(ctx.BOOLEAN().getText().equals("True"))
+			return new Object(true);
+		else if(ctx.BOOLEAN().getText().equals("False"))
+			return new Object(false);
+		else 
+			return new Object("The fuck is this boolean");
 	}
 	
 	@Override 
