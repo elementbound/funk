@@ -2,7 +2,6 @@ package funk;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -14,21 +13,16 @@ import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.NoViableAltException;
-import org.antlr.v4.runtime.ParserRuleContext;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Token;
+import org.antlr.v4.runtime.misc.IntervalSet;
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import funk.antlr.funkBaseVisitor;
 import funk.antlr.funkLexer;
 import funk.antlr.funkParser;
 import funk.antlr.funkParser.ArgsContext;
-import funk.antlr.funkParser.AssignContext;
-import funk.antlr.funkParser.BlockContext;
-import funk.antlr.funkParser.CommentContext;
 import funk.antlr.funkParser.ExprContext;
-import funk.antlr.funkParser.ForLoopContext;
-import funk.antlr.funkParser.IfThenElseContext;
 import funk.antlr.funkParser.StatementContext;
 
 public class Interpreter extends funkBaseVisitor<Object> {
@@ -90,30 +84,48 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		funkParser parser = new funkParser(tokens);
 		
 		//Minden utasitast kiertekelni:
-		try {
+		
 			code = code.replaceAll(" \t\r\n", "");
 			code = code.replaceAll("\t", "");
 			code = code.replaceAll("\r", "");
 			code = code.replaceAll("\n", "");
 			//dbgStream.printf("After replace: %s\n", code);
 			
+			//dbgStream.printf("Remaining tokens: %s\n", lexer.getAllTokens().size());
 			for(ParseTree node = parser.statement(); 
 					!node.getText().startsWith("<EOF>") && !node.getText().trim().equals(""); 
-					node = parser.statement()) 
-				//System.out.println(node.getText());
-				eval(node);
-		}
-		catch(NoViableAltException e) {
-			/*e.printStackTrace(); 
-			dbgStream.printf("Got %s, expected %s\n", e.getOffendingToken(), e.getExpectedTokens());
-			dbgStream.printf("Node text: \"%s\"\n", e.getCtx().getText().trim());*/
-			//Silently continue
-		}
+					) {
+				dbgStream.printf("Visiting %s\n", node.getText());
+				visit(node);
+				
+				try {
+					node = parser.statement();
+				}
+				catch(NoViableAltException e) {
+					e.printStackTrace(); 
+					
+					StringBuilder strb = new StringBuilder();
+					strb.append("Got token ").append(e.getOffendingToken().getText()).append(";\n");
+					strb.append("Expected: ");
+
+					for(int t : e.getExpectedTokens().toList()) {
+						strb.append('\n').append(funkParser.VOCABULARY.getDisplayName(t));
+					}
+					
+					dbgStream.println(strb);
+					dbgStream.printf("Node text: \"%s\"\n", e.getCtx().getText().trim());
+					dbgStream.println(e.getLocalizedMessage());
+					//Silently continue
+				}
+
+				dbgStream.printf("Remaining tokens: %s\n", lexer.getAllTokens().size());
+			}
+		
 	}
 	
 	@Override 
 	public Object defaultResult() {
-		return new Object();
+		return new Object("The fuck");
 	}
 	
 	@Override 
@@ -241,194 +253,76 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		return result; 
 	}
 	
-	@Override 
-	public Object visitSingleStatement(funkParser.SingleStatementContext ctx) {
-		return visit(ctx.expr());
-	}
-	
-	private Object eval(ParseTree node) throws UnknownVariableException, IllegalCastException, UnknownFunctionException {
-		dbgStream.printf("Evaluating node: [%s]%s\n", node.getClass().getName(),node.getText());
-		
-		//Kideriteni hogy milyen szabalyol jott: 
-		//Ha statement: 
-		
-		if(node instanceof StatementContext) {
-			//Kiertekelni az expr reszet
-			dbgStream.println("Statement");
-			return eval(Utils.extractNodes(node).get(0));
-		}
-		//Ha komment: 
-		else if(node instanceof CommentContext) {
-			//Nincs nagyon dolgunk vele, de mivel mindig vissza kell dobjunk egy Object-et, 
-			//visszadobjuk magat a szoveget
-			dbgStream.printf("Comment: %s\n", node.getText());
-			return new Object(node.getText());
-		}
-		//Ha block
-		else if(node instanceof BlockContext){
-			dbgStream.printf("Block: %s\n", node.getText());
-			
-			variableTable.push(new SymbolTable());
-			
-			List<ParseTree> nodes = Utils.extractNodes(node);
-			Object result = new Object();
-			for(ParseTree n : nodes)
-				result = eval(n);
-			
-			variableTable.pop();
-			
-			return result; 
-		}
-		//Ha literal: 
-		else if(node instanceof LiteralContext) {
-			//Megnezni hogy milyen tipusu es visszaadni a megfelelo funk.Object-et
-			String literalStr = node.getText();
-			Object result; 
-			
-			if(literalStr.charAt(0) == '\"' || literalStr.charAt(0) == '\'')
-				result = new Object(literalStr.substring(1, literalStr.length()-1));
-			else if(literalStr.equals("True"))
-				result = new Object(true);
-			else if(literalStr.equals("False"))
-				result = new Object(false);
-			else
-				result = new Object(Integer.parseInt(literalStr));
-			
-			dbgStream.printf("Literal: %s (%s)\n", result, literalStr);
-			return result; 
-		}
-		//Ha object ( object: id | literal )
-		else if(node instanceof ObjectContext) {
-			return eval(Utils.extractNodes(node).get(0));
-		}
-		//Ha memberCall: 
-		else if(node instanceof MemberCallContext) {
-			//Kikeresni a fuggvenyek kozt a megfelelo fuggvenyt
-			//Kimasolni az arg-okat
-			//Kiertekelni az arg-okat es az igy kapott funk.Object-eket listaba tenni
-			//atadni a listat a kikeresett fuggvenynek es visszaadni amit ad
-			
-			List<ParseTree> nodes = Utils.extractNodes(node);
-			List<Token> tokens = Utils.extractTokens(node);
-			
-			ParseTree selfNode = nodes.get(0);
-			Token functionToken = tokens.get(1);
-			ParseTree argsNode = null; 
-			if(nodes.size() >= 2)
-				argsNode = nodes.get(1);
-			
-			dbgStream.printf("Function call: %s . %s(...)\n", selfNode.getText(), functionToken.getText());
-			
-			if(!functionTable.containsKey(functionToken.getText()))
-				throw new UnknownFunctionException(functionToken.getText());
+	@Override
+	public Object visitIfThenElse(funkParser.IfThenElseContext ctx) {
+		ExprContext expr = ctx.expr();
+		StatementContext thenScope = ctx.statement(0);
+		StatementContext elseScope = null;
+		if(ctx.statement().size() >= 1)
+			elseScope = ctx.statement(1);
 
-			List<Object> args = new ArrayList<>();
-			if(argsNode != null) {
-				ParseTree at = argsNode;
-				List<ParseTree> subats;
-				
-				while(true) {
-					subats = Utils.extractNodes(at);
-					ParseTree lhs = subats.get(0);
-					ParseTree rhs = null; 
-					if(subats.size() >= 2)
-						rhs = subats.get(1);
-					
-					if(rhs != null) {
-						dbgStream.printf("\t%s , %s\n", lhs.getText(), rhs.getText());
-						dbgStream.printf("\tCollected argument: %s\n", rhs.getText());
-						args.add(eval(rhs));
-					}
-					
-					if(lhs instanceof ArgsContext) {
-						dbgStream.printf("\tMoving on to %s\n", lhs.getText());
-						at = lhs;
-					}
-					else {
-						dbgStream.printf("\tCollected final argument: %s\n", lhs.getText());
-						args.add(eval(lhs.getChild(0)));
-						break;
-					}
-				}
-			}
-			
-			Collections.reverse(args);
-			
-			ICallable function = functionTable.get(functionToken.getText());
-			return function.call(eval(selfNode), args.toArray(new Object[args.size()])); //Pass as varargs
-		}
-		//Ha assign: 
-		else if(node instanceof AssignContext) {
-			ParseTree expr = Utils.extractNodes(node).get(0);
-			Token id = Utils.extractTokens(node).get(0);
-			
-			
-		}
-		//Ha ( expr ) avagy closedExpr
-		else if(node instanceof ClosedExprContext) {
-			ParseTree subnode = Utils.extractNodes(node).get(0);
-			
-			dbgStream.printf("Closed expr: %s\n", subnode.getText());
-			return eval(subnode);
-		}
-		//Ha if-then-else
-		else if(node instanceof IfThenElseContext) {
-			List<ParseTree> nodes = Utils.extractNodes(node);
-			ParseTree expr = nodes.get(0);
-			ParseTree thenScope = nodes.get(1);
-			ParseTree elseScope = null;
-			if(nodes.size() >= 3)
-				elseScope = nodes.get(2);
-
-			if(elseScope != null)
-				dbgStream.printf("if( %s ) then %s else %s\n", expr.getText(), thenScope.getText(), elseScope.getText());
-			else
-				dbgStream.printf("if( %s ) then %s\n", expr.getText(), thenScope.getText());
-			
-			if(eval(expr).asBoolean())
-				return eval(thenScope);
+		if(elseScope != null)
+			dbgStream.printf("if( %s ) then %s else %s\n", expr.getText(), thenScope.getText(), elseScope.getText());
+		else
+			dbgStream.printf("if( %s ) then %s\n", expr.getText(), thenScope.getText());
+		
+		try {
+			if(visit(expr).asBoolean())
+				return visit(thenScope);
 			else
 				if(elseScope != null)
-					return eval(elseScope);
+					return visit(elseScope);
 				else
 					return new Object();
 		}
-		//Ha for loop: 
-		else if(node instanceof ForLoopContext) {
-			List<ParseTree> nodes = Utils.extractNodes(node);
-			
-			ParseTree initNode = nodes.get(0);
-			ParseTree conditionNode = nodes.get(1);
-			ParseTree stepNode = nodes.get(2);
-			ParseTree scopeNode = nodes.get(3);
-			
-			Object result;
-			
-			result = eval(initNode);
-			while(eval(conditionNode).asBoolean()) {
-				result = eval(scopeNode);
-				eval(stepNode);
-			}
-			
-			return result; 
+		catch(IllegalCastException ex) {
+			//TODO: Exceptions from visitors
+			return new Object("Illegal cast exception: " + ex.getMessage());
 		}
-		//Ha expr: 
-		else if(node instanceof ExprContext) {
-			//Egytagu, vagyis a fentiek egyike lesz
-			if(node.getChildCount() == 1) {
-				dbgStream.println("Lone-child expr");
-				return eval(node.getChild(0));
+	}
+	
+	@Override
+	public Object visitForLoop(funkParser.ForLoopContext ctx) {
+		ExprContext initNode = ctx.expr(0);
+		ExprContext conditionNode = ctx.expr(1);
+		ExprContext stepNode = ctx.expr(2);
+		StatementContext scopeNode = ctx.statement();
+		
+		Object result;
+		
+		result = visit(initNode);
+		try {
+			while(visit(conditionNode).asBoolean()) {
+				result = visit(scopeNode);
+				visit(stepNode);
 			}
-			//Kulonben expr <op> expr: 
-			else {
-				
-			}
+		} catch (IllegalCastException ex) {
+			//TODO: Exceptions from visitors
+			return new Object("Illegal cast exception: " + ex.getMessage());
 		}
-		else {
-			dbgStream.println("The fuck is this");
-		}
-
-		return new Object("No return happened, dumbfuck");
+		
+		return result; 
+	}
+	
+	public Object visitBlock(funkParser.BlockContext ctx) {
+		dbgStream.printf("Block: %s\n", ctx.getText());
+		
+		variableTable.push(new SymbolTable());
+		
+		Object result = new Object();
+		for(ParseTree n : ctx.statement())
+			result = visit(n);
+		
+		variableTable.pop();
+		
+		return result; 
+	}
+	
+	public Object visitComment(funkParser.CommentContext ctx) {
+		//Nincs nagyon dolgunk vele, de mivel mindig vissza kell dobjunk egy Object-et, 
+		//visszadobjuk magat a szoveget
+		dbgStream.printf("Comment: %s\n", ctx.COMMENT().getText());
+		return new Object(ctx.COMMENT().getText());
 	}
 	
 	public void dumpVariables(PrintStream out) {
@@ -438,42 +332,5 @@ public class Interpreter extends funkBaseVisitor<Object> {
 			else 
 				out.printf("%s %s = \'%s\';\n", p.getValue().getType(), p.getKey(), p.getValue().asString());
 		}
-	}
-}
-
-class Utils {
-	//Ide mehetnek majd az olyan utility fuggvenyek mint amik multkor tortentek
-	//Pl. extractNodes, extractTokens, ilyesmik
-	
-	public static int classifyNode(ParseTree node) {
-		ParserRuleContext ctx = (ParserRuleContext)node.getPayload();
-
-		return 0;
-	}
-	
-	public static List<ParseTree> extractNodes(ParseTree node) {
-		List<ParseTree> ret = new ArrayList<>();
-		
-		for(int i = 0; i < node.getChildCount(); i++)
-		{
-			ParseTree c = node.getChild(i);
-			if(c.getPayload() instanceof ParserRuleContext)
-				ret.add(c);
-		}
-		
-		return ret; 
-	}
-	
-	public static List<Token> extractTokens(ParseTree node) {
-		List<Token> ret = new ArrayList<Token>();
-		
-		for(int i = 0; i < node.getChildCount(); i++)
-		{
-			ParseTree c = node.getChild(i);
-			if(c.getPayload() instanceof Token)
-				ret.add((Token)c.getPayload());
-		}
-		
-		return ret; 
 	}
 }

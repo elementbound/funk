@@ -8,13 +8,7 @@ import java.awt.BorderLayout;
 import java.awt.Font;
 import javax.swing.SwingConstants;
 
-import javafx.scene.input.KeyCode;
-
 import java.awt.Color;
-import java.awt.Window.Type;
-import javax.swing.JPanel;
-import javax.swing.JButton;
-import javax.swing.BoxLayout;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 

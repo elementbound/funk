@@ -1,5 +1,15 @@
 grammar funk; 
 
+// Catch errors 
+@parser::members 
+{
+  @Override
+  public void notifyErrorListeners(Token offendingToken, String msg, RecognitionException ex)
+  {
+    throw ex; 
+  }
+}
+
 WS: [ \t\r\n] -> skip; 
 
 NUMBER: [0-9]+;
@@ -20,7 +30,7 @@ expr: '(' expr ')' 				# EnclosedExpr
 	 | ID '=' expr 				# Assign
 	 ;
 
-args: (expr ',')* expr;
+args: ((expr ',')* expr)?;
 statement: expr ';' 			# SingleStatement
 	| ifThenElse 				# IfStatement
 	| forLoop 					# ForStatement

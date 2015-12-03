@@ -80,6 +80,13 @@ public class funkParser extends Parser {
 	@Override
 	public ATN getATN() { return _ATN; }
 
+
+	  @Override
+	  public void notifyErrorListeners(Token offendingToken, String msg, RecognitionException ex)
+	  {
+	    throw ex; 
+	  }
+
 	public funkParser(TokenStream input) {
 		super(input);
 		_interp = new ParserATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
@@ -112,11 +119,6 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitDirectMemberCall(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitDirectMemberCall(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 	public static class UnaryOpContext extends ExprContext {
 		public TerminalNode OP() { return getToken(funkParser.OP, 0); }
@@ -132,11 +134,6 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitUnaryOp(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitUnaryOp(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 	public static class StringLiteralContext extends ExprContext {
 		public TerminalNode STRING() { return getToken(funkParser.STRING, 0); }
@@ -149,10 +146,17 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitStringLiteral(this);
 		}
+	}
+	public static class BooleanLiteralContext extends ExprContext {
+		public TerminalNode BOOLEAN() { return getToken(funkParser.BOOLEAN, 0); }
+		public BooleanLiteralContext(ExprContext ctx) { copyFrom(ctx); }
 		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitStringLiteral(this);
-			else return visitor.visitChildren(this);
+		public void enterRule(ParseTreeListener listener) {
+			if ( listener instanceof funkListener ) ((funkListener)listener).enterBooleanLiteral(this);
+		}
+		@Override
+		public void exitRule(ParseTreeListener listener) {
+			if ( listener instanceof funkListener ) ((funkListener)listener).exitBooleanLiteral(this);
 		}
 	}
 	public static class AssignContext extends ExprContext {
@@ -169,11 +173,6 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitAssign(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitAssign(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 	public static class IDContext extends ExprContext {
 		public TerminalNode ID() { return getToken(funkParser.ID, 0); }
@@ -185,11 +184,6 @@ public class funkParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitID(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitID(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 	public static class EnclosedExprContext extends ExprContext {
@@ -205,11 +199,6 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitEnclosedExpr(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitEnclosedExpr(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 	public static class NumberLiteralContext extends ExprContext {
 		public TerminalNode NUMBER() { return getToken(funkParser.NUMBER, 0); }
@@ -221,11 +210,6 @@ public class funkParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitNumberLiteral(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitNumberLiteral(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 	public static class BinaryOpContext extends ExprContext {
@@ -245,11 +229,6 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitBinaryOp(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitBinaryOp(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 
 	public final ExprContext expr() throws RecognitionException {
@@ -267,7 +246,7 @@ public class funkParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(32);
+			setState(33);
 			switch ( getInterpreter().adaptivePredict(_input,0,_ctx) ) {
 			case 1:
 				{
@@ -318,44 +297,53 @@ public class funkParser extends Parser {
 				break;
 			case 5:
 				{
-				_localctx = new NumberLiteralContext(_localctx);
+				_localctx = new BooleanLiteralContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(23);
-				match(NUMBER);
+				match(BOOLEAN);
 				}
 				break;
 			case 6:
 				{
-				_localctx = new StringLiteralContext(_localctx);
+				_localctx = new NumberLiteralContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(24);
-				match(STRING);
+				match(NUMBER);
 				}
 				break;
 			case 7:
 				{
-				_localctx = new DirectMemberCallContext(_localctx);
+				_localctx = new StringLiteralContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(25);
-				match(ID);
+				match(STRING);
+				}
+				break;
+			case 8:
+				{
+				_localctx = new DirectMemberCallContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(26);
-				match(T__2);
-				setState(27);
 				match(ID);
+				setState(27);
+				match(T__2);
 				setState(28);
-				match(T__0);
+				match(ID);
 				setState(29);
-				args();
+				match(T__0);
 				setState(30);
+				args();
+				setState(31);
 				match(T__1);
 				}
 				break;
 			}
 			_ctx.stop = _input.LT(-1);
-			setState(39);
+			setState(40);
 			_errHandler.sync(this);
 			_alt = getInterpreter().adaptivePredict(_input,1,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
@@ -366,16 +354,16 @@ public class funkParser extends Parser {
 					{
 					_localctx = new BinaryOpContext(new ExprContext(_parentctx, _parentState));
 					pushNewRecursionContext(_localctx, _startState, RULE_expr);
-					setState(34);
-					if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
 					setState(35);
-					match(OP);
+					if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
 					setState(36);
+					match(OP);
+					setState(37);
 					expr(4);
 					}
 					} 
 				}
-				setState(41);
+				setState(42);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,1,_ctx);
 			}
@@ -411,40 +399,43 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitArgs(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitArgs(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 
 	public final ArgsContext args() throws RecognitionException {
 		ArgsContext _localctx = new ArgsContext(_ctx, getState());
 		enterRule(_localctx, 2, RULE_args);
+		int _la;
 		try {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(47);
-			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
-			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
-				if ( _alt==1 ) {
-					{
-					{
-					setState(42);
-					expr(0);
-					setState(43);
-					match(T__4);
-					}
-					} 
-				}
-				setState(49);
+			setState(52);
+			_la = _input.LA(1);
+			if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__0) | (1L << NUMBER) | (1L << STRING) | (1L << BOOLEAN) | (1L << ID) | (1L << OP))) != 0)) {
+				{
+				setState(48);
 				_errHandler.sync(this);
 				_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
+				while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
+					if ( _alt==1 ) {
+						{
+						{
+						setState(43);
+						expr(0);
+						setState(44);
+						match(T__4);
+						}
+						} 
+					}
+					setState(50);
+					_errHandler.sync(this);
+					_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
+				}
+				setState(51);
+				expr(0);
+				}
 			}
-			setState(50);
-			expr(0);
+
 			}
 		}
 		catch (RecognitionException re) {
@@ -482,11 +473,6 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitIfStatement(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitIfStatement(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 	public static class CommentContext extends StatementContext {
 		public TerminalNode COMMENT() { return getToken(funkParser.COMMENT, 0); }
@@ -498,11 +484,6 @@ public class funkParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitComment(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitComment(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 	public static class SingleStatementContext extends StatementContext {
@@ -518,11 +499,6 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitSingleStatement(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitSingleStatement(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 	public static class BlockStatementContext extends StatementContext {
 		public BlockContext block() {
@@ -536,11 +512,6 @@ public class funkParser extends Parser {
 		@Override
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitBlockStatement(this);
-		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitBlockStatement(this);
-			else return visitor.visitChildren(this);
 		}
 	}
 	public static class ForStatementContext extends StatementContext {
@@ -556,30 +527,26 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitForStatement(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitForStatement(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 
 	public final StatementContext statement() throws RecognitionException {
 		StatementContext _localctx = new StatementContext(_ctx, getState());
 		enterRule(_localctx, 4, RULE_statement);
 		try {
-			setState(59);
+			setState(61);
 			switch (_input.LA(1)) {
 			case T__0:
 			case NUMBER:
 			case STRING:
+			case BOOLEAN:
 			case ID:
 			case OP:
 				_localctx = new SingleStatementContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
-				setState(52);
+				setState(54);
 				expr(0);
-				setState(53);
+				setState(55);
 				match(T__5);
 				}
 				break;
@@ -587,7 +554,7 @@ public class funkParser extends Parser {
 				_localctx = new IfStatementContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
-				setState(55);
+				setState(57);
 				ifThenElse();
 				}
 				break;
@@ -595,7 +562,7 @@ public class funkParser extends Parser {
 				_localctx = new ForStatementContext(_localctx);
 				enterOuterAlt(_localctx, 3);
 				{
-				setState(56);
+				setState(58);
 				forLoop();
 				}
 				break;
@@ -603,7 +570,7 @@ public class funkParser extends Parser {
 				_localctx = new BlockStatementContext(_localctx);
 				enterOuterAlt(_localctx, 4);
 				{
-				setState(57);
+				setState(59);
 				block();
 				}
 				break;
@@ -611,7 +578,7 @@ public class funkParser extends Parser {
 				_localctx = new CommentContext(_localctx);
 				enterOuterAlt(_localctx, 5);
 				{
-				setState(58);
+				setState(60);
 				match(COMMENT);
 				}
 				break;
@@ -652,11 +619,6 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitIfThenElse(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitIfThenElse(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 
 	public final IfThenElseContext ifThenElse() throws RecognitionException {
@@ -665,23 +627,23 @@ public class funkParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(61);
-			match(T__6);
-			setState(62);
-			match(T__0);
 			setState(63);
-			expr(0);
+			match(T__6);
 			setState(64);
-			match(T__1);
+			match(T__0);
 			setState(65);
+			expr(0);
+			setState(66);
+			match(T__1);
+			setState(67);
 			statement();
-			setState(68);
-			switch ( getInterpreter().adaptivePredict(_input,4,_ctx) ) {
+			setState(70);
+			switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
 			case 1:
 				{
-				setState(66);
+				setState(68);
 				match(T__7);
-				setState(67);
+				setState(69);
 				statement();
 				}
 				break;
@@ -721,11 +683,6 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitForLoop(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitForLoop(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 
 	public final ForLoopContext forLoop() throws RecognitionException {
@@ -734,14 +691,10 @@ public class funkParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(70);
-			match(T__8);
-			setState(71);
-			match(T__0);
 			setState(72);
-			expr(0);
+			match(T__8);
 			setState(73);
-			match(T__5);
+			match(T__0);
 			setState(74);
 			expr(0);
 			setState(75);
@@ -749,8 +702,12 @@ public class funkParser extends Parser {
 			setState(76);
 			expr(0);
 			setState(77);
-			match(T__1);
+			match(T__5);
 			setState(78);
+			expr(0);
+			setState(79);
+			match(T__1);
+			setState(80);
 			statement();
 			}
 		}
@@ -784,11 +741,6 @@ public class funkParser extends Parser {
 		public void exitRule(ParseTreeListener listener) {
 			if ( listener instanceof funkListener ) ((funkListener)listener).exitBlock(this);
 		}
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof funkVisitor ) return ((funkVisitor<? extends T>)visitor).visitBlock(this);
-			else return visitor.visitChildren(this);
-		}
 	}
 
 	public final BlockContext block() throws RecognitionException {
@@ -798,23 +750,23 @@ public class funkParser extends Parser {
 		try {
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(80);
+			setState(82);
 			match(T__9);
-			setState(82); 
+			setState(84); 
 			_errHandler.sync(this);
 			_la = _input.LA(1);
 			do {
 				{
 				{
-				setState(81);
+				setState(83);
 				statement();
 				}
 				}
-				setState(84); 
+				setState(86); 
 				_errHandler.sync(this);
 				_la = _input.LA(1);
-			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__0) | (1L << T__6) | (1L << T__8) | (1L << T__9) | (1L << NUMBER) | (1L << STRING) | (1L << ID) | (1L << OP) | (1L << COMMENT))) != 0) );
-			setState(86);
+			} while ( (((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__0) | (1L << T__6) | (1L << T__8) | (1L << T__9) | (1L << NUMBER) | (1L << STRING) | (1L << BOOLEAN) | (1L << ID) | (1L << OP) | (1L << COMMENT))) != 0) );
+			setState(88);
 			match(T__10);
 			}
 		}
@@ -845,29 +797,30 @@ public class funkParser extends Parser {
 	}
 
 	public static final String _serializedATN =
-		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\24[\4\2\t\2\4\3\t"+
+		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\24]\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2"+
-		"\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5\2#\n\2\3\2\3\2\3\2\7\2"+
-		"(\n\2\f\2\16\2+\13\2\3\3\3\3\3\3\7\3\60\n\3\f\3\16\3\63\13\3\3\3\3\3\3"+
-		"\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4>\n\4\3\5\3\5\3\5\3\5\3\5\3\5\3\5\5\5G\n"+
-		"\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\7\3\7\6\7U\n\7\r\7\16\7V"+
-		"\3\7\3\7\3\7\2\3\2\b\2\4\6\b\n\f\2\2b\2\"\3\2\2\2\4\61\3\2\2\2\6=\3\2"+
-		"\2\2\b?\3\2\2\2\nH\3\2\2\2\fR\3\2\2\2\16\17\b\2\1\2\17\20\7\23\2\2\20"+
-		"#\5\2\2\6\21\22\7\22\2\2\22\23\7\6\2\2\23#\5\2\2\3\24\25\7\3\2\2\25\26"+
-		"\5\2\2\2\26\27\7\4\2\2\27#\3\2\2\2\30#\7\22\2\2\31#\7\17\2\2\32#\7\20"+
-		"\2\2\33\34\7\22\2\2\34\35\7\5\2\2\35\36\7\22\2\2\36\37\7\3\2\2\37 \5\4"+
-		"\3\2 !\7\4\2\2!#\3\2\2\2\"\16\3\2\2\2\"\21\3\2\2\2\"\24\3\2\2\2\"\30\3"+
-		"\2\2\2\"\31\3\2\2\2\"\32\3\2\2\2\"\33\3\2\2\2#)\3\2\2\2$%\f\5\2\2%&\7"+
-		"\23\2\2&(\5\2\2\6\'$\3\2\2\2(+\3\2\2\2)\'\3\2\2\2)*\3\2\2\2*\3\3\2\2\2"+
-		"+)\3\2\2\2,-\5\2\2\2-.\7\7\2\2.\60\3\2\2\2/,\3\2\2\2\60\63\3\2\2\2\61"+
-		"/\3\2\2\2\61\62\3\2\2\2\62\64\3\2\2\2\63\61\3\2\2\2\64\65\5\2\2\2\65\5"+
-		"\3\2\2\2\66\67\5\2\2\2\678\7\b\2\28>\3\2\2\29>\5\b\5\2:>\5\n\6\2;>\5\f"+
-		"\7\2<>\7\24\2\2=\66\3\2\2\2=9\3\2\2\2=:\3\2\2\2=;\3\2\2\2=<\3\2\2\2>\7"+
-		"\3\2\2\2?@\7\t\2\2@A\7\3\2\2AB\5\2\2\2BC\7\4\2\2CF\5\6\4\2DE\7\n\2\2E"+
-		"G\5\6\4\2FD\3\2\2\2FG\3\2\2\2G\t\3\2\2\2HI\7\13\2\2IJ\7\3\2\2JK\5\2\2"+
-		"\2KL\7\b\2\2LM\5\2\2\2MN\7\b\2\2NO\5\2\2\2OP\7\4\2\2PQ\5\6\4\2Q\13\3\2"+
-		"\2\2RT\7\f\2\2SU\5\6\4\2TS\3\2\2\2UV\3\2\2\2VT\3\2\2\2VW\3\2\2\2WX\3\2"+
-		"\2\2XY\7\r\2\2Y\r\3\2\2\2\b\")\61=FV";
+		"\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5\2$\n\2\3\2\3\2\3\2"+
+		"\7\2)\n\2\f\2\16\2,\13\2\3\3\3\3\3\3\7\3\61\n\3\f\3\16\3\64\13\3\3\3\5"+
+		"\3\67\n\3\3\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4@\n\4\3\5\3\5\3\5\3\5\3\5\3\5"+
+		"\3\5\5\5I\n\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\7\3\7\6\7W\n\7"+
+		"\r\7\16\7X\3\7\3\7\3\7\2\3\2\b\2\4\6\b\n\f\2\2f\2#\3\2\2\2\4\66\3\2\2"+
+		"\2\6?\3\2\2\2\bA\3\2\2\2\nJ\3\2\2\2\fT\3\2\2\2\16\17\b\2\1\2\17\20\7\23"+
+		"\2\2\20$\5\2\2\6\21\22\7\22\2\2\22\23\7\6\2\2\23$\5\2\2\3\24\25\7\3\2"+
+		"\2\25\26\5\2\2\2\26\27\7\4\2\2\27$\3\2\2\2\30$\7\22\2\2\31$\7\21\2\2\32"+
+		"$\7\17\2\2\33$\7\20\2\2\34\35\7\22\2\2\35\36\7\5\2\2\36\37\7\22\2\2\37"+
+		" \7\3\2\2 !\5\4\3\2!\"\7\4\2\2\"$\3\2\2\2#\16\3\2\2\2#\21\3\2\2\2#\24"+
+		"\3\2\2\2#\30\3\2\2\2#\31\3\2\2\2#\32\3\2\2\2#\33\3\2\2\2#\34\3\2\2\2$"+
+		"*\3\2\2\2%&\f\5\2\2&\'\7\23\2\2\')\5\2\2\6(%\3\2\2\2),\3\2\2\2*(\3\2\2"+
+		"\2*+\3\2\2\2+\3\3\2\2\2,*\3\2\2\2-.\5\2\2\2./\7\7\2\2/\61\3\2\2\2\60-"+
+		"\3\2\2\2\61\64\3\2\2\2\62\60\3\2\2\2\62\63\3\2\2\2\63\65\3\2\2\2\64\62"+
+		"\3\2\2\2\65\67\5\2\2\2\66\62\3\2\2\2\66\67\3\2\2\2\67\5\3\2\2\289\5\2"+
+		"\2\29:\7\b\2\2:@\3\2\2\2;@\5\b\5\2<@\5\n\6\2=@\5\f\7\2>@\7\24\2\2?8\3"+
+		"\2\2\2?;\3\2\2\2?<\3\2\2\2?=\3\2\2\2?>\3\2\2\2@\7\3\2\2\2AB\7\t\2\2BC"+
+		"\7\3\2\2CD\5\2\2\2DE\7\4\2\2EH\5\6\4\2FG\7\n\2\2GI\5\6\4\2HF\3\2\2\2H"+
+		"I\3\2\2\2I\t\3\2\2\2JK\7\13\2\2KL\7\3\2\2LM\5\2\2\2MN\7\b\2\2NO\5\2\2"+
+		"\2OP\7\b\2\2PQ\5\2\2\2QR\7\4\2\2RS\5\6\4\2S\13\3\2\2\2TV\7\f\2\2UW\5\6"+
+		"\4\2VU\3\2\2\2WX\3\2\2\2XV\3\2\2\2XY\3\2\2\2YZ\3\2\2\2Z[\7\r\2\2[\r\3"+
+		"\2\2\2\t#*\62\66?HX";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

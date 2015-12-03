@@ -44,6 +44,18 @@ public interface funkListener extends ParseTreeListener {
 	 */
 	void exitStringLiteral(funkParser.StringLiteralContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code BooleanLiteral}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterBooleanLiteral(funkParser.BooleanLiteralContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code BooleanLiteral}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitBooleanLiteral(funkParser.BooleanLiteralContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code Assign}
 	 * labeled alternative in {@link funkParser#expr}.
 	 * @param ctx the parse tree

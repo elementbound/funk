@@ -1,6 +1,5 @@
 package funk.prez;
 
-import java.awt.EventQueue;
 import java.util.ArrayList;
 import java.util.List;
 
