@@ -179,7 +179,12 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		dbgStream.printf("Rule: %s\n", funkParser.ruleNames[node.getRuleContext().getRuleIndex()]);
 		dbgStream.printf("Context type: %s\n\n", node.getRuleContext().getClass().getName());
 		
-		return super.visitChildren(node);
+		Object result = super.visitChildren(node);
+		
+		if(result instanceof Error) 
+			((Error)result).prettyPrint(errorStream);
+		
+		return result;
 	}
 	
 	@Override 

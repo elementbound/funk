@@ -3,6 +3,7 @@ package funk.lang.types;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.io.PrintStream;
 import java.lang.String; 
 
 import funk.lang.Object;
@@ -10,6 +11,7 @@ import funk.lang.Object;
 public class Error extends Object {
 	private String error; 
 	private Map<String, String> fields = new HashMap<>(); 
+	private boolean fresh = true; 
 	
 	public Error(String type) {
 		error = type; 
@@ -43,6 +45,20 @@ public class Error extends Object {
 		return strb.toString();
 	}
 	
+	public boolean isFresh() {
+		if(fresh) {
+			fresh = false;
+			return true;
+		}
+		
+		return false; 
+	}
+	
+	public void prettyPrint(PrintStream os) {
+		if(this.isFresh())
+			os.print(this.asPrettyString());
+	}
+	
 	@Override
 	public boolean asBoolean() {
 		return false;
@@ -60,8 +76,8 @@ public class Error extends Object {
 				.append(": ")
 				.append(e.getValue())
 				.append("; ");
-		
-		return strb.toString();
+
+		return strb.append('}').toString();
 	}
 	
 	@Override
