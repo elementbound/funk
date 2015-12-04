@@ -57,4 +57,9 @@ public class Boolean extends Object {
 	public boolean greaterThan(Object rhs) {
 		return (this.value?1:0) > (rhs.asBoolean()?1:0);
 	}
+
+	@Override
+	public Object opNegate() {
+		return new Boolean(!this.value);
+	}
 }

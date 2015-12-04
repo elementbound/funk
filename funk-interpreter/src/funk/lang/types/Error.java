@@ -98,5 +98,9 @@ public class Error extends Object {
 	public boolean greaterThan(Object rhs) {
 		return false;
 	}
-
+	
+	@Override
+	public Object opNegate() {
+		return this;
+	}
 }

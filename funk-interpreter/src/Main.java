@@ -4,10 +4,7 @@ import java.util.Scanner;
 
 import org.antlr.v4.runtime.RecognitionException;
 
-import funk.IllegalCastException;
 import funk.Interpreter;
-import funk.UnknownFunctionException;
-import funk.UnknownVariableException;
 
 public class Main {
 	public static void main(String... args) {
@@ -29,7 +26,7 @@ public class Main {
 			
 			try {
 				funk.execute(line);
-			} catch (RecognitionException | UnknownVariableException | IllegalCastException | UnknownFunctionException e) {
+			} catch (RecognitionException e) {
 				e.printStackTrace();
 			}
 		}
@@ -55,7 +52,7 @@ public class Main {
 		
 		try {
 			funk.execute(strb.toString());
-		} catch (RecognitionException | UnknownVariableException | IllegalCastException | UnknownFunctionException e) {
+		} catch (RecognitionException e) {
 			e.printStackTrace();
 		}
 	}

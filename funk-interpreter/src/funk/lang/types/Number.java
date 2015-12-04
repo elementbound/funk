@@ -70,4 +70,8 @@ public class Number extends Object {
 			return value > ((Number)rhs).value;
 	}
 
+	@Override
+	public Object opNegate() {
+		return new Number(-this.value);
+	}
 }

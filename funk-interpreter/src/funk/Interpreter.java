@@ -1,6 +1,7 @@
 package funk;
 
 import java.io.PrintStream;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -22,6 +23,12 @@ import funk.antlr.funkParser;
 import funk.antlr.funkParser.ArgsContext;
 import funk.antlr.funkParser.ExprContext;
 import funk.antlr.funkParser.StatementContext;
+import funk.lang.ICastRule;
+import funk.lang.Object;
+import funk.lang.cast.BooleanToNumber;
+import funk.lang.types.Error;
+import funk.lang.types.Number;
+import funk.lang.types.Boolean; 
 
 public class Interpreter extends funkBaseVisitor<Object> {
 	//Valtozok
@@ -30,13 +37,16 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	//Fuggvenyek
 	public Map<String, ICallable> functionTable = new HashMap<>();
 	
+	//Cast rules
+	public List<ICastRule<?,?>> castRules = new ArrayList<>();
+	
 	//Debug stream
 	public PrintStream dbgStream = new PrintStream(new NullOutputStream());
 	
 	//Erro stream 
 	public PrintStream errorStream = new PrintStream(System.out);
 	
-	private static Object defaultResult = new Object();
+	private static Object defaultResult = new Error("void");
 	
 	public Interpreter(){
 		functionTable.put("reverse", new FReverse());
@@ -46,7 +56,12 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		functionTable.put("pow", new FPow());
 		
 		variableTable.push(new SymbolTable());
+		
+		castRules.add(new BooleanToNumber());
 	}
+	
+	//=========================================================================================
+	//Variables
 	
 	Map<String,Object> getAllTable(){
 		Map<String, Object> temp= new HashMap<>();
@@ -78,7 +93,28 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		variableTable.push(temp);
 	}
 	
-	public void execute(String code) throws RecognitionException, UnknownVariableException, IllegalCastException, UnknownFunctionException {
+	//=========================================================================================
+	// Cast
+	
+	public Object cast(Object from, Class<?> to) {
+		if(to.equals(Boolean.class))
+			return new Boolean(from.asBoolean());
+
+		if(to.equals(funk.lang.types.String.class))
+			return new funk.lang.types.String(from.asString());
+		
+		for(ICastRule<?,?> rule : castRules) 
+			if(rule.from().equals(from.getClass()) && rule.to().equals(to))
+				return (Object) rule.cast(from);
+		
+		return new Error("IllegalCast")
+					.addField("from", from.toString())
+					.addField("to", to.toString());
+	}
+	
+	//=========================================================================================
+	
+	public void execute(String code) throws RecognitionException {
 		//Stringbol fat epiteni
 		CharStream stream = new ANTLRInputStream(code);
 		funkLexer lexer = new funkLexer(stream);
@@ -166,7 +202,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	@Override 
 	public Object visitNumberLiteral(funkParser.NumberLiteralContext ctx) {
 		dbgStream.printf("Number literal: %s\n", ctx.getText());
-		return new Object(Integer.parseInt(ctx.NUMBER().getText()));
+		return new Number(Integer.parseInt(ctx.NUMBER().getText()));
 	}
 	
 	@Override
@@ -176,17 +212,18 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		String str = ctx.STRING().getText();
 		str = str.substring(1, str.length()-1);
 		
-		return new Object(str);
+		return new funk.lang.types.String(str);
 	}
 	
 	@Override 
 	public Object visitBooleanLiteral(funkParser.BooleanLiteralContext ctx) {
 		if(ctx.BOOLEAN().getText().equals("True"))
-			return new Object(true);
+			return new Boolean(true);
 		else if(ctx.BOOLEAN().getText().equals("False"))
-			return new Object(false);
+			return new Boolean(false);
 		else 
-			return new Object("The fuck is this boolean");
+			return new Error("WrongBooleanLiteral")
+						.addField("literal", ctx.BOOLEAN().getText());
 	}
 	
 	@Override 
@@ -199,10 +236,9 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		if(op.equals("+"))
 			return visit(expr);
 		else if(op.equals("-"))
-			return visit(expr).negate(); 
+			return visit(expr).opNegate(); 
 		else 
-			//throw InvalidUnaryOp(op)
-			return new Object("Unknown unary operator: " + op);
+			return new Error("UnknownUnaryOperator", "op", op);
 	}
 	
 	@Override 
@@ -210,37 +246,38 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		dbgStream.printf("Binary op: %s\n", ctx.getText());
 		
 		//Kiszedni a ket expr-t es az operatort
-		ParseTree lhs = ctx.expr(0);
-		ParseTree rhs = ctx.expr(1);
+		ExprContext lhsExpr = ctx.expr(0);
+		ExprContext rhsExpr = ctx.expr(1);
 		String operator = ctx.OP().getText();
 		
-		dbgStream.printf("%s %s %s\n", lhs.getText(), operator, rhs.getText());
+		dbgStream.printf("%s %s %s\n", lhsExpr.getText(), operator, rhsExpr.getText());
+		
+		Object lhs = visit(lhsExpr);
+		Object rhs = visit(rhsExpr);
+		rhs = this.cast(rhs, lhs.getClass());
+		
+		if(rhs instanceof Error)
+			return rhs;
 		
 		//A ket kapott Object-etre alkalmazni a megfelelo operatort
-		try {
-			if(operator.equals("+")) 
-				return visit(lhs).add(visit(rhs));
-			else if(operator.equals("-")) 
-				return visit(lhs).subtract(visit(rhs));
-			else if(operator.equals("*")) 
-				return visit(lhs).multiply(visit(rhs));
-			else if(operator.equals("/")) 
-				return visit(lhs).divide(visit(rhs));
-			else if(operator.equals("==")) 
-				return visit(lhs).eq(visit(rhs));
-			else if(operator.equals("!=")) 
-				return visit(lhs).neq(visit(rhs));
-			else if(operator.equals("<")) 
-				return visit(lhs).le(visit(rhs));
-			else if(operator.equals(">")) 
-				return visit(lhs).ge(visit(rhs));
-			else
-				return new Object("Unknown binary operator: " + operator);
-		}
-		catch(IllegalCastException ex) {
-			//TODO: We should REALLY solve throwing exceptions from visitor
-			return new Object(ex.getMessage());
-		}
+		if(operator.equals("+")) 
+			return lhs.opAdd(rhs);
+		else if(operator.equals("-")) 
+			return lhs.opSubtract(rhs);
+		else if(operator.equals("*")) 
+			return lhs.opMultiply(rhs);
+		else if(operator.equals("/")) 
+			return lhs.opDivide(rhs);
+		else if(operator.equals("==")) 
+			return lhs.opEquals(rhs);
+		else if(operator.equals("!=")) 
+			return lhs.opNotEquals(rhs);
+		else if(operator.equals("<")) 
+			return lhs.opLowerThan(rhs);
+		else if(operator.equals(">")) 
+			return lhs.opGreaterThan(rhs);
+		else
+			return new Error("UnknownBinaryOperator", "op", operator);
 	}
 	
 	@Override 
@@ -254,8 +291,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		dbgStream.printf("Function call: %s . %s(...)\n", selfExpr.getText(), functionName);
 		
 		if(!functionTable.containsKey(functionName))
-			//throw new UnknownFunctionException(functionName);
-			return new Object("Unknown function: " + functionName);
+			return new Error("UnknownFunction", "function", functionName);
 
 		Object selfObject = visit(selfExpr);
 		List<Object> argObjects = new ArrayList<>();
@@ -264,12 +300,8 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		
 		ICallable function = functionTable.get(functionName);
 		
-		try {
-			//Pass as varargs
-			return function.call(selfObject, argObjects.toArray(new Object[argObjects.size()]));
-		} catch (IllegalCastException e) {
-			return new Object("Illegal cast exception: " + e.getMessage());
-		} 
+		//Pass as varargs
+		return function.call(selfObject, argObjects.toArray(new Object[argObjects.size()]));
 	}
 	
 	@Override 
@@ -305,19 +337,13 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		else
 			dbgStream.printf("if( %s ) then %s\n", expr.getText(), thenScope.getText());
 		
-		try {
-			if(visit(expr).asBoolean())
-				return visit(thenScope);
+		if(visit(expr).asBoolean())
+			return visit(thenScope);
+		else
+			if(elseScope != null)
+				return visit(elseScope);
 			else
-				if(elseScope != null)
-					return visit(elseScope);
-				else
-					return new Object();
-		}
-		catch(IllegalCastException ex) {
-			//TODO: Exceptions from visitors
-			return new Object("Illegal cast exception: " + ex.getMessage());
-		}
+				return new Boolean(false);
 	}
 	
 	@Override
@@ -330,14 +356,9 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		Object result;
 		
 		result = visit(initNode);
-		try {
-			while(visit(conditionNode).asBoolean()) {
-				result = visit(scopeNode);
-				visit(stepNode);
-			}
-		} catch (IllegalCastException ex) {
-			//TODO: Exceptions from visitors
-			return new Object("Illegal cast exception: " + ex.getMessage());
+		while(visit(conditionNode).asBoolean()) {
+			result = visit(scopeNode);
+			visit(stepNode);
 		}
 		
 		return result; 
@@ -348,7 +369,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		
 		variableTable.push(new SymbolTable());
 		
-		Object result = new Object();
+		Object result = new Boolean();
 		for(ParseTree n : ctx.statement())
 			result = visit(n);
 		
@@ -361,15 +382,11 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		//Nincs nagyon dolgunk vele, de mivel mindig vissza kell dobjunk egy Object-et, 
 		//visszadobjuk magat a szoveget
 		dbgStream.printf("Comment: %s\n", ctx.COMMENT().getText());
-		return new Object(ctx.COMMENT().getText());
+		return new funk.lang.types.String(ctx.COMMENT().getText());
 	}
 	
 	public void dumpVariables(PrintStream out) {
-		for(Entry<String, Object> p : getAllTable().entrySet()) {
-			if(p.getValue().getType() != Type.String)
-				out.printf("%s %s = %s;\n", p.getValue().getType(), p.getKey(), p.getValue().asString());
-			else 
-				out.printf("%s %s = \'%s\';\n", p.getValue().getType(), p.getKey(), p.getValue().asString());
-		}
+		for(Entry<String, Object> p : getAllTable().entrySet()) 
+			out.printf("%s: %s;\n", p.getKey(), p.getValue().toString());
 	}
 }

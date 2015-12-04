@@ -1,19 +1,22 @@
 package funk;
 
+import funk.lang.Object; 
+import funk.lang.types.Number; 
+
 public class FSubstr implements ICallable {
 
 	@Override
-	public Object call(Object self, Object... args) throws IllegalCastException {
+	public Object call(Object self, Object... args) {
 		String ret = self.asString();
 		int from = 0;
 		int to = ret.length();
 		
 		if(args.length==1){
-			to=args[0].asNumber();;
+			to=((Number)args[0]).value;
 		}
 		else if(args.length > 1) {
-			from = args[0].asNumber();
-			to = args[1].asNumber();
+			from = ((Number)args[0]).value;
+			to = ((Number)args[1]).value;
 		}
 		
 		if(from < 0)
@@ -27,6 +30,6 @@ public class FSubstr implements ICallable {
 			from = tmp;
 		}
 
-		return new Object(ret.substring(from, to));
+		return new funk.lang.types.String(ret.substring(from, to));
 	}
 }

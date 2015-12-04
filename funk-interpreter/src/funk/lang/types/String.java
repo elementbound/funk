@@ -85,4 +85,13 @@ public class String extends Object {
 		else 
 			return this.value.compareTo(((String)rhs).value) > 0;
 	}
+
+	@Override
+	public Object opNegate() {
+		StringBuilder strb = new StringBuilder();
+		strb.append(this.value);
+		strb.reverse();
+		
+		return new String(strb.toString());
+	}
 }

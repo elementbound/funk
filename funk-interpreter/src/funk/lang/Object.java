@@ -18,7 +18,7 @@ abstract public class Object {
 	}
 	
 	public String typeString() {
-		return this.getClass().getName();
+		return this.getClass().getSimpleName();
 	}
 	
 	public boolean typesMatch(Object rhs) {
@@ -30,6 +30,8 @@ abstract public class Object {
 	public abstract Object opSubtract(Object rhs);
 	public abstract Object opMultiply(Object rhs);
 	public abstract Object opDivide(Object rhs);
+	
+	public abstract Object opNegate();
 	
 	//Relational functions
 	public abstract boolean equals(Object rhs);
@@ -47,6 +49,10 @@ abstract public class Object {
 	//Relational operators
 	public Object opEquals(Object rhs) { 
 		return new Boolean(this.equals(rhs));
+	}
+	
+	public Object opNotEquals(Object rhs) {
+		return new Boolean(!this.equals(rhs));
 	}
 	
 	public Object opLowerThan(Object rhs) {

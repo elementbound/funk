@@ -3,6 +3,8 @@ package funk;
 import java.util.HashMap;
 import java.util.Map;
 
+import funk.lang.Object;
+
 public class SymbolTable {
 	public Map<String, Object> table = new HashMap<>();
 	
