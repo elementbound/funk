@@ -200,7 +200,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		if(op.equals("+"))
 			return visit(expr);
 		else if(op.equals("-"))
-			return new Object("TODO: funk.Object.negate()"); //TODO: negate
+			return visit(expr).negate(); 
 		else 
 			//throw InvalidUnaryOp(op)
 			return new Object("Unknown unary operator: " + op);
