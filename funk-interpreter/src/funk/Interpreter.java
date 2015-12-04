@@ -23,6 +23,7 @@ import funk.antlr.funkParser;
 import funk.antlr.funkParser.ArgsContext;
 import funk.antlr.funkParser.ExprContext;
 import funk.antlr.funkParser.StatementContext;
+import funk.lang.IFunction;
 import funk.lang.ICastRule;
 import funk.lang.Object;
 import funk.lang.cast.BooleanToNumber;
@@ -35,7 +36,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	public Stack<SymbolTable> variableTable= new Stack<SymbolTable>();
 	
 	//Fuggvenyek
-	public Map<String, ICallable> functionTable = new HashMap<>();
+	public Map<String, IFunction> functionTable = new HashMap<>();
 	
 	//Cast rules
 	public List<ICastRule<?,?>> castRules = new ArrayList<>();
@@ -298,7 +299,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		for(ExprContext arg : args.expr()) 
 			argObjects.add(visit(arg));
 		
-		ICallable function = functionTable.get(functionName);
+		IFunction function = functionTable.get(functionName);
 		
 		//Pass as varargs
 		return function.call(selfObject, argObjects.toArray(new Object[argObjects.size()]));

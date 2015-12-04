@@ -1,10 +1,11 @@
 package funk;
 
+import funk.lang.IFunction;
 import funk.lang.Object;
 import funk.lang.types.Error;
 import funk.lang.types.Number; 
 
-public class FReverse implements ICallable {
+public class FReverse implements IFunction {
 
 	@Override
 	public Object call(Object self, Object... args) {

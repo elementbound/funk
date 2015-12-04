@@ -1,9 +1,10 @@
 package funk;
 
+import funk.lang.IFunction;
 import funk.lang.Object; 
 import funk.lang.types.Number; 
 
-public class FSubstr implements ICallable {
+public class FSubstr implements IFunction {
 
 	@Override
 	public Object call(Object self, Object... args) {
