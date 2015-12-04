@@ -7,7 +7,7 @@ abstract public class Object {
 	public abstract String asString();
 	
 	@Override
-	public String toString() {
+	public final String toString() {
 		StringBuilder strb = new StringBuilder();
 		strb.append('[')
 			.append(this.typeString())

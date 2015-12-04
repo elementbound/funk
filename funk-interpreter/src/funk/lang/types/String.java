@@ -40,20 +40,26 @@ public class String extends Object {
 
 	@Override
 	public Object opSubtract(Object rhs) {
-		//TODO: return an Error object or something
-		return new String("");
+		return new Error("IllegalOperation")
+					.addField("op", "subtract")
+					.addField("lhs", this.toString())
+					.addField("rhs", rhs.toString());
 	}
 
 	@Override
 	public Object opMultiply(Object rhs) {
-		//TODO: return an Error object or something
-		return new String("");
+		return new Error("IllegalOperation")
+				.addField("op", "multiply")
+				.addField("lhs", this.toString())
+				.addField("rhs", rhs.toString());
 	}
 
 	@Override
 	public Object opDivide(Object rhs) {
-		//TODO: return an Error object or something
-		return new String("");
+		return new Error("IllegalOperation")
+				.addField("op", "divide")
+				.addField("lhs", this.toString())
+				.addField("rhs", rhs.toString());
 	}
 
 	@Override
