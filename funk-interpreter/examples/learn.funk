@@ -76,16 +76,15 @@ else {
 "".println(); 
 
 for(i = 99; i > 0; i = i-1) {
-	l = ("" + i) + " bottles of beer on the wall, " + i + " bottles of beer. ";
-	l.println();
+	(("" + i) + " bottles of beer on the wall, " + i + " bottles of beer. ").println();
 	
 	if(i > 1)
-		l = "Take one down and pass it around, " + 
-			(i-1) + " bottles of beer on the wall.";
+		("Take one down and pass it around, " + 
+			(i-1) + " bottles of beer on the wall.").println();
 	else 
-		l = "Take one down and pass it around, " + 
-			"no more bottles of beer on the wall. ";
-	l.println();
+		("Take one down and pass it around, " + 
+			"no more bottles of beer on the wall. ").println();
+	
 	"".println();
 }
 

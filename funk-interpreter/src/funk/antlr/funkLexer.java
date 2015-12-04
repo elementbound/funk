@@ -18,7 +18,7 @@ public class funkLexer extends Lexer {
 		new PredictionContextCache();
 	public static final int
 		T__0=1, T__1=2, T__2=3, T__3=4, T__4=5, T__5=6, T__6=7, T__7=8, T__8=9, 
-		T__9=10, T__10=11, WS=12, NUMBER=13, STRING=14, BOOLEAN=15, ID=16, BINOP=17, 
+		T__9=10, T__10=11, WS=12, NUMBER=13, STRING=14, BOOLEAN=15, ID=16, OP=17, 
 		COMMENT=18;
 	public static String[] modeNames = {
 		"DEFAULT_MODE"
@@ -26,16 +26,16 @@ public class funkLexer extends Lexer {
 
 	public static final String[] ruleNames = {
 		"T__0", "T__1", "T__2", "T__3", "T__4", "T__5", "T__6", "T__7", "T__8", 
-		"T__9", "T__10", "WS", "NUMBER", "STRING", "BOOLEAN", "ID", "BINOP", "COMMENT"
+		"T__9", "T__10", "WS", "NUMBER", "STRING", "BOOLEAN", "ID", "OP", "COMMENT"
 	};
 
 	private static final String[] _LITERAL_NAMES = {
-		null, "'.'", "'('", "')'", "'='", "','", "';'", "'if'", "'else'", "'for'", 
+		null, "'('", "')'", "'.'", "'='", "','", "';'", "'if'", "'else'", "'for'", 
 		"'{'", "'}'"
 	};
 	private static final String[] _SYMBOLIC_NAMES = {
 		null, null, null, null, null, null, null, null, null, null, null, null, 
-		"WS", "NUMBER", "STRING", "BOOLEAN", "ID", "BINOP", "COMMENT"
+		"WS", "NUMBER", "STRING", "BOOLEAN", "ID", "OP", "COMMENT"
 	};
 	public static final Vocabulary VOCABULARY = new VocabularyImpl(_LITERAL_NAMES, _SYMBOLIC_NAMES);
 
@@ -111,7 +111,7 @@ public class funkLexer extends Lexer {
 		"\2\5)\3\2\2\2\7+\3\2\2\2\t-\3\2\2\2\13/\3\2\2\2\r\61\3\2\2\2\17\63\3\2"+
 		"\2\2\21\66\3\2\2\2\23;\3\2\2\2\25?\3\2\2\2\27A\3\2\2\2\31C\3\2\2\2\33"+
 		"H\3\2\2\2\35\\\3\2\2\2\37g\3\2\2\2!i\3\2\2\2#v\3\2\2\2%x\3\2\2\2\'(\7"+
-		"\60\2\2(\4\3\2\2\2)*\7*\2\2*\6\3\2\2\2+,\7+\2\2,\b\3\2\2\2-.\7?\2\2.\n"+
+		"*\2\2(\4\3\2\2\2)*\7+\2\2*\6\3\2\2\2+,\7\60\2\2,\b\3\2\2\2-.\7?\2\2.\n"+
 		"\3\2\2\2/\60\7.\2\2\60\f\3\2\2\2\61\62\7=\2\2\62\16\3\2\2\2\63\64\7k\2"+
 		"\2\64\65\7h\2\2\65\20\3\2\2\2\66\67\7g\2\2\678\7n\2\289\7u\2\29:\7g\2"+
 		"\2:\22\3\2\2\2;<\7h\2\2<=\7q\2\2=>\7t\2\2>\24\3\2\2\2?@\7}\2\2@\26\3\2"+

@@ -185,6 +185,26 @@ public class Object {
 		}
 	}
 	
+	public Object negate() {
+		switch(type) {
+			case Boolean: 
+				return new Object(!this.asBoolean);
+				
+			case Number: 
+				return new Object(-this.asNumber);
+				
+			case String: 
+				StringBuilder strb = new StringBuilder();
+				strb.append(this.asString);
+				strb.reverse();
+				
+				return new Object(strb.toString());
+				
+			default: 
+				return new Object(); 
+		}
+	}
+	
 	//=========================================================================================
 	//Comparisons 
 	
