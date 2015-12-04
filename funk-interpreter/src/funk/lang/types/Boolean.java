@@ -19,7 +19,7 @@ public class Boolean extends Object {
 	}
 
 	@Override
-	public String asString() {
+	public java.lang.String asString() {
 		return value ? "True" : "False";
 	}
 

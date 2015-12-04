@@ -22,7 +22,7 @@ public class Number extends Object {
 	}
 
 	@Override
-	public String asString() {
+	public java.lang.String asString() {
 		return Integer.toString(value);
 	}
 
