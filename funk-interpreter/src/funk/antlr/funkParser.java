@@ -81,11 +81,14 @@ public class funkParser extends Parser {
 	public ATN getATN() { return _ATN; }
 
 
-	  @Override
-	  public void notifyErrorListeners(Token offendingToken, String msg, RecognitionException ex)
-	  {
-	    throw ex; 
-	  }
+		@Override
+		public void notifyErrorListeners(Token offendingToken, String msg, RecognitionException ex)
+		{
+			if(ex != null)
+				throw ex; 
+			else 
+				throw new RecognitionException(msg, null, _input, _ctx);
+		}
 
 	public funkParser(TokenStream input) {
 		super(input);
@@ -103,10 +106,10 @@ public class funkParser extends Parser {
 		}
 	}
 	public static class DirectMemberCallContext extends ExprContext {
-		public List<TerminalNode> ID() { return getTokens(funkParser.ID); }
-		public TerminalNode ID(int i) {
-			return getToken(funkParser.ID, i);
+		public ExprContext expr() {
+			return getRuleContext(ExprContext.class,0);
 		}
+		public TerminalNode ID() { return getToken(funkParser.ID, 0); }
 		public ArgsContext args() {
 			return getRuleContext(ArgsContext.class,0);
 		}
@@ -291,7 +294,7 @@ public class funkParser extends Parser {
 			int _alt;
 			enterOuterAlt(_localctx, 1);
 			{
-			setState(33);
+			setState(26);
 			switch ( getInterpreter().adaptivePredict(_input,0,_ctx) ) {
 			case 1:
 				{
@@ -367,50 +370,54 @@ public class funkParser extends Parser {
 				match(STRING);
 				}
 				break;
-			case 8:
-				{
-				_localctx = new DirectMemberCallContext(_localctx);
-				_ctx = _localctx;
-				_prevctx = _localctx;
-				setState(26);
-				match(ID);
-				setState(27);
-				match(T__2);
-				setState(28);
-				match(ID);
-				setState(29);
-				match(T__0);
-				setState(30);
-				args();
-				setState(31);
-				match(T__1);
-				}
-				break;
 			}
 			_ctx.stop = _input.LT(-1);
 			setState(40);
 			_errHandler.sync(this);
-			_alt = getInterpreter().adaptivePredict(_input,1,_ctx);
+			_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
 			while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if ( _parseListeners!=null ) triggerExitRuleEvent();
 					_prevctx = _localctx;
 					{
-					{
-					_localctx = new BinaryOpContext(new ExprContext(_parentctx, _parentState));
-					pushNewRecursionContext(_localctx, _startState, RULE_expr);
-					setState(35);
-					if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
-					setState(36);
-					match(OP);
-					setState(37);
-					expr(4);
+					setState(38);
+					switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
+					case 1:
+						{
+						_localctx = new BinaryOpContext(new ExprContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_expr);
+						setState(28);
+						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
+						setState(29);
+						match(OP);
+						setState(30);
+						expr(4);
+						}
+						break;
+					case 2:
+						{
+						_localctx = new DirectMemberCallContext(new ExprContext(_parentctx, _parentState));
+						pushNewRecursionContext(_localctx, _startState, RULE_expr);
+						setState(31);
+						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
+						setState(32);
+						match(T__2);
+						setState(33);
+						match(ID);
+						setState(34);
+						match(T__0);
+						setState(35);
+						args();
+						setState(36);
+						match(T__1);
+						}
+						break;
 					}
 					} 
 				}
 				setState(42);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,1,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
 			}
 			}
 		}
@@ -465,7 +472,7 @@ public class funkParser extends Parser {
 				{
 				setState(48);
 				_errHandler.sync(this);
-				_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
+				_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
 				while ( _alt!=2 && _alt!=org.antlr.v4.runtime.atn.ATN.INVALID_ALT_NUMBER ) {
 					if ( _alt==1 ) {
 						{
@@ -479,7 +486,7 @@ public class funkParser extends Parser {
 					}
 					setState(50);
 					_errHandler.sync(this);
-					_alt = getInterpreter().adaptivePredict(_input,2,_ctx);
+					_alt = getInterpreter().adaptivePredict(_input,3,_ctx);
 				}
 				setState(51);
 				expr(0);
@@ -718,7 +725,7 @@ public class funkParser extends Parser {
 			setState(67);
 			statement();
 			setState(70);
-			switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
+			switch ( getInterpreter().adaptivePredict(_input,6,_ctx) ) {
 			case 1:
 				{
 				setState(68);
@@ -882,6 +889,8 @@ public class funkParser extends Parser {
 		switch (predIndex) {
 		case 0:
 			return precpred(_ctx, 3);
+		case 1:
+			return precpred(_ctx, 2);
 		}
 		return true;
 	}
@@ -889,28 +898,28 @@ public class funkParser extends Parser {
 	public static final String _serializedATN =
 		"\3\u0430\ud6d1\u8206\uad2d\u4417\uaef1\u8d80\uaadd\3\24]\4\2\t\2\4\3\t"+
 		"\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2"+
-		"\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5\2$\n\2\3\2\3\2\3\2"+
-		"\7\2)\n\2\f\2\16\2,\13\2\3\3\3\3\3\3\7\3\61\n\3\f\3\16\3\64\13\3\3\3\5"+
-		"\3\67\n\3\3\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4@\n\4\3\5\3\5\3\5\3\5\3\5\3\5"+
-		"\3\5\5\5I\n\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\7\3\7\6\7W\n\7"+
-		"\r\7\16\7X\3\7\3\7\3\7\2\3\2\b\2\4\6\b\n\f\2\2f\2#\3\2\2\2\4\66\3\2\2"+
-		"\2\6?\3\2\2\2\bA\3\2\2\2\nJ\3\2\2\2\fT\3\2\2\2\16\17\b\2\1\2\17\20\7\23"+
-		"\2\2\20$\5\2\2\6\21\22\7\22\2\2\22\23\7\6\2\2\23$\5\2\2\3\24\25\7\3\2"+
-		"\2\25\26\5\2\2\2\26\27\7\4\2\2\27$\3\2\2\2\30$\7\22\2\2\31$\7\21\2\2\32"+
-		"$\7\17\2\2\33$\7\20\2\2\34\35\7\22\2\2\35\36\7\5\2\2\36\37\7\22\2\2\37"+
-		" \7\3\2\2 !\5\4\3\2!\"\7\4\2\2\"$\3\2\2\2#\16\3\2\2\2#\21\3\2\2\2#\24"+
-		"\3\2\2\2#\30\3\2\2\2#\31\3\2\2\2#\32\3\2\2\2#\33\3\2\2\2#\34\3\2\2\2$"+
-		"*\3\2\2\2%&\f\5\2\2&\'\7\23\2\2\')\5\2\2\6(%\3\2\2\2),\3\2\2\2*(\3\2\2"+
-		"\2*+\3\2\2\2+\3\3\2\2\2,*\3\2\2\2-.\5\2\2\2./\7\7\2\2/\61\3\2\2\2\60-"+
-		"\3\2\2\2\61\64\3\2\2\2\62\60\3\2\2\2\62\63\3\2\2\2\63\65\3\2\2\2\64\62"+
-		"\3\2\2\2\65\67\5\2\2\2\66\62\3\2\2\2\66\67\3\2\2\2\67\5\3\2\2\289\5\2"+
-		"\2\29:\7\b\2\2:@\3\2\2\2;@\5\b\5\2<@\5\n\6\2=@\5\f\7\2>@\7\24\2\2?8\3"+
-		"\2\2\2?;\3\2\2\2?<\3\2\2\2?=\3\2\2\2?>\3\2\2\2@\7\3\2\2\2AB\7\t\2\2BC"+
-		"\7\3\2\2CD\5\2\2\2DE\7\4\2\2EH\5\6\4\2FG\7\n\2\2GI\5\6\4\2HF\3\2\2\2H"+
-		"I\3\2\2\2I\t\3\2\2\2JK\7\13\2\2KL\7\3\2\2LM\5\2\2\2MN\7\b\2\2NO\5\2\2"+
-		"\2OP\7\b\2\2PQ\5\2\2\2QR\7\4\2\2RS\5\6\4\2S\13\3\2\2\2TV\7\f\2\2UW\5\6"+
-		"\4\2VU\3\2\2\2WX\3\2\2\2XV\3\2\2\2XY\3\2\2\2YZ\3\2\2\2Z[\7\r\2\2[\r\3"+
-		"\2\2\2\t#*\62\66?HX";
+		"\3\2\3\2\3\2\3\2\3\2\5\2\35\n\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3"+
+		"\2\7\2)\n\2\f\2\16\2,\13\2\3\3\3\3\3\3\7\3\61\n\3\f\3\16\3\64\13\3\3\3"+
+		"\5\3\67\n\3\3\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4@\n\4\3\5\3\5\3\5\3\5\3\5\3"+
+		"\5\3\5\5\5I\n\5\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\6\3\7\3\7\6\7W\n"+
+		"\7\r\7\16\7X\3\7\3\7\3\7\2\3\2\b\2\4\6\b\n\f\2\2f\2\34\3\2\2\2\4\66\3"+
+		"\2\2\2\6?\3\2\2\2\bA\3\2\2\2\nJ\3\2\2\2\fT\3\2\2\2\16\17\b\2\1\2\17\20"+
+		"\7\23\2\2\20\35\5\2\2\6\21\22\7\22\2\2\22\23\7\6\2\2\23\35\5\2\2\3\24"+
+		"\25\7\3\2\2\25\26\5\2\2\2\26\27\7\4\2\2\27\35\3\2\2\2\30\35\7\22\2\2\31"+
+		"\35\7\21\2\2\32\35\7\17\2\2\33\35\7\20\2\2\34\16\3\2\2\2\34\21\3\2\2\2"+
+		"\34\24\3\2\2\2\34\30\3\2\2\2\34\31\3\2\2\2\34\32\3\2\2\2\34\33\3\2\2\2"+
+		"\35*\3\2\2\2\36\37\f\5\2\2\37 \7\23\2\2 )\5\2\2\6!\"\f\4\2\2\"#\7\5\2"+
+		"\2#$\7\22\2\2$%\7\3\2\2%&\5\4\3\2&\'\7\4\2\2\')\3\2\2\2(\36\3\2\2\2(!"+
+		"\3\2\2\2),\3\2\2\2*(\3\2\2\2*+\3\2\2\2+\3\3\2\2\2,*\3\2\2\2-.\5\2\2\2"+
+		"./\7\7\2\2/\61\3\2\2\2\60-\3\2\2\2\61\64\3\2\2\2\62\60\3\2\2\2\62\63\3"+
+		"\2\2\2\63\65\3\2\2\2\64\62\3\2\2\2\65\67\5\2\2\2\66\62\3\2\2\2\66\67\3"+
+		"\2\2\2\67\5\3\2\2\289\5\2\2\29:\7\b\2\2:@\3\2\2\2;@\5\b\5\2<@\5\n\6\2"+
+		"=@\5\f\7\2>@\7\24\2\2?8\3\2\2\2?;\3\2\2\2?<\3\2\2\2?=\3\2\2\2?>\3\2\2"+
+		"\2@\7\3\2\2\2AB\7\t\2\2BC\7\3\2\2CD\5\2\2\2DE\7\4\2\2EH\5\6\4\2FG\7\n"+
+		"\2\2GI\5\6\4\2HF\3\2\2\2HI\3\2\2\2I\t\3\2\2\2JK\7\13\2\2KL\7\3\2\2LM\5"+
+		"\2\2\2MN\7\b\2\2NO\5\2\2\2OP\7\b\2\2PQ\5\2\2\2QR\7\4\2\2RS\5\6\4\2S\13"+
+		"\3\2\2\2TV\7\f\2\2UW\5\6\4\2VU\3\2\2\2WX\3\2\2\2XV\3\2\2\2XY\3\2\2\2Y"+
+		"Z\3\2\2\2Z[\7\r\2\2[\r\3\2\2\2\n\34(*\62\66?HX";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());
 	static {

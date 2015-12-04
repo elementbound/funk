@@ -34,6 +34,11 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	//Debug stream
 	public PrintStream dbgStream = new PrintStream(new NullOutputStream());
 	
+	//Erro stream 
+	public PrintStream errorStream = new PrintStream(System.out);
+	
+	private static Object defaultResult = new Object();
+	
 	public Interpreter(){
 		functionTable.put("reverse", new FReverse());
 		functionTable.put("substr", new FSubstr());
@@ -84,21 +89,14 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		
 		//Minden utasitast kiertekelni:
 		try {
-			code = code.replaceAll(" \t\r\n", "");
-			code = code.replaceAll("\t", "");
-			code = code.replaceAll("\r", "");
-			code = code.replaceAll("\n", "");
-			//dbgStream.printf("After replace: %s\n", code);
-			
-			//dbgStream.printf("Remaining tokens: %s\n", lexer.getAllTokens().size());
 			for(ParseTree node = parser.statement(); 
-					!node.getText().startsWith("<EOF>") && !node.getText().trim().equals(""); 
+					!node.getText().startsWith("<EOF>") && !node.getText().trim().equals("");
 					node = parser.statement()) {
 				dbgStream.printf("Visiting %s\n", node.getText());
 				dbgStream.printf("Return: %s\n", visit(node).toString());
 			}
 		}
-		catch(NoViableAltException e) {
+		catch(RecognitionException e) {
 			if(e.getOffendingToken().getText().equals("<EOF>"))
 				return; 
 			
@@ -110,22 +108,26 @@ public class Interpreter extends funkBaseVisitor<Object> {
 				strb.append('\n').append(funkParser.VOCABULARY.getDisplayName(t));
 			}
 			
-			dbgStream.println(strb);
-			dbgStream.printf("Node text: \"%s\"\n", e.getCtx().getText().trim());
+			errorStream.println(strb);
+			errorStream.printf("Node text: \"%s\"\n", e.getCtx().getText().trim());
+			errorStream.printf("Error at %s\n", e.getCtx().getSourceInterval());
 			
 			e.printStackTrace(); 
 			//Silently continue
+		}
+		catch(Exception ex) { 
+			ex.printStackTrace(errorStream);
 		}
 	}
 	
 	@Override 
 	public Object defaultResult() {
-		return null;
+		return defaultResult;
 	}
 	
 	@Override 
 	public Object aggregateResult(Object aggregate, Object next) {
-		if(aggregate == null) {
+		if(aggregate == defaultResult) {
 			//dbgStream.printf("Aggregating null and %s; returning %s\n", next, next);
 			return next;
 		}
@@ -246,17 +248,17 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	public Object visitDirectMemberCall(funkParser.DirectMemberCallContext ctx) {
 		dbgStream.printf("Direct member call: %s\n", ctx.getText());
 		
-		String selfName = ctx.ID(0).getText();
-		String functionName = ctx.ID(1).getText();
+		ExprContext selfExpr = ctx.expr();
+		String functionName = ctx.ID().getText();
 		ArgsContext args = ctx.args();
 		
-		dbgStream.printf("Function call: %s . %s(...)\n", selfName, functionName);
+		dbgStream.printf("Function call: %s . %s(...)\n", selfExpr.getText(), functionName);
 		
 		if(!functionTable.containsKey(functionName))
 			//throw new UnknownFunctionException(functionName);
 			return new Object("Unknown function: " + functionName);
 
-		Object selfObject = getVariable(selfName);
+		Object selfObject = visit(selfExpr);
 		List<Object> argObjects = new ArrayList<>();
 		for(ExprContext arg : args.expr()) 
 			argObjects.add(visit(arg));

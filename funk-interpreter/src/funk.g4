@@ -3,11 +3,14 @@ grammar funk;
 // Catch errors 
 @parser::members 
 {
-  @Override
-  public void notifyErrorListeners(Token offendingToken, String msg, RecognitionException ex)
-  {
-    throw ex; 
-  }
+	@Override
+	public void notifyErrorListeners(Token offendingToken, String msg, RecognitionException ex)
+	{
+		if(ex != null)
+			throw ex; 
+		else 
+			throw new RecognitionException(msg, null, _input, _ctx);
+	}
 }
 
 WS: [ \t\r\n] -> skip; 
@@ -26,7 +29,7 @@ expr: '(' expr ')' 				# EnclosedExpr
 	 | STRING 					# StringLiteral
 	 | OP expr 					# UnaryOp
 	 | expr OP expr 			# BinaryOp
-	 | ID '.' ID '(' args ')' 	# DirectMemberCall
+	 | expr '.' ID '(' args ')' # DirectMemberCall
 	 | ID '=' expr 				# Assign
 	 ;
 
