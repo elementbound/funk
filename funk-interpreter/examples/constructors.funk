@@ -23,3 +23,7 @@ Funk error: FailedInstantiation
 
 /* Funk currently doesn't support constructors with arguments. The parser recognizes them, but 
 the arguments are discarded for now. */
+
+/* For now, let's construct 100 empty strings and print them next to eachother: */
+for(i = 0; i < 100; i = i+1) 
+	(!.String()).print();

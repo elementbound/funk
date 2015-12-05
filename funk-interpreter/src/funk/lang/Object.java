@@ -7,7 +7,7 @@ abstract public class Object implements Cloneable {
 	public abstract String asString();
 
 	@Override
-	public final String toString() {
+	public String toString() {
 		StringBuilder strb = new StringBuilder();
 		strb.append('[')
 			.append(this.typeString())
@@ -23,6 +23,10 @@ abstract public class Object implements Cloneable {
 	
 	public boolean typesMatch(Object rhs) {
 		return this.getClass().equals(rhs.getClass());
+	}
+	
+	public Object construct(Object... args) throws InstantiationException, IllegalAccessException {
+		return (Object)(this.getClass().newInstance());
 	}
 	
 	//Basic arithmetic operators

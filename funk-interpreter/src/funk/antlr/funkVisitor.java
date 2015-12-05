@@ -115,6 +115,13 @@ public interface funkVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitBlockStatement(funkParser.BlockStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code AggregateDeclaration}
+	 * labeled alternative in {@link funkParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAggregateDeclaration(funkParser.AggregateDeclarationContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code Comment}
 	 * labeled alternative in {@link funkParser#statement}.
 	 * @param ctx the parse tree
@@ -139,4 +146,10 @@ public interface funkVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitBlock(funkParser.BlockContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link funkParser#aggregateDecl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAggregateDecl(funkParser.AggregateDeclContext ctx);
 }

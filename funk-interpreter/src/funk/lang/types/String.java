@@ -3,6 +3,7 @@ package funk.lang.types;
 import java.util.Random;
 
 import funk.lang.Object;
+import funk.lang.StandardErrors;
 
 public class String extends Object {
 	public java.lang.String value; 
@@ -10,7 +11,7 @@ public class String extends Object {
 	private static final java.lang.String _MagicValue = 
 		"Never gonna give you up\n" + 
 		"Never gonna let you down\n" + 
-		"Never gonna run around and desert you";
+		"Never gonna run around and desert you\n";
 	
 	public String() {
 		if(rng.nextInt(100) < 2) 
@@ -40,26 +41,17 @@ public class String extends Object {
 
 	@Override
 	public Object opSubtract(Object rhs) {
-		return new Error("IllegalOperation")
-					.addField("op", "subtract")
-					.addField("lhs", this.toString())
-					.addField("rhs", rhs.toString());
+		return StandardErrors.IllegalOperation("subtract", this, rhs);
 	}
 
 	@Override
 	public Object opMultiply(Object rhs) {
-		return new Error("IllegalOperation")
-				.addField("op", "multiply")
-				.addField("lhs", this.toString())
-				.addField("rhs", rhs.toString());
+		return StandardErrors.IllegalOperation("multiply", this, rhs);
 	}
 
 	@Override
 	public Object opDivide(Object rhs) {
-		return new Error("IllegalOperation")
-				.addField("op", "divide")
-				.addField("lhs", this.toString())
-				.addField("rhs", rhs.toString());
+		return StandardErrors.IllegalOperation("divide", this, rhs);
 	}
 
 	@Override

@@ -186,6 +186,18 @@ public interface funkListener extends ParseTreeListener {
 	 */
 	void exitBlockStatement(funkParser.BlockStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code AggregateDeclaration}
+	 * labeled alternative in {@link funkParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterAggregateDeclaration(funkParser.AggregateDeclarationContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code AggregateDeclaration}
+	 * labeled alternative in {@link funkParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitAggregateDeclaration(funkParser.AggregateDeclarationContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code Comment}
 	 * labeled alternative in {@link funkParser#statement}.
 	 * @param ctx the parse tree
@@ -227,4 +239,14 @@ public interface funkListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitBlock(funkParser.BlockContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link funkParser#aggregateDecl}.
+	 * @param ctx the parse tree
+	 */
+	void enterAggregateDecl(funkParser.AggregateDeclContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link funkParser#aggregateDecl}.
+	 * @param ctx the parse tree
+	 */
+	void exitAggregateDecl(funkParser.AggregateDeclContext ctx);
 }

@@ -39,9 +39,11 @@ statement: expr ';' 			# SingleStatement
 	| ifThenElse 				# IfStatement
 	| forLoop 					# ForStatement
 	| block 					# BlockStatement
+	| aggregateDecl				# AggregateDeclaration
 	| COMMENT					# Comment
 	;
 
 ifThenElse: 'if' '(' expr ')' statement ('else' statement)?; 
 forLoop: 'for' '(' expr ';' expr ';' expr ')' statement; 
 block: '{' statement+ '}';
+aggregateDecl: 'aggregate' ID '{' ((ID ',')* ID) '}'; 

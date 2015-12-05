@@ -3,6 +3,7 @@ package funk.lang.func;
 import funk.Interpreter;
 import funk.lang.IFunction;
 import funk.lang.Object;
+import funk.lang.StandardErrors;
 import funk.lang.types.Number;
 import funk.lang.types.Error;
 
@@ -11,14 +12,10 @@ public class Pow implements IFunction {
 	@Override
 	public Object call(Interpreter funk, Object self, Object... args) {
 		if(args.length < 1)
-			return new Error("WrongArgumentCount")
-						.addField("argCount", Integer.toString(args.length))
-						.addField("expectedArgCount", "1");
+			return StandardErrors.WrongArgumentCount(args.length, 1);
 		
 		if(!(args[0] instanceof Number))
-			return new Error("WrongArgumentType")
-						.addField("argType", args[0].typeString())
-						.addField("expectedType", "Number");
+			return StandardErrors.WrongArgumentType(args[0].typeString(), "Number");
 		
 		//
 		

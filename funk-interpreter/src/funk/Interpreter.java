@@ -27,6 +27,7 @@ import funk.antlr.funkParser.StatementContext;
 import funk.lang.IFunction;
 import funk.lang.ICastRule;
 import funk.lang.Object;
+import funk.lang.StandardErrors;
 import funk.lang.cast.BooleanToNumber;
 import funk.lang.func.Pow;
 import funk.lang.func.Print;
@@ -37,6 +38,7 @@ import funk.lang.func.TypeMatch;
 import funk.lang.func.TypeString;
 import funk.lang.types.Error;
 import funk.lang.types.Number;
+import funk.lang.types.Aggregate;
 import funk.lang.types.Boolean; 
 
 public class Interpreter extends funkBaseVisitor<Object> {
@@ -50,7 +52,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	public List<ICastRule<?,?>> castRules = new ArrayList<>();
 	
 	//Ismert típusok
-	public Map<String, Class<? extends Object>> typeTable = new HashMap<>();
+	public Map<String, Object> typeTable = new HashMap<>();
 	
 	//Debug stream
 	public PrintStream dbgStream = new PrintStream(new NullOutputStream());
@@ -74,10 +76,10 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		
 		variableTable.push(new SymbolTable());
 		
-		typeTable.put("Boolean", Boolean.class);
-		typeTable.put("Number", Number.class); 
-		typeTable.put("String", funk.lang.types.String.class);
-		typeTable.put("Error", Error.class); 
+		typeTable.put("Boolean", new Boolean());
+		typeTable.put("Number", new Number()); 
+		typeTable.put("String", new funk.lang.types.String());
+		typeTable.put("Error", new Error("void")); 
 		
 		castRules.add(new BooleanToNumber());
 	}
@@ -115,23 +117,23 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	//=========================================================================================
 	//Types 
 	
-	public void registerType(String name, Class<? extends Object> type) {
+	public void registerType(String name, Object type) {
 		typeTable.put(name, type);
 	}
 	
-	public Class<? extends Object> getType(String typeName) {
+	public Object getType(String typeName) {
 		return typeTable.get(typeName);
 	}
 	
 	public Object getTypeInstance(String typeName) {
-		Class<?> type = getType(typeName); 
+		Object type = getType(typeName); 
 		if(type == null)
-			return new Error("UnknownType", "type", typeName);
+			return StandardErrors.UnknownType(typeName);
 		else
 			try {
-				return (Object) type.newInstance();
+				return type.construct();
 			} catch (InstantiationException | IllegalAccessException e) {
-				return new Error("FailedInstantiation", "type", typeName);
+				return StandardErrors.FailedInstantiation(typeName);
 			}
 	}
 	
@@ -168,6 +170,11 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		variableTable.push(temp);
 	}
 	
+	public void dumpVariables(PrintStream out) {
+		for(Entry<String, Object> p : getAllTable().entrySet()) 
+			out.printf("%s: %s;\n", p.getKey(), p.getValue().toString());
+	}
+	
 	//=========================================================================================
 	// Cast
 	
@@ -185,9 +192,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 			if(rule.from().equals(from.getClass()) && rule.to().equals(to))
 				return (Object) rule.cast(from);
 		
-		return new Error("IllegalCast")
-					.addField("from", from.toString())
-					.addField("to", to.getSimpleName());
+		return StandardErrors.IllegalCast(from, to);
 	}
 	
 	//=========================================================================================
@@ -280,7 +285,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		dbgStream.printf("id: %s\n", id);
 		
 		if(!exists(id))
-			return new Error("UnknownVariable", "name", id);
+			return StandardErrors.UnknownVariable(id); 
 		
 		return getVariable(id);
 	}
@@ -313,8 +318,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		else if(ctx.BOOLEAN().getText().equals("False"))
 			return new Boolean(false);
 		else 
-			return new Error("WrongBooleanLiteral")
-						.addField("literal", ctx.BOOLEAN().getText());
+			return StandardErrors.WrongLiteral("Boolean", ctx.BOOLEAN().getText());
 	}
 	
 	@Override 
@@ -329,7 +333,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		else if(op.equals("-"))
 			return visit(expr).opNegate(); 
 		else 
-			return new Error("UnknownUnaryOperator", "op", op);
+			return StandardErrors.UnknownUnaryOperator(op);
 	}
 	
 	@Override 
@@ -368,7 +372,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		else if(operator.equals(">")) 
 			return lhs.opGreaterThan(rhs);
 		else
-			return new Error("UnknownBinaryOperator", "op", operator);
+			return StandardErrors.UnknownBinaryOperator(operator);
 	}
 	
 	@Override 
@@ -388,9 +392,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		
 		IFunction function = getFunction(functionName, argObjects.size());
 		if(function == null) 
-			return new Error("UnknownFunction")
-						.addField("name", functionName)
-						.addField("argCount", Integer.toString(argObjects.size()));
+			return StandardErrors.UnknownFunction(functionName, argObjects.size());
 		
 		//Pass as varargs
 		return function.call(this, selfObject, argObjects.toArray(new Object[argObjects.size()]));
@@ -470,15 +472,24 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		return result; 
 	}
 	
+	@Override 
+	public Object visitAggregateDecl(funkParser.AggregateDeclContext ctx) {
+		String typeName = ctx.ID(0).getText();
+		
+		Aggregate type = new Aggregate(typeName);
+		for(int i = 1; i < ctx.ID().size(); i++)
+			type.addField(ctx.ID(i).getText());
+		
+		registerType(typeName, type);
+		
+		return type;
+	}
+	
+	@Override
 	public Object visitComment(funkParser.CommentContext ctx) {
 		//Nincs nagyon dolgunk vele, de mivel mindig vissza kell dobjunk egy Object-et, 
 		//visszadobjuk magat a szoveget
 		dbgStream.printf("Comment: %s\n", ctx.COMMENT().getText());
 		return new funk.lang.types.String(ctx.COMMENT().getText());
-	}
-	
-	public void dumpVariables(PrintStream out) {
-		for(Entry<String, Object> p : getAllTable().entrySet()) 
-			out.printf("%s: %s;\n", p.getKey(), p.getValue().toString());
 	}
 }
