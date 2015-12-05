@@ -44,6 +44,18 @@ public interface funkListener extends ParseTreeListener {
 	 */
 	void exitStringLiteral(funkParser.StringLiteralContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code MemberAccess}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterMemberAccess(funkParser.MemberAccessContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code MemberAccess}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitMemberAccess(funkParser.MemberAccessContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code BooleanLiteral}
 	 * labeled alternative in {@link funkParser#expr}.
 	 * @param ctx the parse tree
@@ -79,6 +91,18 @@ public interface funkListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAssign(funkParser.AssignContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code MemberAssign}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterMemberAssign(funkParser.MemberAssignContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code MemberAssign}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitMemberAssign(funkParser.MemberAssignContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code ID}
 	 * labeled alternative in {@link funkParser#expr}.

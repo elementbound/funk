@@ -9,6 +9,12 @@ public class StandardErrors {
 				.addField("to", to.getSimpleName());
 	}
 	
+	public static Error IllegalOperation(String op, Object self) {
+		return new Error("IllegalOperation")
+				.addField("op", op)
+				.addField("self", self.toString());
+	}
+	
 	public static Error IllegalOperation(String op, Object lhs, Object rhs) {
 		return new Error("IllegalOperation")
 				.addField("op", op)
@@ -38,6 +44,10 @@ public class StandardErrors {
 	
 	public static Error UnknownBinaryOperator(String op) {
 		return new Error("UnknownBinaryOperator", "op", op);
+	}
+	
+	public static Error UnknownField(String field) {
+		return new Error("UnknownField", "field", field);
 	}
 	
 	public static Error WrongLiteral(String type, String literal) {

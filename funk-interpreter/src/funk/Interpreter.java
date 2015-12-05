@@ -485,6 +485,30 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		return type;
 	}
 	
+	@Override 
+	public Object visitMemberAccess(funkParser.MemberAccessContext ctx) {
+		Object self = visit(ctx.expr());
+		
+		if(!(self instanceof Aggregate))
+			return StandardErrors.IllegalOperation("memberAccess", self);
+		
+		String id = ctx.ID().getText();
+		return ((Aggregate)self).getField(id);
+	}
+	
+	@Override
+	public Object visitMemberAssign(funkParser.MemberAssignContext ctx) {
+		Object self = visit(ctx.expr(0));
+		String id = ctx.ID().getText();
+		
+		if(!(self instanceof Aggregate))
+			return StandardErrors.IllegalOperation("memberAssign", self);
+		
+		Object assign = visit(ctx.expr(1));
+		
+		return ((Aggregate)self).setField(id, assign);
+	}
+	
 	@Override
 	public Object visitComment(funkParser.CommentContext ctx) {
 		//Nincs nagyon dolgunk vele, de mivel mindig vissza kell dobjunk egy Object-et, 

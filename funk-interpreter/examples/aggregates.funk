@@ -1,0 +1,23 @@
+/* Aggregate types */
+
+/*
+Are you missing structs from C? Maybe classes from Java, C++, or C#? 
+No worries! We got you, champ!
+
+...well, kind of. You can declare your own types, which are collections of named variables: 
+*/
+
+aggregate Foo {
+	a, 
+	b,
+	c
+}
+
+/* From this point, you can use Foo as an actual type: */
+a = !.Foo(); 
+
+/* You can refer to its members: */
+
+a.a = "Whoa!";
+a.b = "Dam son!";
+a.c = (a.a + " ") * 3; 

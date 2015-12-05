@@ -29,6 +29,8 @@ expr: '(' expr ')' 					# EnclosedExpr
 	 | STRING 						# StringLiteral
 	 | '!' '.' ID '(' args ')'		# Constructor
 	 | expr '.' ID '(' args ')' 	# MemberCall
+	 | expr '.' ID '=' expr 		# MemberAssign
+	 | expr '.' ID 					# MemberAccess
 	 | OP expr 						# UnaryOp
 	 | expr OP expr 				# BinaryOp
 	 | ID '=' expr 					# Assign

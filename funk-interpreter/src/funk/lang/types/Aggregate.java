@@ -28,6 +28,25 @@ public class Aggregate extends Object {
 		return this;
 	}
 	
+	public Object getField(String name) {
+		if(values.containsKey(name))
+			return values.get(name);
+		else
+			return StandardErrors.UnknownField(name);
+	}
+	
+	public boolean hasField(String name) {
+		return values.containsKey(name);
+	}
+	
+	public Object setField(String name, Object value) {
+		if(!this.hasField(name))
+			return StandardErrors.UnknownField(name);
+		
+		values.put(name, value);
+		return value; 
+	}
+	
 	@Override 
 	public Object construct(Object... args) {
 		Aggregate result = new Aggregate(this.typeName);
