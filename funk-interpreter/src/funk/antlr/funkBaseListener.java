@@ -16,13 +16,13 @@ public class funkBaseListener implements funkListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void enterDirectMemberCall(funkParser.DirectMemberCallContext ctx) { }
+	@Override public void enterMemberCall(funkParser.MemberCallContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
-	@Override public void exitDirectMemberCall(funkParser.DirectMemberCallContext ctx) { }
+	@Override public void exitMemberCall(funkParser.MemberCallContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -59,6 +59,18 @@ public class funkBaseListener implements funkListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitBooleanLiteral(funkParser.BooleanLiteralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterConstructor(funkParser.ConstructorContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitConstructor(funkParser.ConstructorContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *

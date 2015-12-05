@@ -21,6 +21,7 @@ import funk.antlr.funkBaseVisitor;
 import funk.antlr.funkLexer;
 import funk.antlr.funkParser;
 import funk.antlr.funkParser.ArgsContext;
+import funk.antlr.funkParser.ConstructorContext;
 import funk.antlr.funkParser.ExprContext;
 import funk.antlr.funkParser.StatementContext;
 import funk.lang.IFunction;
@@ -36,7 +37,6 @@ import funk.lang.func.TypeMatch;
 import funk.lang.func.TypeString;
 import funk.lang.types.Error;
 import funk.lang.types.Number;
-import jdk.nashorn.internal.codegen.TypeMap;
 import funk.lang.types.Boolean; 
 
 public class Interpreter extends funkBaseVisitor<Object> {
@@ -46,8 +46,11 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	//Fuggvenyek
 	public Map<String, IFunction> functionTable = new HashMap<>();
 	
-	//Cast rules
+	//Átváltási szabályok
 	public List<ICastRule<?,?>> castRules = new ArrayList<>();
+	
+	//Ismert típusok
+	public Map<String, Class<? extends Object>> typeTable = new HashMap<>();
 	
 	//Debug stream
 	public PrintStream dbgStream = new PrintStream(new NullOutputStream());
@@ -71,6 +74,11 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		
 		variableTable.push(new SymbolTable());
 		
+		typeTable.put("Boolean", Boolean.class);
+		typeTable.put("Number", Number.class); 
+		typeTable.put("String", funk.lang.types.String.class);
+		typeTable.put("Error", Error.class); 
+		
 		castRules.add(new BooleanToNumber());
 	}
 	
@@ -82,6 +90,9 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		
 		functionTable.put(funcName.toString(), func);
 	}
+	
+	//=========================================================================================
+	//Functions 
 	
 	public boolean hasFunction(String name, int argCount) {
 		StringBuilder funcName = new StringBuilder();
@@ -99,6 +110,29 @@ public class Interpreter extends funkBaseVisitor<Object> {
 				.append(argCount);
 		
 		return functionTable.get(funcName.toString());
+	}
+	
+	//=========================================================================================
+	//Types 
+	
+	public void registerType(String name, Class<? extends Object> type) {
+		typeTable.put(name, type);
+	}
+	
+	public Class<? extends Object> getType(String typeName) {
+		return typeTable.get(typeName);
+	}
+	
+	public Object getTypeInstance(String typeName) {
+		Class<?> type = getType(typeName); 
+		if(type == null)
+			return new Error("UnknownType", "type", typeName);
+		else
+			try {
+				return (Object) type.newInstance();
+			} catch (InstantiationException | IllegalAccessException e) {
+				return new Error("FailedInstantiation", "type", typeName);
+			}
 	}
 	
 	//=========================================================================================
@@ -199,6 +233,9 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		}
 	}
 	
+	//=========================================================================================
+	//Visitor methods
+	
 	@Override 
 	public Object defaultResult() {
 		return defaultResult;
@@ -262,6 +299,11 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		str = str.substring(1, str.length()-1);
 		
 		return new funk.lang.types.String(str);
+	}
+	
+	@Override
+	public Object visitConstructor(ConstructorContext ctx) {
+		return this.getTypeInstance(ctx.ID().getText());
 	}
 	
 	@Override 
@@ -330,7 +372,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	}
 	
 	@Override 
-	public Object visitDirectMemberCall(funkParser.DirectMemberCallContext ctx) {
+	public Object visitMemberCall(funkParser.MemberCallContext ctx) {
 		dbgStream.printf("Direct member call: %s\n", ctx.getText());
 		
 		ExprContext selfExpr = ctx.expr();

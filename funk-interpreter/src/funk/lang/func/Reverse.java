@@ -3,7 +3,6 @@ package funk.lang.func;
 import funk.Interpreter;
 import funk.lang.IFunction;
 import funk.lang.Object;
-import funk.lang.types.Error;
 import funk.lang.types.Number; 
 
 public class Reverse implements IFunction {

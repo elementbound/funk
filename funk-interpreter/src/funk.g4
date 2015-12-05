@@ -22,15 +22,16 @@ ID: [_a-zA-Z][a-zA-Z0-9]*;
 OP: '+' | '-' | '*' | '/' | '==' | '!=' | '<' | '>';
 COMMENT: '/*' .*? '*/'; // Non-greedy matching
 
-expr: '(' expr ')' 				# EnclosedExpr 
-	 | ID 						# ID
-	 | BOOLEAN 					# BooleanLiteral
-	 | NUMBER 					# NumberLiteral
-	 | STRING 					# StringLiteral
-	 | OP expr 					# UnaryOp
-	 | expr OP expr 			# BinaryOp
-	 | expr '.' ID '(' args ')' # DirectMemberCall
-	 | ID '=' expr 				# Assign
+expr: '(' expr ')' 					# EnclosedExpr 
+	 | ID 							# ID
+	 | BOOLEAN 						# BooleanLiteral
+	 | NUMBER 						# NumberLiteral
+	 | STRING 						# StringLiteral
+	 | '!' '.' ID '(' args ')'		# Constructor
+	 | expr '.' ID '(' args ')' 	# MemberCall
+	 | OP expr 						# UnaryOp
+	 | expr OP expr 				# BinaryOp
+	 | ID '=' expr 					# Assign
 	 ;
 
 args: ((expr ',')* expr)?;

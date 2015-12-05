@@ -8,17 +8,17 @@ import org.antlr.v4.runtime.tree.ParseTreeListener;
  */
 public interface funkListener extends ParseTreeListener {
 	/**
-	 * Enter a parse tree produced by the {@code DirectMemberCall}
+	 * Enter a parse tree produced by the {@code MemberCall}
 	 * labeled alternative in {@link funkParser#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterDirectMemberCall(funkParser.DirectMemberCallContext ctx);
+	void enterMemberCall(funkParser.MemberCallContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code DirectMemberCall}
+	 * Exit a parse tree produced by the {@code MemberCall}
 	 * labeled alternative in {@link funkParser#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitDirectMemberCall(funkParser.DirectMemberCallContext ctx);
+	void exitMemberCall(funkParser.MemberCallContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code UnaryOp}
 	 * labeled alternative in {@link funkParser#expr}.
@@ -55,6 +55,18 @@ public interface funkListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitBooleanLiteral(funkParser.BooleanLiteralContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code Constructor}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterConstructor(funkParser.ConstructorContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code Constructor}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitConstructor(funkParser.ConstructorContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code Assign}
 	 * labeled alternative in {@link funkParser#expr}.

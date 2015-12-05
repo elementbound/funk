@@ -11,12 +11,12 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public interface funkVisitor<T> extends ParseTreeVisitor<T> {
 	/**
-	 * Visit a parse tree produced by the {@code DirectMemberCall}
+	 * Visit a parse tree produced by the {@code MemberCall}
 	 * labeled alternative in {@link funkParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDirectMemberCall(funkParser.DirectMemberCallContext ctx);
+	T visitMemberCall(funkParser.MemberCallContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code UnaryOp}
 	 * labeled alternative in {@link funkParser#expr}.
@@ -38,6 +38,13 @@ public interface funkVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitBooleanLiteral(funkParser.BooleanLiteralContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code Constructor}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitConstructor(funkParser.ConstructorContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code Assign}
 	 * labeled alternative in {@link funkParser#expr}.

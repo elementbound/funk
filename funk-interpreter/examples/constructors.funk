@@ -1,0 +1,22 @@
+/* Constructors in Funk */
+
+/* You can get a new instance of any registered type: */
+a = !.String(); 
+
+/* This creates an empty string. */
+/* When you try to get an instance of an unknown type, you get an error: */
+a = !.What(); 
+
+/* 
+Funk error: UnknownType 
+	type: What
+*/
+
+/* You also get an error when you try to instantiate an object which has no default constructor */
+a = !.Error(); 
+
+/* Error is a recognized type, yet you can't construct it without arguments. Output: */
+/*
+Funk error: FailedInstantiation 
+	type: Error
+*/
