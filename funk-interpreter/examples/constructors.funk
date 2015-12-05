@@ -20,3 +20,6 @@ a = !.Error();
 Funk error: FailedInstantiation 
 	type: Error
 */
+
+/* Funk currently doesn't support constructors with arguments. The parser recognizes them, but 
+the arguments are discarded for now. */

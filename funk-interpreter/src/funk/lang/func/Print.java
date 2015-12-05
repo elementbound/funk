@@ -8,7 +8,7 @@ public class Print implements IFunction{
 	
 	@Override
 	public Object call(Interpreter funk, Object self, Object... args) {
-		System.out.println(self.asString());
+		System.out.print(self.asString());
 		return self;
 	}
 
