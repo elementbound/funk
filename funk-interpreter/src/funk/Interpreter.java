@@ -32,8 +32,11 @@ import funk.lang.func.Print;
 import funk.lang.func.Println;
 import funk.lang.func.Reverse;
 import funk.lang.func.Substr;
+import funk.lang.func.TypeMatch;
+import funk.lang.func.TypeString;
 import funk.lang.types.Error;
 import funk.lang.types.Number;
+import jdk.nashorn.internal.codegen.TypeMap;
 import funk.lang.types.Boolean; 
 
 public class Interpreter extends funkBaseVisitor<Object> {
@@ -62,6 +65,9 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		
 		registerFunction("print", new Print());
 		registerFunction("println", new Println());
+		
+		registerFunction("typeString", new TypeString());
+		registerFunction("typeMatch", new TypeMatch());
 		
 		variableTable.push(new SymbolTable());
 		
@@ -332,9 +338,6 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		ArgsContext args = ctx.args();
 		
 		dbgStream.printf("Function call: %s . %s(...)\n", selfExpr.getText(), functionName);
-		
-		//if(!functionTable.containsKey(functionName))
-		//	return new Error("UnknownFunction", "function", functionName);
 
 		Object selfObject = visit(selfExpr);
 		List<Object> argObjects = new ArrayList<>();
