@@ -1,5 +1,6 @@
 package funk.lang.func;
 
+import funk.Interpreter;
 import funk.lang.IFunction;
 import funk.lang.Object;
 import funk.lang.types.Error;
@@ -8,7 +9,7 @@ import funk.lang.types.Number;
 public class Reverse implements IFunction {
 
 	@Override
-	public Object call(Object self, Object... args) {
+	public Object call(Interpreter funk, Object self, Object... args) {
 		if(self instanceof Number) {
 			StringBuilder strb = new StringBuilder();
 			strb.append(self.asString());
@@ -16,19 +17,16 @@ public class Reverse implements IFunction {
 			
 			return new Number(Integer.parseInt(strb.toString()));
 		}
+
+		StringBuilder strb = new StringBuilder();
+		strb.append(self.asString());
+		strb.reverse();
 		
-		if(self instanceof funk.lang.types.String) {
-			StringBuilder strb = new StringBuilder();
-			strb.append(self.asString());
-			strb.reverse();
-			
-			return new funk.lang.types.String(strb.toString());
-		}
-		
-		return new Error("WrongSelfType")
-				.addField("type", self.typeString())
-				.addField("self", self.toString())
-				.addField("expectedType", "String, Number");
+		return new funk.lang.types.String(strb.toString());
 	}
 
+	@Override
+	public int expectedArgumentCount() {
+		return 0;
+	}
 }

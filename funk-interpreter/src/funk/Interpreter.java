@@ -55,15 +55,44 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	private static Object defaultResult = new Error("void");
 	
 	public Interpreter(){
-		functionTable.put("reverse", new Reverse());
-		functionTable.put("substr", new Substr());
-		functionTable.put("println", new Println());
-		functionTable.put("print", new Print());
-		functionTable.put("pow", new Pow());
+		registerFunction("reverse", new Reverse());
+		registerFunction("substr", new Substr(1));
+		registerFunction("substr", new Substr(2));
+		registerFunction("pow", new Pow());
+		
+		registerFunction("print", new Print());
+		registerFunction("println", new Println());
 		
 		variableTable.push(new SymbolTable());
 		
 		castRules.add(new BooleanToNumber());
+	}
+	
+	public void registerFunction(String name, IFunction func) {
+		StringBuilder funcName = new StringBuilder();
+		funcName.append(name)
+				.append(';')
+				.append(func.expectedArgumentCount());
+		
+		functionTable.put(funcName.toString(), func);
+	}
+	
+	public boolean hasFunction(String name, int argCount) {
+		StringBuilder funcName = new StringBuilder();
+		funcName.append(name)
+				.append(';')
+				.append(argCount);
+		
+		return functionTable.containsKey(funcName.toString());
+	}
+	
+	public IFunction getFunction(String name, int argCount) {
+		StringBuilder funcName = new StringBuilder();
+		funcName.append(name)
+				.append(';')
+				.append(argCount);
+		
+		return functionTable.get(funcName.toString());
 	}
 	
 	//=========================================================================================
@@ -103,6 +132,9 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	// Cast
 	
 	public Object cast(Object from, Class<?> to) {
+		if(to.equals(from.getClass()))
+			return from; 
+		
 		if(to.equals(Boolean.class))
 			return new Boolean(from.asBoolean());
 
@@ -205,7 +237,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		dbgStream.printf("id: %s\n", id);
 		
 		if(!exists(id))
-			return defaultResult(); //throw new UnknownVariableException(id);
+			return new Error("UnknownVariable", "name", id);
 		
 		return getVariable(id);
 	}
@@ -301,18 +333,22 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		
 		dbgStream.printf("Function call: %s . %s(...)\n", selfExpr.getText(), functionName);
 		
-		if(!functionTable.containsKey(functionName))
-			return new Error("UnknownFunction", "function", functionName);
+		//if(!functionTable.containsKey(functionName))
+		//	return new Error("UnknownFunction", "function", functionName);
 
 		Object selfObject = visit(selfExpr);
 		List<Object> argObjects = new ArrayList<>();
 		for(ExprContext arg : args.expr()) 
 			argObjects.add(visit(arg));
 		
-		IFunction function = functionTable.get(functionName);
+		IFunction function = getFunction(functionName, argObjects.size());//functionTable.get(functionName);
+		if(function == null) 
+			return new Error("UnknownFunction")
+						.addField("name", functionName)
+						.addField("argCount", Integer.toString(argObjects.size()));
 		
 		//Pass as varargs
-		return function.call(selfObject, argObjects.toArray(new Object[argObjects.size()]));
+		return function.call(this, selfObject, argObjects.toArray(new Object[argObjects.size()]));
 	}
 	
 	@Override 

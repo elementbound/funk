@@ -1,13 +1,31 @@
 package funk.lang.func;
 
+import funk.Interpreter;
 import funk.lang.IFunction;
 import funk.lang.Object; 
 import funk.lang.types.Number; 
 
 public class Substr implements IFunction {
-
+	private int argCount; 
+	
+	public Substr() {
+		this.argCount = 1;
+	}
+	
+	/* 
+	 * This function is written to accept one or two arguments. 
+	 * We didn't want to write two separate classes for the same thing, 
+	 * so instead Substr instances can be constructed to accept one or two 
+	 * arguments. 
+	 */
+	public Substr(int argCount) {
+		if(argCount <0 || argCount > 2)
+			argCount = 1;
+		this.argCount = argCount;
+	}
+	
 	@Override
-	public Object call(Object self, Object... args) {
+	public Object call(Interpreter funk, Object self, Object... args) {
 		String ret = self.asString();
 		int from = 0;
 		int to = ret.length();
@@ -32,5 +50,10 @@ public class Substr implements IFunction {
 		}
 
 		return new funk.lang.types.String(ret.substring(from, to));
+	}
+
+	@Override
+	public int expectedArgumentCount() {
+		return argCount;
 	}
 }
