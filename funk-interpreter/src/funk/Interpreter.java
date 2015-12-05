@@ -27,6 +27,11 @@ import funk.lang.IFunction;
 import funk.lang.ICastRule;
 import funk.lang.Object;
 import funk.lang.cast.BooleanToNumber;
+import funk.lang.func.Pow;
+import funk.lang.func.Print;
+import funk.lang.func.Println;
+import funk.lang.func.Reverse;
+import funk.lang.func.Substr;
 import funk.lang.types.Error;
 import funk.lang.types.Number;
 import funk.lang.types.Boolean; 
@@ -50,11 +55,11 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	private static Object defaultResult = new Error("void");
 	
 	public Interpreter(){
-		functionTable.put("reverse", new FReverse());
-		functionTable.put("substr", new FSubstr());
-		functionTable.put("println", new FPrintln());
-		functionTable.put("print", new FPrint());
-		functionTable.put("pow", new FPow());
+		functionTable.put("reverse", new Reverse());
+		functionTable.put("substr", new Substr());
+		functionTable.put("println", new Println());
+		functionTable.put("print", new Print());
+		functionTable.put("pow", new Pow());
 		
 		variableTable.push(new SymbolTable());
 		
@@ -110,7 +115,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		
 		return new Error("IllegalCast")
 					.addField("from", from.toString())
-					.addField("to", to.toString());
+					.addField("to", to.getSimpleName());
 	}
 	
 	//=========================================================================================

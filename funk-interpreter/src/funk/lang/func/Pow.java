@@ -1,11 +1,11 @@
-package funk;
+package funk.lang.func;
 
 import funk.lang.IFunction;
 import funk.lang.Object;
 import funk.lang.types.Number;
 import funk.lang.types.Error;
 
-public class FPow implements IFunction {
+public class Pow implements IFunction {
 
 	@Override
 	public Object call(Object self, Object... args) {

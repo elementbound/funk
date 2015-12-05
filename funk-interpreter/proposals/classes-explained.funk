@@ -1,0 +1,86 @@
+/* Arbitrary aggregate types can be defined: */
+
+type Date {
+	year,
+	month,
+	day
+}
+
+/* These variables are also typless, and can be accessed anytime. */
+
+/* Functions can be attached to them: */
+
+function Date.nextMonth() {
+	self.month = self.month + 1;
+	if(self.month == 13) {
+		self.month = 1;
+		self.year = self.year + 1;
+	}
+}
+
+/* Sometimes, you also want to write getters, which return a value 
+derived from other members: */
+
+type FileSize {
+	bytes 
+}
+
+function FileSize.kb() {
+	return self.bytes / 1024;
+}
+
+function FileSize.mb() {
+	return self.kb() / 1024;
+}
+
+/* Just as in C#, you can use these similar to actual members: */
+
+aLot = FileSize();
+aLot.bytes = 671088640;
+aLot.mb.println(); /* 640 */
+
+/* Setters are also there: */
+
+function FileSize.kb(v) {
+	self.bytes = v/1024;
+}
+
+function FileSize.mb(v) {
+	self.kb = v/1024;
+}
+
+aLot.kb = 655360;
+aLot.mb.println(); /* 640 */
+
+/* 
+To sum it up: 
+	Any function without arguments attached to a type can act as a getter. 
+	Any function with a single argument attached to a type can act as a setter. 
+	
+This allows you to do some fun stuff: 
+*/
+
+type Array {
+	...
+}
+
+function Array.clear() {
+	...
+}
+
+function Array.fill(val) {
+	...
+}
+
+a = Array();
+a.clear;
+a.fill = 8;
+
+/* This will also work for libraries ( if we ever get to do them ) */
+
+"Random".loadLibrary(); /* Load library; library creates a variable called Random */
+
+x = Random.number; /* Get a random number */
+y = (Random.string = 8); /* Get a random string of 8 characters */
+
+/* TODO: Inheritance */

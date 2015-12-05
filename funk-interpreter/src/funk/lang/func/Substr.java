@@ -1,10 +1,10 @@
-package funk;
+package funk.lang.func;
 
 import funk.lang.IFunction;
 import funk.lang.Object; 
 import funk.lang.types.Number; 
 
-public class FSubstr implements IFunction {
+public class Substr implements IFunction {
 
 	@Override
 	public Object call(Object self, Object... args) {

@@ -1,0 +1,18 @@
+/* 
+Libraries would ( initially ) be written in Java. 
+These libraries would be loaded at runtime. Once the library is loaded, its init function is 
+called, giving it access to the current Interpreter. Thus, the library would be able to inject 
+its own types, variables, functions and cast rules. 
+
+Funk's every feature would work as expected: 
+*/
+
+"Random".loadLibrary(); 
+/* Random injects its own type, which provides random numbers: */
+
+rng = Random();
+rng.seed = 7; /* Seed */
+val = rng.number; /* Get a random number */
+str = (rng.string = 8); /* Get a random string of 8 characters */
+
+/* TODO: Avoid name clashes, and the mysterious case of $ */

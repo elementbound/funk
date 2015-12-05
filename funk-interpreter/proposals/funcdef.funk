@@ -1,0 +1,54 @@
+/* 
+Functions are attached to arbitrary types. 
+So, a function specification must include the type it is attached to. 
+
+Functions also have arguments. Those must be somehow present. 
+*/
+
+function Number.power(n) {
+	ret = self; 
+	
+	for(i = 0; i < n; i = i+1)
+		ret = ret*self;
+	
+	return ret; 
+}
+
+/*
+An implicit variable, called 'self' is always provided. 
+When no return statement is given, self, is returned. 
+*/
+
+/*
+To retain Funk's typeless nature, argument types are not enforced. 
+When an argument is given with a wrong type, an error will probably 
+happen anyways. 
+*/
+
+/*
+To some degree, function overloads are also possible: 
+The same function can be attached to the same type, with differing 
+argument counts: 
+*/
+
+function *.println() {
+	self.print();
+	"\n".print(); /* Note: escape characters not implemented yet. */
+}
+
+function *.println(sep) {
+	self.print();
+	sep.print();
+}
+
+"Hello".println(" ");
+"world!".println();
+
+/* A function can be attached to a single type: */
+function Number.increment() { ... }
+
+/* To any type: */
+function *.negate() { ... }
+
+/* Or to multiple types: */
+function (Boolean | Number).invert() { ... }
