@@ -1,0 +1,47 @@
+/* Errors in Funk */
+
+/* 
+While running code, the Funk Interpreter could encounter various errors: 
+	using an unknown variable 
+	using an unknown function
+	trying to perform an invalid operation ( è.g. subtract strings ) 
+	trying to perform an invalid cast ( e.g. string to number )
+	
+These kind of operations return Error values. 
+Errors have their own type in Funk - this type has a type ( string ), and a collection of 
+fields. 
+
+When a piece of code results in an Error, the Interpreter immediately prints the error on its 
+error stream: 
+*/
+
+a = "True" * "False"; 
+
+/* The above results in: 
+Funk error: IllegalOperation 
+	op: multiply
+	lhs: [String] True
+	rhs: [String] False
+*/
+
+/* You can also print these: */
+a.println(); 
+/* {Error: IllegalOperation | op: multiply; lhs: [String] True; rhs: [String] False; } */
+
+/* Don't be surprised when the error states different objects than you used: */
+
+"True" - 96;
+
+/*
+Funk error: IllegalOperation 
+	op: subtract
+	lhs: [String] True
+	rhs: [String] 96
+*/
+
+/* 
+As you see, the error mentions two *strings* being subtracted, while you wanted to subtract 
+a *number* from a string. 
+This happens according to Funk's rule: On binary operations, cast everything to the left 
+operand's type. 
+*/

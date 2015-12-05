@@ -341,7 +341,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		for(ExprContext arg : args.expr()) 
 			argObjects.add(visit(arg));
 		
-		IFunction function = getFunction(functionName, argObjects.size());//functionTable.get(functionName);
+		IFunction function = getFunction(functionName, argObjects.size());
 		if(function == null) 
 			return new Error("UnknownFunction")
 						.addField("name", functionName)
