@@ -16,4 +16,9 @@ public class Print implements IFunction{
 	public int expectedArgumentCount() {
 		return 0;
 	}
+
+	@Override
+	public Class<? extends Object> expectedSelfType() {
+		return Object.class;
+	}
 }

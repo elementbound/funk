@@ -17,4 +17,8 @@ public class TypeMatch implements IFunction {
 		return 1;
 	}
 
+	@Override
+	public Class<? extends Object> expectedSelfType() {
+		return Object.class;
+	}
 }

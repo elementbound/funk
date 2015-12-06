@@ -19,13 +19,6 @@ public class Pow implements IFunction {
 		
 		//
 		
-		/*if(self instanceof Number) {
-			Number n = (Number)self;
-			Number p = (Number)args[0];
-			
-			return new Number((int)Math.pow(n.value, p.value));
-		}*/
-		
 		if(self instanceof funk.lang.types.String) {
 			funk.lang.types.String n = (funk.lang.types.String)self;
 			Number p = (Number)args[0];
@@ -51,5 +44,10 @@ public class Pow implements IFunction {
 	@Override
 	public int expectedArgumentCount() {
 		return 1;
+	}
+
+	@Override
+	public Class<? extends Object> expectedSelfType() {
+		return Object.class; 
 	}
 }

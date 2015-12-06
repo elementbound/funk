@@ -56,4 +56,9 @@ public class Substr implements IFunction {
 	public int expectedArgumentCount() {
 		return argCount;
 	}
+
+	@Override
+	public Class<? extends Object> expectedSelfType() {
+		return Object.class;
+	}
 }

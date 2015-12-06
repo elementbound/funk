@@ -1,7 +1,7 @@
 package funk;
 
 import java.io.PrintStream;
-
+import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -46,7 +46,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	public Stack<SymbolTable> variableTable= new Stack<SymbolTable>();
 	
 	//Fuggvenyek
-	public Map<String, IFunction> functionTable = new HashMap<>();
+	public List<Entry<String, IFunction>> functionTable = new ArrayList<>();
 	
 	//Átváltási szabályok
 	public List<ICastRule<?,?>> castRules = new ArrayList<>();
@@ -85,33 +85,65 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	}
 	
 	public void registerFunction(String name, IFunction func) {
-		StringBuilder funcName = new StringBuilder();
-		funcName.append(name)
-				.append(';')
-				.append(func.expectedArgumentCount());
-		
-		functionTable.put(funcName.toString(), func);
+		functionTable.add(new SimpleEntry<>(name, func));
 	}
 	
 	//=========================================================================================
 	//Functions 
 	
-	public boolean hasFunction(String name, int argCount) {
-		StringBuilder funcName = new StringBuilder();
-		funcName.append(name)
-				.append(';')
-				.append(argCount);
+	public boolean hasFunction(String name, Class<?> selfType, int argCount) {
+		for(Entry<String, IFunction> e : functionTable) {
+			String n = e.getKey();
+			IFunction f = e.getValue();
+			
+			if(!n.equals(name))
+				continue; 
+			
+			if(!f.expectedSelfType().equals(selfType))
+				continue; 
+			
+			if(f.expectedArgumentCount() != argCount)
+				continue;
+			
+			return true;
+		}
 		
-		return functionTable.containsKey(funcName.toString());
+		return false;
 	}
 	
-	public IFunction getFunction(String name, int argCount) {
-		StringBuilder funcName = new StringBuilder();
-		funcName.append(name)
-				.append(';')
-				.append(argCount);
+	private IFunction getFunction(String name, Class<? extends Object> selfType, int argCount) {
+		for(Entry<String, IFunction> e : functionTable) {
+			String n = e.getKey();
+			IFunction f = e.getValue();
+			
+			if(!n.equals(name))
+				continue; 
+			
+			if(!f.expectedSelfType().equals(selfType))
+				continue; 
+			
+			if(f.expectedArgumentCount() != argCount)
+				continue;
+			
+			return f;
+		}
 		
-		return functionTable.get(funcName.toString());
+		return null;
+	}
+	
+	public IFunction lookupFunction(String name, Class<? extends Object> selfType, int argCount) {
+		//First, try a lookup to the exact type
+		IFunction result = this.getFunction(name, selfType, argCount);
+		if(result != null)
+			return result; 
+		
+		//If it fails, try to find a generic function
+		result = this.getFunction(name, Object.class, argCount);
+		if(result != null)
+			return result;
+		
+		//If everything fails, return null
+		return null;
 	}
 	
 	//=========================================================================================
@@ -354,7 +386,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		if(rhs instanceof Error)
 			return rhs;
 		
-		//A ket kapott Object-etre alkalmazni a megfelelo operatort
+		//A ket kapott Object-re alkalmazni a megfelelo operatort
 		if(operator.equals("+")) 
 			return lhs.opAdd(rhs);
 		else if(operator.equals("-")) 
@@ -377,7 +409,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	
 	@Override 
 	public Object visitMemberCall(funkParser.MemberCallContext ctx) {
-		dbgStream.printf("Direct member call: %s\n", ctx.getText());
+		dbgStream.printf("Member call: %s\n", ctx.getText());
 		
 		ExprContext selfExpr = ctx.expr();
 		String functionName = ctx.ID().getText();
@@ -390,9 +422,9 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		for(ExprContext arg : args.expr()) 
 			argObjects.add(visit(arg));
 		
-		IFunction function = getFunction(functionName, argObjects.size());
+		IFunction function = lookupFunction(functionName, selfObject.getClass(), argObjects.size());//getFunction(functionName, argObjects.size());
 		if(function == null) 
-			return StandardErrors.UnknownFunction(functionName, argObjects.size());
+			return StandardErrors.UnknownFunction(functionName, selfObject, argObjects.size());
 		
 		//Pass as varargs
 		return function.call(this, selfObject, argObjects.toArray(new Object[argObjects.size()]));

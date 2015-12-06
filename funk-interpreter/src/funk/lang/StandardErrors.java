@@ -30,8 +30,11 @@ public class StandardErrors {
 		return new Error("UnknownVariable", "name", variable);
 	}
 	
-	public static Error UnknownFunction(String name, int argCount) {
-		return new Error("UnknownFunction", "function", name, "argCount", Integer.toString(argCount));
+	public static Error UnknownFunction(String name, Object self, int argCount) {
+		return new Error("UnknownFunction")
+					.addField("function", name)
+					.addField("self", self.toString())
+					.addField("argCount", Integer.toString(argCount));
 	}
 	
 	public static Error FailedInstantiation(String typeName) {

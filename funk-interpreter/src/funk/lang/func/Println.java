@@ -17,4 +17,8 @@ public class Println implements IFunction {
 		return 0;
 	}
 
+	@Override
+	public Class<? extends Object> expectedSelfType() {
+		return Object.class;
+	}
 }
