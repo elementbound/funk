@@ -21,3 +21,5 @@ a = !.Foo();
 a.a = "Whoa!";
 a.b = "Dam son!";
 a.c = (a.a + " ") * 3; 
+
+/* You might want to check functions.funk now */

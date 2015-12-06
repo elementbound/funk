@@ -1,0 +1,88 @@
+/* Functions in Funk */
+
+/* Arbitrary functions can be attached to types: */
+function Number.intensify(intensity) 
+	self = self * ( self + intensity );
+	
+/* You can write functions which don't care about type: */
+function *.isCool() 
+	if(self.asString().contains("cool"))
+		return True;
+	else 
+		return False; 
+	
+/* You can even attach to multiple types at once: */
+function (Number | Boolean).increment() {
+	self = self + 1;
+}
+
+/* You can also do overloads: */
+
+function Number.negate() {
+	self = -self;
+}
+
+function Boolean.negate() 
+	if(self)
+		return False;
+	else 
+		return True; 
+	
+/* 
+Also notice the seemingly arbitrary usage of {}. This is because function bodies can be any 
+of the accepted statement types: 
+	A single statement ( expr; )
+	An if statement 
+	A for loop
+	A block ( { ... } )
+	An aggregate declaration ( the aggregate would be declared once the function is called ) 
+	A comment. Yep. 
+*/
+
+/* According to the above, some fun functions: */ 
+
+function *.nope()
+	/* Nope */
+	
+function *.fuckMyTypesUpFam()
+	aggregate Number {}
+	
+/* When the function body does not contain a return statement, self is returned. */
+
+/* 
+Please note the fun nature of 'self'. 
+Directly assigning a value to self does nothing to the actual value. The effect you get is that
+the function returns the now modified self. 
+*/
+
+function Number.increment() {
+	self = self + 1; 
+}
+
+a = 1;
+a.increment(); 
+a.println(); /* 1 */
+
+/* However: */
+a = a.increment();
+a.println(); /* 2 */
+
+/* This is not true for aggregate fields: */
+
+aggregate Triplet {
+	a, b, c
+}
+
+function Triplet.set(a, b, c) {
+	self.a = a;
+	self.b = b;
+	self.c = c;
+}
+
+a = !.Triplet();
+a.set(1,2,3);
+a.println(); /* 1, 2, 3 */
+
+b = a.set(4,5,6);
+a.println(); /* 4, 5, 6 */
+b.println(); /* 4, 5, 6 */

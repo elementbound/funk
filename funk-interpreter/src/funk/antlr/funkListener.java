@@ -174,6 +174,18 @@ public interface funkListener extends ParseTreeListener {
 	 */
 	void exitSingleStatement(funkParser.SingleStatementContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code ReturnStatement}
+	 * labeled alternative in {@link funkParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterReturnStatement(funkParser.ReturnStatementContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code ReturnStatement}
+	 * labeled alternative in {@link funkParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitReturnStatement(funkParser.ReturnStatementContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code IfStatement}
 	 * labeled alternative in {@link funkParser#statement}.
 	 * @param ctx the parse tree
@@ -221,6 +233,42 @@ public interface funkListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAggregateDeclaration(funkParser.AggregateDeclarationContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code SingleFuncDecl}
+	 * labeled alternative in {@link funkParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterSingleFuncDecl(funkParser.SingleFuncDeclContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code SingleFuncDecl}
+	 * labeled alternative in {@link funkParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitSingleFuncDecl(funkParser.SingleFuncDeclContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code MultiFuncDecl}
+	 * labeled alternative in {@link funkParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultiFuncDecl(funkParser.MultiFuncDeclContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code MultiFuncDecl}
+	 * labeled alternative in {@link funkParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultiFuncDecl(funkParser.MultiFuncDeclContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code GenFuncDecl}
+	 * labeled alternative in {@link funkParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void enterGenFuncDecl(funkParser.GenFuncDeclContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code GenFuncDecl}
+	 * labeled alternative in {@link funkParser#statement}.
+	 * @param ctx the parse tree
+	 */
+	void exitGenFuncDecl(funkParser.GenFuncDeclContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code Comment}
 	 * labeled alternative in {@link funkParser#statement}.
@@ -273,4 +321,34 @@ public interface funkListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitAggregateDecl(funkParser.AggregateDeclContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link funkParser#singleTypeFunctionDecl}.
+	 * @param ctx the parse tree
+	 */
+	void enterSingleTypeFunctionDecl(funkParser.SingleTypeFunctionDeclContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link funkParser#singleTypeFunctionDecl}.
+	 * @param ctx the parse tree
+	 */
+	void exitSingleTypeFunctionDecl(funkParser.SingleTypeFunctionDeclContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link funkParser#multipleTypeFunctionDecl}.
+	 * @param ctx the parse tree
+	 */
+	void enterMultipleTypeFunctionDecl(funkParser.MultipleTypeFunctionDeclContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link funkParser#multipleTypeFunctionDecl}.
+	 * @param ctx the parse tree
+	 */
+	void exitMultipleTypeFunctionDecl(funkParser.MultipleTypeFunctionDeclContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link funkParser#genericTypeFunctionDecl}.
+	 * @param ctx the parse tree
+	 */
+	void enterGenericTypeFunctionDecl(funkParser.GenericTypeFunctionDeclContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link funkParser#genericTypeFunctionDecl}.
+	 * @param ctx the parse tree
+	 */
+	void exitGenericTypeFunctionDecl(funkParser.GenericTypeFunctionDeclContext ctx);
 }

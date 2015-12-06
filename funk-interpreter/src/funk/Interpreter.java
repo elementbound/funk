@@ -36,6 +36,7 @@ import funk.lang.func.Reverse;
 import funk.lang.func.Substr;
 import funk.lang.func.TypeMatch;
 import funk.lang.func.TypeString;
+import funk.lang.func.UserFunc;
 import funk.lang.types.Error;
 import funk.lang.types.Number;
 import funk.lang.types.Aggregate;
@@ -74,7 +75,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		registerFunction("typeString", new TypeString());
 		registerFunction("typeMatch", new TypeMatch());
 		
-		variableTable.push(new SymbolTable());
+		this.enterScope(); //variableTable.push(new SymbolTable());
 		
 		typeTable.put("Boolean", new Boolean());
 		typeTable.put("Number", new Number()); 
@@ -195,11 +196,22 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		return temp.get(key);
 	}
 	
-	public void putToTop(String key, Object val){
-		SymbolTable temp= variableTable.pop();
+	public void setLocalVariable(String key, Object val){
+		SymbolTable temp= variableTable.peek();
 		temp.set(key, val);
-		
-		variableTable.push(temp);
+	}
+	
+	public void enterScope() {
+		variableTable.push(new SymbolTable());
+	}
+	
+	public boolean exitScope() {
+		if(variableTable.size() != 1) {
+			variableTable.pop();
+			return true;
+		}
+		else 
+			return false; 
 	}
 	
 	public void dumpVariables(PrintStream out) {
@@ -441,7 +453,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		Object result = visit(expr);
 		
 		//A kapott Object-et eltenni ID neve valtozokent
-		putToTop(id, result);
+		setLocalVariable(id, result);
 		
 		dbgStream.printf("Saved variable: %s = %s\n", id, result);
 		
@@ -493,13 +505,13 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	public Object visitBlock(funkParser.BlockContext ctx) {
 		dbgStream.printf("Block: %s\n", ctx.getText());
 		
-		variableTable.push(new SymbolTable());
+		this.enterScope(); //variableTable.push(new SymbolTable());
 		
 		Object result = new Boolean();
 		for(ParseTree n : ctx.statement())
 			result = visit(n);
 		
-		variableTable.pop();
+		this.exitScope(); //variableTable.pop();
 		
 		return result; 
 	}
@@ -539,6 +551,23 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		Object assign = visit(ctx.expr(1));
 		
 		return ((Aggregate)self).setField(id, assign);
+	}
+	
+	@Override 
+	public Object visitSingleTypeFunctionDecl(funkParser.SingleTypeFunctionDeclContext ctx) {
+		String typeName = ctx.ID(0).getText();
+		String functionName = ctx.ID(1).getText();
+		List<String> argNames = new ArrayList<>();
+		
+		if(getType(typeName) == null)
+			return StandardErrors.UnknownType(typeName);
+		
+		for(int i = 2; i < ctx.ID().size(); i++)
+			argNames.add(ctx.ID(i).getText());
+		
+		registerFunction(functionName, new UserFunc(getType(typeName).getClass(), argNames, ctx.statement()));
+		
+		return new Boolean(true);
 	}
 	
 	@Override

@@ -38,10 +38,14 @@ expr: '(' expr ')' 					# EnclosedExpr
 
 args: ((expr ',')* expr)?;
 statement: expr ';' 			# SingleStatement
+	| 'return' expr ';'			# ReturnStatement
 	| ifThenElse 				# IfStatement
 	| forLoop 					# ForStatement
 	| block 					# BlockStatement
 	| aggregateDecl				# AggregateDeclaration
+	| singleTypeFunctionDecl	# SingleFuncDecl
+	| multipleTypeFunctionDecl	# MultiFuncDecl
+	| genericTypeFunctionDecl	# GenFuncDecl
 	| COMMENT					# Comment
 	;
 
@@ -49,3 +53,13 @@ ifThenElse: 'if' '(' expr ')' statement ('else' statement)?;
 forLoop: 'for' '(' expr ';' expr ';' expr ')' statement; 
 block: '{' statement+ '}';
 aggregateDecl: 'aggregate' ID '{' ((ID ',')* ID) '}'; 
+
+singleTypeFunctionDecl: 
+	'function' ID '.' ID '(' ((ID ',')* ID)?  ')' statement; 
+	
+multipleTypeFunctionDecl: 
+	'function' '(' ((ID '|')* ID)? ')' statement; 
+	
+genericTypeFunctionDecl: 
+	'function' '*' '.' ID '('((ID ',')* ID)?  ')' statement; 
+	

@@ -108,6 +108,13 @@ public interface funkVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSingleStatement(funkParser.SingleStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code ReturnStatement}
+	 * labeled alternative in {@link funkParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitReturnStatement(funkParser.ReturnStatementContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code IfStatement}
 	 * labeled alternative in {@link funkParser#statement}.
 	 * @param ctx the parse tree
@@ -135,6 +142,27 @@ public interface funkVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitAggregateDeclaration(funkParser.AggregateDeclarationContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code SingleFuncDecl}
+	 * labeled alternative in {@link funkParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSingleFuncDecl(funkParser.SingleFuncDeclContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code MultiFuncDecl}
+	 * labeled alternative in {@link funkParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMultiFuncDecl(funkParser.MultiFuncDeclContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code GenFuncDecl}
+	 * labeled alternative in {@link funkParser#statement}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitGenFuncDecl(funkParser.GenFuncDeclContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code Comment}
 	 * labeled alternative in {@link funkParser#statement}.
@@ -166,4 +194,22 @@ public interface funkVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitAggregateDecl(funkParser.AggregateDeclContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link funkParser#singleTypeFunctionDecl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSingleTypeFunctionDecl(funkParser.SingleTypeFunctionDeclContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link funkParser#multipleTypeFunctionDecl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMultipleTypeFunctionDecl(funkParser.MultipleTypeFunctionDeclContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link funkParser#genericTypeFunctionDecl}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitGenericTypeFunctionDecl(funkParser.GenericTypeFunctionDeclContext ctx);
 }

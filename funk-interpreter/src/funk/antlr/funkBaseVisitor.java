@@ -115,6 +115,13 @@ public class funkBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements f
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitReturnStatement(funkParser.ReturnStatementContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitIfStatement(funkParser.IfStatementContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
@@ -137,6 +144,27 @@ public class funkBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements f
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitAggregateDeclaration(funkParser.AggregateDeclarationContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitSingleFuncDecl(funkParser.SingleFuncDeclContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitMultiFuncDecl(funkParser.MultiFuncDeclContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitGenFuncDecl(funkParser.GenFuncDeclContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -172,4 +200,25 @@ public class funkBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements f
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
 	@Override public T visitAggregateDecl(funkParser.AggregateDeclContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitSingleTypeFunctionDecl(funkParser.SingleTypeFunctionDeclContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitMultipleTypeFunctionDecl(funkParser.MultipleTypeFunctionDeclContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
+	@Override public T visitGenericTypeFunctionDecl(funkParser.GenericTypeFunctionDeclContext ctx) { return visitChildren(ctx); }
 }

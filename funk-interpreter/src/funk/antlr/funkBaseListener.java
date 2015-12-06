@@ -184,6 +184,18 @@ public class funkBaseListener implements funkListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterReturnStatement(funkParser.ReturnStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitReturnStatement(funkParser.ReturnStatementContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterIfStatement(funkParser.IfStatementContext ctx) { }
 	/**
 	 * {@inheritDoc}
@@ -227,6 +239,42 @@ public class funkBaseListener implements funkListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitAggregateDeclaration(funkParser.AggregateDeclarationContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSingleFuncDecl(funkParser.SingleFuncDeclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSingleFuncDecl(funkParser.SingleFuncDeclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMultiFuncDecl(funkParser.MultiFuncDeclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMultiFuncDecl(funkParser.MultiFuncDeclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterGenFuncDecl(funkParser.GenFuncDeclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitGenFuncDecl(funkParser.GenFuncDeclContext ctx) { }
 	/**
 	 * {@inheritDoc}
 	 *
@@ -287,6 +335,42 @@ public class funkBaseListener implements funkListener {
 	 * <p>The default implementation does nothing.</p>
 	 */
 	@Override public void exitAggregateDecl(funkParser.AggregateDeclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterSingleTypeFunctionDecl(funkParser.SingleTypeFunctionDeclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitSingleTypeFunctionDecl(funkParser.SingleTypeFunctionDeclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterMultipleTypeFunctionDecl(funkParser.MultipleTypeFunctionDeclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitMultipleTypeFunctionDecl(funkParser.MultipleTypeFunctionDeclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void enterGenericTypeFunctionDecl(funkParser.GenericTypeFunctionDeclContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitGenericTypeFunctionDecl(funkParser.GenericTypeFunctionDeclContext ctx) { }
 
 	/**
 	 * {@inheritDoc}
