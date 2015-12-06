@@ -322,6 +322,26 @@ public interface funkListener extends ParseTreeListener {
 	 */
 	void exitAggregateDecl(funkParser.AggregateDeclContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link funkParser#argsProto}.
+	 * @param ctx the parse tree
+	 */
+	void enterArgsProto(funkParser.ArgsProtoContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link funkParser#argsProto}.
+	 * @param ctx the parse tree
+	 */
+	void exitArgsProto(funkParser.ArgsProtoContext ctx);
+	/**
+	 * Enter a parse tree produced by {@link funkParser#typesProto}.
+	 * @param ctx the parse tree
+	 */
+	void enterTypesProto(funkParser.TypesProtoContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link funkParser#typesProto}.
+	 * @param ctx the parse tree
+	 */
+	void exitTypesProto(funkParser.TypesProtoContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link funkParser#singleTypeFunctionDecl}.
 	 * @param ctx the parse tree
 	 */

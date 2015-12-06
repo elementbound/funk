@@ -16,6 +16,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.tree.ParseTree;
 import org.antlr.v4.runtime.tree.RuleNode;
+import org.antlr.v4.runtime.tree.TerminalNode;
 
 import funk.antlr.funkBaseVisitor;
 import funk.antlr.funkLexer;
@@ -562,10 +563,45 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		if(getType(typeName) == null)
 			return StandardErrors.UnknownType(typeName);
 		
-		for(int i = 2; i < ctx.ID().size(); i++)
-			argNames.add(ctx.ID(i).getText());
+		for(TerminalNode t : ctx.argsProto().ID())
+			argNames.add(t.getText());
 		
 		registerFunction(functionName, new UserFunc(getType(typeName).getClass(), argNames, ctx.statement()));
+		
+		return new Boolean(true);
+	}
+	
+	@Override
+	public Object visitMultipleTypeFunctionDecl(funkParser.MultipleTypeFunctionDeclContext ctx) {
+		List<String> attachedTypes = new ArrayList<>();
+		String functionName = ctx.ID().getText();
+		List<String> argNames = new ArrayList<>();
+		
+		for(TerminalNode t : ctx.typesProto().ID())
+			attachedTypes.add(t.getText());
+		
+		for(TerminalNode t : ctx.argsProto().ID())
+			argNames.add(t.getText());
+		
+		for(String type : attachedTypes) {
+			if(getType(type) == null)
+				return StandardErrors.UnknownType(type);
+			
+			registerFunction(functionName, new UserFunc(getType(type).getClass(), argNames, ctx.statement()));
+		}
+		
+		return new Boolean(true);
+	}
+	
+	@Override 
+	public Object visitGenericTypeFunctionDecl(funkParser.GenericTypeFunctionDeclContext ctx) {
+		String functionName = ctx.ID().getText();
+		List<String> argNames = new ArrayList<>();
+		
+		for(TerminalNode t : ctx.argsProto().ID())
+			argNames.add(t.getText());
+		
+		registerFunction(functionName, new UserFunc(Object.class, argNames, ctx.statement()));
 		
 		return new Boolean(true);
 	}

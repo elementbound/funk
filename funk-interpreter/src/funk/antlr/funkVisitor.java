@@ -195,6 +195,18 @@ public interface funkVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitAggregateDecl(funkParser.AggregateDeclContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link funkParser#argsProto}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArgsProto(funkParser.ArgsProtoContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link funkParser#typesProto}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTypesProto(funkParser.TypesProtoContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link funkParser#singleTypeFunctionDecl}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

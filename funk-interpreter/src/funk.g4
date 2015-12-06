@@ -23,7 +23,6 @@ OP: '+' | '-' | '*' | '/' | '==' | '!=' | '<' | '>';
 COMMENT: '/*' .*? '*/'; // Non-greedy matching
 
 expr: '(' expr ')' 					# EnclosedExpr 
-	 | ID 							# ID
 	 | BOOLEAN 						# BooleanLiteral
 	 | NUMBER 						# NumberLiteral
 	 | STRING 						# StringLiteral
@@ -34,6 +33,7 @@ expr: '(' expr ')' 					# EnclosedExpr
 	 | OP expr 						# UnaryOp
 	 | expr OP expr 				# BinaryOp
 	 | ID '=' expr 					# Assign
+	 | ID 							# ID
 	 ;
 
 args: ((expr ',')* expr)?;
@@ -54,12 +54,15 @@ forLoop: 'for' '(' expr ';' expr ';' expr ')' statement;
 block: '{' statement+ '}';
 aggregateDecl: 'aggregate' ID '{' ((ID ',')* ID) '}'; 
 
+argsProto: ((ID ',')* ID)?;
+typesProto:  (ID '|')* ID; 
+
 singleTypeFunctionDecl: 
-	'function' ID '.' ID '(' ((ID ',')* ID)?  ')' statement; 
+	'function' ID '.' ID '(' argsProto  ')' statement; 
 	
 multipleTypeFunctionDecl: 
-	'function' '(' ((ID '|')* ID)? ')' statement; 
+	'function' '(' typesProto ')' '.' ID '(' argsProto ')' statement; 
 	
 genericTypeFunctionDecl: 
-	'function' '*' '.' ID '('((ID ',')* ID)?  ')' statement; 
+	'function' '?' '.' ID '(' argsProto  ')' statement; 
 	
