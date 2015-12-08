@@ -45,6 +45,7 @@ import funk.lang.types.Boolean;
 
 public class Interpreter extends funkBaseVisitor<Object> {
 	//Valtozok
+	//TODO: ez legyen list, könnyebb keresgélni benne
 	public Stack<SymbolTable> variableTable= new Stack<SymbolTable>();
 	
 	//Fuggvenyek
@@ -212,6 +213,12 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	public void setLocalVariable(String key, Object val){
 		SymbolTable temp= variableTable.peek();
 		temp.set(key, val);
+	}
+	
+	public void setExistingVariable(String key, Object val) {
+		//TODO: 
+		//Ha van ilyen nevû változó, állítsa azt
+		//Különben állítson setLocalVariable
 	}
 	
 	public void enterScope() {
