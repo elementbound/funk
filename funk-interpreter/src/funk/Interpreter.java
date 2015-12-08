@@ -63,6 +63,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	public PrintStream errorStream = new PrintStream(System.out);
 	
 	private static Object defaultResult = new Error("void");
+	private Object queuedReturn = null; 
 	
 	public Interpreter(){
 		registerFunction("reverse", new Reverse());
@@ -146,6 +147,17 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		
 		//If everything fails, return null
 		return null;
+	}
+	
+	public boolean hasReturn() {
+		return queuedReturn != null;
+	}
+	
+	public Object returnValue() {
+		Object res = queuedReturn;
+		queuedReturn = null;
+		
+		return res; 
 	}
 	
 	//=========================================================================================
@@ -255,8 +267,12 @@ public class Interpreter extends funkBaseVisitor<Object> {
 			for(ParseTree node = parser.statement(); 
 					!node.getText().startsWith("<EOF>") && !node.getText().trim().equals("");
 					node = parser.statement()) {
+				Object result = visit(node);
+				if(queuedReturn != null) 
+					break;
+				
 				dbgStream.printf("Visiting %s\n", node.getText());
-				dbgStream.printf("Return: %s\n", visit(node).toString());
+				dbgStream.printf("Return: %s\n", result.toString());
 			}
 		}
 		catch(RecognitionException e) {
@@ -308,6 +324,9 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		dbgStream.printf("Visiting node: %s\n", node.getText());
 		dbgStream.printf("Rule: %s\n", funkParser.ruleNames[node.getRuleContext().getRuleIndex()]);
 		dbgStream.printf("Context type: %s\n\n", node.getRuleContext().getClass().getName());
+		
+		if(queuedReturn != null) 
+			return queuedReturn;
 		
 		Object result = super.visitChildren(node);
 		
@@ -463,6 +482,12 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		return result; 
 	}
 	
+	@Override 
+	public Object visitReturnStatement(funkParser.ReturnStatementContext ctx) {
+		queuedReturn = visit(ctx.expr());
+		return queuedReturn;
+	}
+	
 	@Override
 	public Object visitIfThenElse(funkParser.IfThenElseContext ctx) {
 		ExprContext expr = ctx.expr();
@@ -503,6 +528,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		return result; 
 	}
 	
+	@Override
 	public Object visitBlock(funkParser.BlockContext ctx) {
 		dbgStream.printf("Block: %s\n", ctx.getText());
 		

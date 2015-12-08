@@ -9,7 +9,7 @@ import funk.Interpreter;
 public class Main {
 	public static void main(String... args) {
 		Interpreter funk = new Interpreter();
-		funk.dbgStream = System.out; 
+		//funk.dbgStream = System.out; 
 		
 		if(args.length > 0)
 			batch(args[0], funk);

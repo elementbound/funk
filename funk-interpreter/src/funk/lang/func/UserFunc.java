@@ -1,11 +1,13 @@
 package funk.lang.func;
 
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import funk.Interpreter;
+import funk.NullOutputStream;
 import funk.lang.IFunction;
 import funk.lang.Object;
 
@@ -28,7 +30,12 @@ public class UserFunc implements IFunction {
 		funk.setLocalVariable("self", self);
 		
 		funk.visit(userCode);
-		Object result = funk.getVariable("self");
+		
+		Object result;
+		if(funk.hasReturn())
+			result = funk.returnValue();
+		else 
+			result = funk.getVariable("self");
 		
 		funk.exitScope();
 		return result; 
