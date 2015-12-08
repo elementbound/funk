@@ -28,6 +28,16 @@ public class Aggregate extends Object {
 		return this;
 	}
 	
+	public Aggregate inheritFields(Aggregate parent) {
+		for(String f : parent.fields)
+			if(!fields.contains(f)) {
+				fields.add(f);
+				values.put(f, parent.values.get(f));
+			}
+		
+		return this; 
+	}
+	
 	public Object getField(String name) {
 		if(values.containsKey(name))
 			return values.get(name);

@@ -571,10 +571,31 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	@Override 
 	public Object visitAggregateDecl(funkParser.AggregateDeclContext ctx) {
 		String typeName = ctx.ID(0).getText();
+		String baseTypeName = null; 
+		Object baseType = null;
+		
+		int firstFieldId = 1;
+		
+		if(ctx.baseType != null) {
+			baseTypeName = ctx.baseType.getText();
+			baseType = this.getType(baseTypeName);
+			if(baseType == null)
+				return StandardErrors.UnknownType(baseTypeName);
+			
+			if(!(baseType instanceof Aggregate))
+				return StandardErrors.InvalidInheritance(baseTypeName);
+			
+			firstFieldId = 2;
+		}
 		
 		Aggregate type = new Aggregate(typeName);
-		for(int i = 1; i < ctx.ID().size(); i++)
+		for(int i = firstFieldId; i < ctx.ID().size(); i++)
 			type.addField(ctx.ID(i).getText());
+		
+		if(baseType != null) {
+			type.inheritFields((Aggregate) baseType);
+			registerInheritance(typeName, baseTypeName);
+		}
 		
 		registerType(typeName, type);
 		

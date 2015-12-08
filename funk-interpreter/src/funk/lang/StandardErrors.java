@@ -70,4 +70,9 @@ public class StandardErrors {
 				.addField("argType", type)
 				.addField("expectedType", expected);
 	}
+
+	public static Object InvalidInheritance(String baseTypeName) {
+		return new Error("InvalidInheritance")
+				.addField("notAggregateType", baseTypeName);
+	}
 }

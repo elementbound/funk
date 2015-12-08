@@ -52,7 +52,7 @@ statement: expr ';' 			# SingleStatement
 ifThenElse: 'if' '(' expr ')' statement ('else' statement)?; 
 forLoop: 'for' '(' expr ';' expr ';' expr ')' statement; 
 block: '{' statement+ '}';
-aggregateDecl: 'aggregate' ID '{' ((ID ',')* ID) '}'; 
+aggregateDecl: 'aggregate' ID (':' baseType=ID)? '{' ((ID ',')* ID) '}'; 
 
 argsProto: ((ID ',')* ID)?;
 typesProto:  (ID '|')* ID; 
