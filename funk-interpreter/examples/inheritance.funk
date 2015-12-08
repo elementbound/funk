@@ -1,0 +1,79 @@
+/* Inheritance in Funk */
+
+/* If you haven't already, please read aggregates.funk and functions.funk. */
+/* This example is based on them. */
+
+/* So you already have some of your types, but common functionality occurs and you really don't
+want to repeat yourself because you are a proper programmer. 
+In other languages, you usually turn to the wonder of inheritance and polymorphism. 
+
+You are in luck, fam! */
+
+aggregate Date { 
+	year,
+	month, 
+	day 
+}
+
+function Date.nextYear() {
+	self.year = self.year + 1;
+}
+
+function Date.nextMonth() {
+	self.month = self.month + 1;
+	if(self.month > 12) {
+		self.month = 1;
+		self.nextYear(); 
+	}
+}
+
+function Date.nextDay() {
+	self.day = self.day + 1;
+	if(self.day > self.daysInMonth(self.month)) {
+		self.day = 1;
+		self.nextMonth();
+	}
+}
+
+function Date.daysInMonth(month) {
+	if(month == 2) 
+		return 28; /* TODO: modulo operator */
+	else 
+		return 30; /* TODO: please, a modulo operator */
+}
+
+function Date.print() {
+	(("" + self.day) + "." + self.month + "." + self.year).print();
+}
+
+/* We got a really basic Date class fleshed out. We'd like to add a time to this class, so we 
+derive a new one: */
+
+aggregate DateTime : Date { 
+	hour, 
+	minute, 
+	second 
+}
+
+/* The parent aggregate's fields are appended to child's. */
+/* If you redefine a field, it won't be added again. */
+
+function DateTime.print() {
+	(("" + self.day) + "." + self.month + "." + self.year + " " + 
+		self.hour + ":" + self.minute + ":" + self.second).print();
+}
+
+whenever = !.DateTime(); 
+
+whenever.year = !.Number();
+whenever.month = 6;
+whenever.day = 4;
+
+whenever.hour = 8;
+whenever.minute = 47;
+whenever.second = 11; 
+
+/* And voi'la, you can use Date functions on DateTimes: */
+
+whenever.nextYear();
+whenever.println(); 
