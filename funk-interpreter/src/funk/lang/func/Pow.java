@@ -5,6 +5,7 @@ import funk.lang.IFunction;
 import funk.lang.Object;
 import funk.lang.StandardErrors;
 import funk.lang.types.Number;
+import funk.lang.types.Generic;
 import funk.lang.types.Error;
 
 public class Pow implements IFunction {
@@ -47,7 +48,7 @@ public class Pow implements IFunction {
 	}
 
 	@Override
-	public Class<? extends Object> expectedSelfType() {
-		return Object.class; 
+	public Object expectedSelfType() {
+		return Generic.instance; 
 	}
 }

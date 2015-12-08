@@ -3,8 +3,10 @@ package funk.lang.func;
 import funk.Interpreter;
 import funk.lang.IFunction;
 import funk.lang.Object;
+import funk.lang.types.Generic;
 
 public class TypeString implements IFunction {
+
 	@Override
 	public Object call(Interpreter funk, Object self, Object... args) {
 		return new funk.lang.types.String(self.typeString());
@@ -16,7 +18,7 @@ public class TypeString implements IFunction {
 	}
 
 	@Override
-	public Class<? extends Object> expectedSelfType() {
-		return Object.class;
+	public Object expectedSelfType() {
+		return Generic.instance; 
 	}
 }

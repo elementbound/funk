@@ -3,6 +3,7 @@ package funk.lang.func;
 import funk.Interpreter;
 import funk.lang.IFunction;
 import funk.lang.Object;
+import funk.lang.types.Generic;
 import funk.lang.types.Boolean;
 
 public class TypeMatch implements IFunction {
@@ -18,7 +19,7 @@ public class TypeMatch implements IFunction {
 	}
 
 	@Override
-	public Class<? extends Object> expectedSelfType() {
-		return Object.class;
+	public Object expectedSelfType() {
+		return Generic.instance; 
 	}
 }

@@ -12,14 +12,14 @@ import funk.lang.IFunction;
 import funk.lang.Object;
 
 public class UserFunc implements IFunction {
+	private Object typeInstance = null;
 	private List<String> argNames = new ArrayList<>();
-	private Class<? extends Object> acceptedType = Object.class;
 	private ParseTree userCode = null;
 	
-	public UserFunc(Class<? extends Object> selfType, List<String> argNames, ParseTree code) {
+	public UserFunc(Object selfType, List<String> argNames, ParseTree code) {
 		this.argNames.addAll(argNames);
-		this.acceptedType = selfType;
 		this.userCode = code; 
+		this.typeInstance = selfType;
 	}
 	
 	@Override
@@ -47,8 +47,8 @@ public class UserFunc implements IFunction {
 	}
 
 	@Override
-	public Class<? extends Object> expectedSelfType() {
-		return acceptedType;
+	public Object expectedSelfType() {
+		return typeInstance;
 	}
 
 }

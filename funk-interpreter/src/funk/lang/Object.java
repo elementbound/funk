@@ -3,6 +3,7 @@ package funk.lang;
 import funk.lang.types.Boolean;
 
 abstract public class Object implements Cloneable {
+	
 	public abstract boolean asBoolean(); 
 	public abstract String asString();
 

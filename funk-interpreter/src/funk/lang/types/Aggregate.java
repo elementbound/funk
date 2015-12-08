@@ -104,7 +104,7 @@ public class Aggregate extends Object {
 	
 	@Override 
 	public String typeString() {
-		return "Aggregate:" + typeName;
+		return typeName;
 	}
 	
 	@Override

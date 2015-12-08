@@ -41,6 +41,7 @@ import funk.lang.func.UserFunc;
 import funk.lang.types.Error;
 import funk.lang.types.Number;
 import funk.lang.types.Aggregate;
+import funk.lang.types.Generic;
 import funk.lang.types.Boolean; 
 
 public class Interpreter extends funkBaseVisitor<Object> {
@@ -56,6 +57,10 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	
 	//Ismert típusok
 	public Map<String, Object> typeTable = new HashMap<>();
+	
+	//Típusok közti öröklõdés 
+	//Minden típushoz hozzárendeli a szülõjét 
+	public Map<String, String> inheritanceTable = new HashMap<>();
 	
 	//Debug stream
 	public PrintStream dbgStream = new PrintStream(new NullOutputStream());
@@ -80,6 +85,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		
 		this.enterScope(); //variableTable.push(new SymbolTable());
 		
+		typeTable.put("?", Generic.instance); 
 		typeTable.put("Boolean", new Boolean());
 		typeTable.put("Number", new Number()); 
 		typeTable.put("String", new funk.lang.types.String());
@@ -95,7 +101,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	//=========================================================================================
 	//Functions 
 	
-	public boolean hasFunction(String name, Class<?> selfType, int argCount) {
+	public boolean hasFunction(String name, Object selfType, int argCount) {
 		for(Entry<String, IFunction> e : functionTable) {
 			String n = e.getKey();
 			IFunction f = e.getValue();
@@ -103,7 +109,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 			if(!n.equals(name))
 				continue; 
 			
-			if(!f.expectedSelfType().equals(selfType))
+			if(!f.expectedSelfType().typesMatch(selfType))
 				continue; 
 			
 			if(f.expectedArgumentCount() != argCount)
@@ -115,7 +121,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		return false;
 	}
 	
-	private IFunction getFunction(String name, Class<? extends Object> selfType, int argCount) {
+	private IFunction getFunction(String name, Object selfType, int argCount) {
 		for(Entry<String, IFunction> e : functionTable) {
 			String n = e.getKey();
 			IFunction f = e.getValue();
@@ -123,7 +129,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 			if(!n.equals(name))
 				continue; 
 			
-			if(!f.expectedSelfType().equals(selfType))
+			if(!f.expectedSelfType().typesMatch(selfType))
 				continue; 
 			
 			if(f.expectedArgumentCount() != argCount)
@@ -135,14 +141,18 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		return null;
 	}
 	
-	public IFunction lookupFunction(String name, Class<? extends Object> selfType, int argCount) {
-		//First, try a lookup to the exact type
-		IFunction result = this.getFunction(name, selfType, argCount);
-		if(result != null)
-			return result; 
+	public IFunction lookupFunction(String name, Object selfType, int argCount) {
+		IFunction result; 
+		
+		//First, try a lookup to the exact type, or parent
+		for(String type = selfType.typeString(); type != null; type = getTypeParent(type)) {
+			result = this.getFunction(name, this.getType(type), argCount);
+			if(result != null)
+				return result; 
+		}
 		
 		//If it fails, try to find a generic function
-		result = this.getFunction(name, Object.class, argCount);
+		result = this.getFunction(name, this.getType("?"), argCount);
 		if(result != null)
 			return result;
 		
@@ -168,8 +178,16 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		typeTable.put(name, type);
 	}
 	
+	public void registerInheritance(String child, String parent) {
+		inheritanceTable.put(child, parent);
+	}
+	
 	public Object getType(String typeName) {
 		return typeTable.get(typeName);
+	}
+	
+	public String getTypeParent(String typeName) {
+		return inheritanceTable.get(typeName);
 	}
 	
 	public Object getTypeInstance(String typeName) {
@@ -461,7 +479,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		for(ExprContext arg : args.expr()) 
 			argObjects.add(visit(arg));
 		
-		IFunction function = lookupFunction(functionName, selfObject.getClass(), argObjects.size());//getFunction(functionName, argObjects.size());
+		IFunction function = lookupFunction(functionName, selfObject, argObjects.size());//getFunction(functionName, argObjects.size());
 		if(function == null) 
 			return StandardErrors.UnknownFunction(functionName, selfObject, argObjects.size());
 		
@@ -599,7 +617,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		for(TerminalNode t : ctx.argsProto().ID())
 			argNames.add(t.getText());
 		
-		registerFunction(functionName, new UserFunc(getType(typeName).getClass(), argNames, ctx.statement()));
+		registerFunction(functionName, new UserFunc(getType(typeName), argNames, ctx.statement()));
 		
 		return new Boolean(true);
 	}
@@ -620,7 +638,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 			if(getType(type) == null)
 				return StandardErrors.UnknownType(type);
 			
-			registerFunction(functionName, new UserFunc(getType(type).getClass(), argNames, ctx.statement()));
+			registerFunction(functionName, new UserFunc(getType(type), argNames, ctx.statement()));
 		}
 		
 		return new Boolean(true);
@@ -634,7 +652,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		for(TerminalNode t : ctx.argsProto().ID())
 			argNames.add(t.getText());
 		
-		registerFunction(functionName, new UserFunc(Object.class, argNames, ctx.statement()));
+		registerFunction(functionName, new UserFunc(null, argNames, ctx.statement()));
 		
 		return new Boolean(true);
 	}

@@ -3,10 +3,10 @@ package funk.lang.func;
 import funk.Interpreter;
 import funk.lang.IFunction;
 import funk.lang.Object;
+import funk.lang.types.Generic;
 import funk.lang.types.Number; 
 
 public class Reverse implements IFunction {
-
 	@Override
 	public Object call(Interpreter funk, Object self, Object... args) {
 		if(self instanceof Number) {
@@ -30,7 +30,7 @@ public class Reverse implements IFunction {
 	}
 
 	@Override
-	public Class<? extends Object> expectedSelfType() {
-		return Object.class;
+	public Object expectedSelfType() {
+		return Generic.instance; 
 	}
 }
