@@ -610,7 +610,16 @@ public class Interpreter extends funkBaseVisitor<Object> {
 			return StandardErrors.IllegalOperation("memberAccess", self);
 		
 		String id = ctx.ID().getText();
-		return ((Aggregate)self).getField(id);
+
+		Aggregate selfCast = (Aggregate) self;
+		IFunction functionCandidate = this.lookupFunction(id, selfCast, 0);
+		
+		if(selfCast.hasField(id)) 
+			return selfCast.getField(id);
+		else if(functionCandidate != null) 
+			return functionCandidate.call(this, self);
+		else 
+			return StandardErrors.UnknownField(id, selfCast);
 	}
 	
 	@Override
@@ -621,9 +630,17 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		if(!(self instanceof Aggregate))
 			return StandardErrors.IllegalOperation("memberAssign", self);
 		
+		Aggregate selfCast = (Aggregate) self; 
+		IFunction functionCandidate = this.lookupFunction(id, selfCast, 1);
 		Object assign = visit(ctx.expr(1));
 		
-		return ((Aggregate)self).setField(id, assign);
+		
+		if(selfCast.hasField(id))
+			return selfCast.setField(id, assign);
+		else if(functionCandidate != null)
+			return functionCandidate.call(this, self, assign);
+		else 
+			return StandardErrors.UnknownField(id, selfCast);
 	}
 	
 	@Override 

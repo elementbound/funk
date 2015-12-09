@@ -49,8 +49,8 @@ public class StandardErrors {
 		return new Error("UnknownBinaryOperator", "op", op);
 	}
 	
-	public static Error UnknownField(String field) {
-		return new Error("UnknownField", "field", field);
+	public static Error UnknownField(String field, Object self) {
+		return new Error("UnknownField", "field", field, "self", self.toString());
 	}
 	
 	public static Error WrongLiteral(String type, String literal) {

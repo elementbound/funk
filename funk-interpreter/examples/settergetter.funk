@@ -1,0 +1,35 @@
+/* Getters and setters in Funk */
+
+/* 
+Let's say you declare a custom type, and you want to give it a getter which then gives you 
+a value derived from the type's fields. So you go ahead and write something like this: 
+*/
+
+aggregate Dollars {
+	amount
+}
+
+function Dollars.asForints() 
+	return self.amount * 288; 
+	
+/* And then you access it: */ 
+
+IWishThisWasMyMonthlySalary = !.Dollars(); 
+IWishThisWasMyMonthlySalary.amount = 4500; 
+
+aLot = IWishThisWasMyMonthlySalary.asForints();
+
+/* No. Don't do this. Please. There is a better way: */
+
+function Dollars.forints() 
+	return self.amount * 288; 
+	
+function Dollars.forints(val)
+	self.amount = val / 288; 
+	
+IWishThisWasMyMonthlySalary = !.Dollars(); 
+IWishThisWasMyMonthlySalary.amount = 4500;
+
+aLot = IWishThisWasMyMonthlySalary.forints; 
+IWishThisWasMyMonthlySalary.forints = 960*1000;
+IWishThisWasMyMonthlySalary.amount.println(); 

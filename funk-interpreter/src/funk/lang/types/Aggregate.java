@@ -42,7 +42,7 @@ public class Aggregate extends Object {
 		if(values.containsKey(name))
 			return values.get(name);
 		else
-			return StandardErrors.UnknownField(name);
+			return StandardErrors.UnknownField(name, this);
 	}
 	
 	public boolean hasField(String name) {
@@ -51,7 +51,7 @@ public class Aggregate extends Object {
 	
 	public Object setField(String name, Object value) {
 		if(!this.hasField(name))
-			return StandardErrors.UnknownField(name);
+			return StandardErrors.UnknownField(name, this);
 		
 		values.put(name, value);
 		return value; 
