@@ -28,10 +28,10 @@ expr: '(' expr ')' 					# EnclosedExpr
 	 | STRING 						# StringLiteral
 	 | '!' '.' ID '(' args ')'		# Constructor
 	 | expr '.' ID '(' args ')' 	# MemberCall
-	 | expr '.' ID '=' expr 		# MemberAssign
 	 | expr '.' ID 					# MemberAccess
 	 | OP expr 						# UnaryOp
 	 | expr OP expr 				# BinaryOp
+	 | expr '.' ID '=' expr 		# MemberAssign
 	 | ID '=' expr 					# Assign
 	 | ID 							# ID
 	 ;

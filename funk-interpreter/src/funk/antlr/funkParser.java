@@ -374,7 +374,7 @@ public class funkParser extends Parser {
 				setState(25);
 				match(OP);
 				setState(26);
-				expr(4);
+				expr(5);
 				}
 				break;
 			case 2:
@@ -472,28 +472,28 @@ public class funkParser extends Parser {
 					switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
 					case 1:
 						{
-						_localctx = new MemberAssignContext(new ExprContext(_parentctx, _parentState));
+						_localctx = new BinaryOpContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(47);
-						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
+						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
 						setState(48);
-						match(T__3);
+						match(OP);
 						setState(49);
-						match(ID);
-						setState(50);
-						match(T__4);
-						setState(51);
-						expr(7);
+						expr(5);
 						}
 						break;
 					case 2:
 						{
-						_localctx = new BinaryOpContext(new ExprContext(_parentctx, _parentState));
+						_localctx = new MemberAssignContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(52);
+						setState(50);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
+						setState(51);
+						match(T__3);
+						setState(52);
+						match(ID);
 						setState(53);
-						match(OP);
+						match(T__4);
 						setState(54);
 						expr(4);
 						}
@@ -521,7 +521,7 @@ public class funkParser extends Parser {
 						_localctx = new MemberAccessContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(62);
-						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
+						if (!(precpred(_ctx, 6))) throw new FailedPredicateException(this, "precpred(_ctx, 6)");
 						setState(63);
 						match(T__3);
 						setState(64);
@@ -1555,13 +1555,13 @@ public class funkParser extends Parser {
 	private boolean expr_sempred(ExprContext _localctx, int predIndex) {
 		switch (predIndex) {
 		case 0:
-			return precpred(_ctx, 6);
+			return precpred(_ctx, 4);
 		case 1:
 			return precpred(_ctx, 3);
 		case 2:
 			return precpred(_ctx, 7);
 		case 3:
-			return precpred(_ctx, 5);
+			return precpred(_ctx, 6);
 		}
 		return true;
 	}
@@ -1583,15 +1583,15 @@ public class funkParser extends Parser {
 		"\r\3\r\3\r\2\3\2\16\2\4\6\b\n\f\16\20\22\24\26\30\2\2\u00d2\2/\3\2\2\2"+
 		"\4Q\3\2\2\2\6b\3\2\2\2\bd\3\2\2\2\nm\3\2\2\2\fw\3\2\2\2\16\177\3\2\2\2"+
 		"\20\u0099\3\2\2\2\22\u009f\3\2\2\2\24\u00a4\3\2\2\2\26\u00ad\3\2\2\2\30"+
-		"\u00b8\3\2\2\2\32\33\b\2\1\2\33\34\7\32\2\2\34\60\5\2\2\6\35\36\7\31\2"+
+		"\u00b8\3\2\2\2\32\33\b\2\1\2\33\34\7\32\2\2\34\60\5\2\2\7\35\36\7\31\2"+
 		"\2\36\37\7\7\2\2\37\60\5\2\2\4 !\7\3\2\2!\"\5\2\2\2\"#\7\4\2\2#\60\3\2"+
 		"\2\2$\60\7\30\2\2%\60\7\26\2\2&\60\7\27\2\2\'(\7\5\2\2()\7\6\2\2)*\7\31"+
 		"\2\2*+\7\3\2\2+,\5\4\3\2,-\7\4\2\2-\60\3\2\2\2.\60\7\31\2\2/\32\3\2\2"+
 		"\2/\35\3\2\2\2/ \3\2\2\2/$\3\2\2\2/%\3\2\2\2/&\3\2\2\2/\'\3\2\2\2/.\3"+
-		"\2\2\2\60E\3\2\2\2\61\62\f\b\2\2\62\63\7\6\2\2\63\64\7\31\2\2\64\65\7"+
-		"\7\2\2\65D\5\2\2\t\66\67\f\5\2\2\678\7\32\2\28D\5\2\2\69:\f\t\2\2:;\7"+
-		"\6\2\2;<\7\31\2\2<=\7\3\2\2=>\5\4\3\2>?\7\4\2\2?D\3\2\2\2@A\f\7\2\2AB"+
-		"\7\6\2\2BD\7\31\2\2C\61\3\2\2\2C\66\3\2\2\2C9\3\2\2\2C@\3\2\2\2DG\3\2"+
+		"\2\2\2\60E\3\2\2\2\61\62\f\6\2\2\62\63\7\32\2\2\63D\5\2\2\7\64\65\f\5"+
+		"\2\2\65\66\7\6\2\2\66\67\7\31\2\2\678\7\7\2\28D\5\2\2\69:\f\t\2\2:;\7"+
+		"\6\2\2;<\7\31\2\2<=\7\3\2\2=>\5\4\3\2>?\7\4\2\2?D\3\2\2\2@A\f\b\2\2AB"+
+		"\7\6\2\2BD\7\31\2\2C\61\3\2\2\2C\64\3\2\2\2C9\3\2\2\2C@\3\2\2\2DG\3\2"+
 		"\2\2EC\3\2\2\2EF\3\2\2\2F\3\3\2\2\2GE\3\2\2\2HI\5\2\2\2IJ\7\b\2\2JL\3"+
 		"\2\2\2KH\3\2\2\2LO\3\2\2\2MK\3\2\2\2MN\3\2\2\2NP\3\2\2\2OM\3\2\2\2PR\5"+
 		"\2\2\2QM\3\2\2\2QR\3\2\2\2R\5\3\2\2\2ST\5\2\2\2TU\7\t\2\2Uc\3\2\2\2VW"+
