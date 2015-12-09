@@ -30,6 +30,41 @@ function Dollars.forints(val)
 IWishThisWasMyMonthlySalary = !.Dollars(); 
 IWishThisWasMyMonthlySalary.amount = 4500;
 
-aLot = IWishThisWasMyMonthlySalary.forints; 
+/*
+In Funk, any function without an argument can be used as a getter. 
+Any function with a single argument can be used as a setter: 
+*/
+
+IWishThisWasMyMonthlySalary.forints.println(); 
 IWishThisWasMyMonthlySalary.forints = 960*1000;
 IWishThisWasMyMonthlySalary.amount.println(); 
+
+/* Do note that you can't override existing fields with getters and setters: */
+
+function Dollars.amount() 
+	return 2; 
+	
+IWishThisWasMyMonthlySalary.amount.println(); /* NOT 2 */
+
+return 1;
+/* Funk's setters and getters allow for some pretty fun things, syntax-wise: */
+/* ( Since these things are not implemented yet, execution stops here ) */ 
+
+aggregate Array {
+	/* ... */
+}
+
+function Array.clear() {
+	/* ... */
+}
+
+function Array.fill(val) {
+	/* ... */
+}
+
+a = !.Array();
+a.clear; /* Clear array */
+a.fill = 8; /* Fill it with 8's */
+
+/* Chain this with implicit self-return: */
+a = 
