@@ -1,10 +1,16 @@
 package funk.lib.Random;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import funk.Interpreter;
 import funk.Utils;
+import funk.lang.FunctionTemplate;
+import funk.lang.IFunclet;
 import funk.lang.IFunction;
 import funk.lang.ILibrary;
 import funk.lang.Object;
+import funk.lang.types.Boolean;
 import funk.lang.types.Number;
 import funk.lang.types.Error;
 
@@ -16,184 +22,90 @@ public class Library implements ILibrary {
 		
 		//-------------------------------------------------------------------------------------
 		//seed(val)
-		funk.registerFunction("seed", new IFunction() {
-			private Object type = new Random();
-			
+		funk.registerFunction("seed", new FunctionTemplate(new Random(), new IFunclet() {
 			@Override
-			public Object expectedSelfType() {
-				return type;
-			}
-			
-			@Override
-			public int expectedArgumentCount() {
-				return 1;
-			}
-			
-			@Override
-			public Object call(Interpreter funk, Object self, Object... args) {
-				Object seedObj = funk.cast(args[0], Number.class);
-				if(seedObj instanceof Error)
-					return seedObj;
+			public Object call(Object baseSelf, Object... args) {
+				Random self = (Random) baseSelf;
+				int seed = ((Number)args[0]).value; 
 				
-				((Random) self).seed(((Number)seedObj).value);
-				return self; 
+				self.seed(seed);
+				return self;
 			}
-		});
+		}, Number.class));
 		
 		//-------------------------------------------------------------------------------------
 		//randomNumber()
-		funk.registerFunction("number", new IFunction() {
-			private Object type = new Random();
-			
+		funk.registerFunction("number", new FunctionTemplate(new Random(), new IFunclet() {
 			@Override
-			public Object expectedSelfType() {
-				return type; 
+			public Object call(Object baseSelf, Object... args) {
+				Random self = (Random) baseSelf;
+				
+				return new Number((int) self.randomNumber());
 			}
-			
-			@Override
-			public int expectedArgumentCount() {
-				return 0;
-			}
-			
-			@Override
-			public Object call(Interpreter funk, Object self, Object... args) {
-				return new Number((int) ((Random)self).randomNumber());
-			}
-		});
+		}));
 		
 		//-------------------------------------------------------------------------------------
 		//randomNumber(min, max)
-		funk.registerFunction("number", new IFunction() {
-			private Object type = new Random();
-			
+		funk.registerFunction("number", new FunctionTemplate(new Random(), new IFunclet() {
 			@Override
-			public Object expectedSelfType() {
-				return type;
-			}
-			
-			@Override
-			public int expectedArgumentCount() {
-				return 2;
-			}
-			
-			@Override
-			public Object call(Interpreter funk, Object self, Object... args) {
-				Number minObj = (Number) funk.cast(args[0], Number.class);
-				Number maxObj = (Number) funk.cast(args[1], Number.class);
+			public Object call(Object baseSelf, Object... args) {
+				Random self = (Random) baseSelf;
+				int min = ((Number)args[0]).value;
+				int max = ((Number)args[1]).value; 
 				
-				return new Number((int) ((Random)self).randomNumber(minObj.value, maxObj.value));
+				return new Number(self.randomNumber(min, max));
 			}
-		});
+		}, Number.class, Number.class));
 		
 		//-------------------------------------------------------------------------------------
 		//randomBoolean()
-		funk.registerFunction("boolean", new IFunction() {
-			private Object type = new Random();
-			
+		funk.registerFunction("boolean", new FunctionTemplate(new Random(), new IFunclet() {
 			@Override
-			public Object expectedSelfType() {
-				return type;
+			public Object call(Object baseSelf, Object... args) {
+				Random self = (Random) baseSelf;
+				
+				return new Boolean(self.randomBoolean());
 			}
-			
-			@Override
-			public int expectedArgumentCount() {
-				return 0;
-			}
-			
-			@Override
-			public Object call(Interpreter funk, Object self, Object... args) {
-				return new funk.lang.types.Boolean(((Random)self).randomBoolean());
-			}
-		});
+		}));
 		
 		//-------------------------------------------------------------------------------------
 		//randomString(length)
-		funk.registerFunction("string", new IFunction() {
-			private Object type = new Random();
-			
+		funk.registerFunction("string", new FunctionTemplate(new Random(), new IFunclet() {
 			@Override
-			public Object expectedSelfType() {
-				return type;
-			}
-			
-			@Override
-			public int expectedArgumentCount() {
-				return 1;
-			}
-			
-			@Override
-			public Object call(Interpreter funk, Object self, Object... args) {
-				Object lengthObj = funk.cast(args[0], Number.class);
-				if(lengthObj instanceof funk.lang.types.Error)
-					return lengthObj; 
+			public Object call(Object baseSelf, Object... args) {
+				Random self = (Random) baseSelf;
+				int length = (int) ((Number)args[0]).value;
 				
-				int length = (int) ((Number)lengthObj).value;
-				
-				return new funk.lang.types.String(((Random)self).randomString(length));
+				return new funk.lang.types.String(self.randomString(length));
 			}
-		});
+		}, Number.class));
 		
 		//-------------------------------------------------------------------------------------
 		//randomString(length, min, max)
-		funk.registerFunction("string", new IFunction() {
-			private Object type = new Random();
-			
+		funk.registerFunction("string", new FunctionTemplate(new Random(), new IFunclet() {
 			@Override
-			public Object expectedSelfType() {
-				return type;
-			}
-			
-			@Override
-			public int expectedArgumentCount() {
-				return 3;
-			}
-			
-			@Override
-			public Object call(Interpreter funk, Object self, Object... args) {
-				Object lengthObj = funk.cast(args[0], Number.class);
-				Object minObj = funk.cast(args[1], Number.class);
-				Object maxObj = funk.cast(args[2], Number.class);
+			public Object call(Object baseSelf, Object... args) {
+				Random self = (Random) baseSelf;
+				int length = (int) ((Number)args[0]).value;
+				int min = (int) ((Number)args[1]).value;
+				int max = (int) ((Number)args[2]).value;
 				
-				Error e = Utils.gatherErrors(lengthObj, minObj, maxObj);
-				if(e != null)
-					return e; 
-				
-				int length = (int) ((Number)lengthObj).value;
-				int min = (int) ((Number)minObj).value; 
-				int max = (int) ((Number)maxObj).value;
-				
-				return new funk.lang.types.String(((Random)self).randomString(length, min, max));
+				return new funk.lang.types.String(self.randomString(length, min, max));
 			}
-		});
+		}, Number.class, Number.class, Number.class));
 		
 		//-------------------------------------------------------------------------------------
 		//randomString(length, alphabet)
-		funk.registerFunction("string", new IFunction() {
-			private Object type = new Random();
-			
+		funk.registerFunction("string", new FunctionTemplate(new Random(), new IFunclet() {
 			@Override
-			public Object expectedSelfType() {
-				return type;
-			}
-			
-			@Override
-			public int expectedArgumentCount() {
-				return 2;
-			}
-			
-			@Override
-			public Object call(Interpreter funk, Object self, Object... args) {
-				Object lengthObj = funk.cast(args[0], Number.class);
-				
-				if(lengthObj instanceof Error)
-					return lengthObj; 
-				
+			public Object call(Object baseSelf, Object... args) {
+				Random self = (Random) baseSelf;
+				int length = (int) ((Number) args[0]).value;
 				String alphabet = args[1].asString();
-				int length = (int) ((Number)lengthObj).value;
 				
-				return new funk.lang.types.String(((Random)self).randomString(length, alphabet));
+				return new funk.lang.types.String(self.randomString(length, alphabet));
 			}
-		});
+		}, Number.class, Object.class));
 	}
 
 	@Override

@@ -16,6 +16,10 @@ public class Number extends Object {
 		value = v;
 	}
 	
+	public Number(double v) {
+		value = (int) v;
+	}
+	
 	@Override
 	public boolean asBoolean() {
 		return this.value != 0;
