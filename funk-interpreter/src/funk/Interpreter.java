@@ -46,21 +46,22 @@ import funk.lang.types.Generic;
 import funk.lang.types.Boolean; 
 
 public class Interpreter extends funkBaseVisitor<Object> {
+	public boolean local=false;
+	
 	//Valtozok
-	//TODO: ez legyen list, könnyebb keresgélni benne
-	public Stack<SymbolTable> variableTable= new Stack<SymbolTable>();
+	public List<SymbolTable> variableTable= new ArrayList<SymbolTable>();
 	
 	//Fuggvenyek
 	public List<Entry<String, IFunction>> functionTable = new ArrayList<>();
 	
-	//Átváltási szabályok
+	//ï¿½tvï¿½ltï¿½si szabï¿½lyok
 	public List<ICastRule<?,?>> castRules = new ArrayList<>();
 	
-	//Ismert típusok
+	//Ismert tï¿½pusok
 	public Map<String, Object> typeTable = new HashMap<>();
 	
-	//Típusok közti öröklõdés 
-	//Minden típushoz hozzárendeli a szülõjét 
+	//Tï¿½pusok kï¿½zti ï¿½rï¿½klï¿½dï¿½s 
+	//Minden tï¿½pushoz hozzï¿½rendeli a szï¿½lï¿½jï¿½t 
 	public Map<String, String> inheritanceTable = new HashMap<>();
 	
 	//Debug stream
@@ -228,11 +229,9 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	Map<String,Object> getAllTable(){
 		Map<String, Object> temp= new HashMap<>();
 		
-		for(Iterator<SymbolTable> iterator=variableTable.iterator();iterator.hasNext();){
-			SymbolTable table=iterator.next();
+		for(SymbolTable table: variableTable)
 			temp.putAll(table.table);
-		}
-		
+
 		return temp;
 	}
 	
@@ -249,23 +248,26 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	}
 	
 	public void setLocalVariable(String key, Object val){
-		SymbolTable temp= variableTable.peek();
-		temp.set(key, val);
+		variableTable.get(variableTable.size()-1).set(key, val);
 	}
 	
 	public void setExistingVariable(String key, Object val) {
-		//TODO: 
-		//Ha van ilyen nevû változó, állítsa azt
-		//Különben állítson setLocalVariable
+		for(int i=0;i<variableTable.size();i++)
+			if(variableTable.get(i).exists(key)){
+				variableTable.get(i).set(key, val);
+				return ;	
+			}
+		
+		setLocalVariable(key, val);
 	}
 	
 	public void enterScope() {
-		variableTable.push(new SymbolTable());
+		variableTable.add(new SymbolTable());
 	}
 	
 	public boolean exitScope() {
 		if(variableTable.size() != 1) {
-			variableTable.pop();
+			variableTable.remove(variableTable.size()-1);
 			return true;
 		}
 		else 
@@ -512,18 +514,25 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		String id = ctx.ID().getText();
 		ExprContext expr = ctx.expr();
 		
+		if(ctx.LOCAL()!=null)
+			local=true;
+		
 		dbgStream.printf("Assignment: %s = %s\n", id, expr.getText());
 		
 		//Kiertekelni expr-t
 		Object result = visit(expr);
 		
 		//A kapott Object-et eltenni ID neve valtozokent
-		setLocalVariable(id, result);
+		if(local)
+			setLocalVariable(id, result);
+		else 
+			setExistingVariable(id, result);
 		
 		dbgStream.printf("Saved variable: %s = %s\n", id, result);
 		
 		//A kapott Object-et visszaadni
 		dbgStream.printf("Returning from assign: %s\n", result);
+		local=false;
 		return result; 
 	}
 	

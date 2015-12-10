@@ -21,6 +21,7 @@ BOOLEAN: 'True' | 'False';
 ID: [_a-zA-Z][a-zA-Z0-9]*;
 OP: '+' | '-' | '*' | '/' | '==' | '!=' | '<' | '>';
 COMMENT: '/*' .*? '*/'; // Non-greedy matching
+LOCAL: '$';
 
 expr: '(' expr ')' 					# EnclosedExpr 
 	 | BOOLEAN 						# BooleanLiteral
@@ -32,7 +33,7 @@ expr: '(' expr ')' 					# EnclosedExpr
 	 | OP expr 						# UnaryOp
 	 | expr OP expr 				# BinaryOp
 	 | expr '.' ID '=' expr 		# MemberAssign
-	 | ID '=' expr 					# Assign
+	 | LOCAL? ID '=' expr 			# Assign
 	 | ID 							# ID
 	 ;
 
