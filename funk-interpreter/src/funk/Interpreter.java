@@ -26,6 +26,7 @@ import funk.antlr.funkParser.ConstructorContext;
 import funk.antlr.funkParser.ExprContext;
 import funk.antlr.funkParser.StatementContext;
 import funk.lang.IFunction;
+import funk.lang.ILibrary;
 import funk.lang.ICastRule;
 import funk.lang.Object;
 import funk.lang.StandardErrors;
@@ -92,10 +93,29 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		typeTable.put("Error", new Error("void")); 
 		
 		castRules.add(new BooleanToNumber());
+		
+		this.loadLibrary(new funk.lib.Random.Library());
+		
+		this.dumpFunctions(dbgStream);
 	}
 	
 	public void registerFunction(String name, IFunction func) {
 		functionTable.add(new SimpleEntry<>(name, func));
+	}
+	
+	public void loadLibrary(ILibrary lib) {
+		lib.inject(this);
+	}
+	
+	public void dumpFunctions(PrintStream out) {
+		out.println("Known functions: ");
+		
+		for(Entry<String, IFunction> p : functionTable) {
+			String name = p.getKey();
+			IFunction func = p.getValue();
+			
+			out.printf("\t %s . %s - %d arg(s)\n", func.expectedSelfType().typeString(), name, func.expectedArgumentCount());
+		}
 	}
 	
 	//=========================================================================================

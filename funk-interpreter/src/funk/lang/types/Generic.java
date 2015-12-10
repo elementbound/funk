@@ -4,7 +4,7 @@ import funk.lang.Object;
 import funk.lang.StandardErrors;
 
 /* The purpose of this type to match any other type when compared. 
- * This only works on when lhs is the AnyType instance
+ * This only works on when lhs is the Generic instance
  */
 public class Generic extends Object {
 	public static final Generic instance = new Generic(); 
@@ -16,7 +16,7 @@ public class Generic extends Object {
 
 	@Override
 	public java.lang.String asString() {
-		return "Any";
+		return "Generic";
 	}
 
 	@Override
