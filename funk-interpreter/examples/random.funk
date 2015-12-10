@@ -1,0 +1,13 @@
+/* Random library in Funk*/ 
+
+/* The Random library is loaded at startup by default ( atm ) */
+/* Here's a tiny example to generate some random passwords: */
+rng = !.Random();
+
+alphabet = "abcdefghijklmnopqrstuvwxyz";
+alphabet = alphabet + "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+alphabet = alphabet + "0123456789";
+alphabet = alphabet + "!@#";
+
+for(i = 0; i < 512; i = i+1) 
+	rng.string(8,alphabet).println(); 
