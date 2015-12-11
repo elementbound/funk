@@ -1,0 +1,65 @@
+/* Containers in Funk */
+
+/* Why bother with having multiple types? */
+/* Collections got you covered, fam! */
+
+array = !.Collection(); 
+
+/* An empty array is rarely useful. You can add a new item by assigning to its []: */
+array[] = 0;
+array[] = 1;
+array[] = "Heh"; 
+
+array.println(); /* { Collection | 0: 0, 1: 1, 2: "Heh" } */
+
+/* This can only happen in an assignment. The following is a syntax error: */
+a = 8 + array[]; 
+
+/* You can also use it as a map: */
+array["key"] = "value"; 
+array[3.14] = 1.0;
+
+/* HIGHLY OPTIONAL, NO FUCKS GIVEN YET */
+/* Indexing with floating point values can be cumbersome and erroneous. If we get to it, Funk 
+will trim the last few digits ( can be configured ), to not get funkd up with values that 
+can't be represented in binary, like this one: */
+
+array.setKeyPrecision(0.01); /* Two decimals */
+array[1.0 / 3.0] = "I can't believe it's not butter!";
+array[0.33].println(); /* "I can't believe it's not butter!" */
+
+/* OPTIONAL PART ENDING HERE */
+
+/* As long as a collection has only positive whole numbers as keys, and those are contiguous, 
+the collection is considered an Array: */
+
+array.isArray(); /* False; heh heh. */
+
+/* You can also query some attributes of the collection: */
+
+array.keys(); 
+/* returns an array of its keys: 
+{ Collection | 0: 0, 1: 1, 2: 2, 3: "key", 4: 3.14 } */
+
+array.values(); 
+/* returns an array of its values; basically converts whatever collection to an array: 
+{ Collection: 0: 0, 1: 1, 2: "Heh", 3: "value", 4: 1.0 } */
+
+array.size(); 
+
+array.has("key"); /* Query key existence */
+array.hasValue("value"); /* Query value existence */
+
+/* Collections also have an inner pointer which can be used to iterate them: */
+for( array.rewind(); !array.pastEnd(); array.next()) 
+	("" + array.key() + ": " + array.value()).println();
+	
+/* The order of key-value pairs in your collection is also strict. In short, collections are 
+ordered. At first, things in your collection are in the same order as you put them in. 
+However, you can sort them: */
+
+array.sort(); /* Sort by value */
+array.sortByKeys(); 
+
+/* You better pray your values/keys are comparable. */
+/* This could maybe solved by bucketing types? */

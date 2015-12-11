@@ -115,7 +115,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 			String name = p.getKey();
 			IFunction func = p.getValue();
 			
-			out.printf("\t %s . %s - %d arg(s)\n", func.expectedSelfType().typeString(), name, func.expectedArgumentCount());
+			out.printf("\t %s . %s ( %d )\n", func.expectedSelfType().typeString(), name, func.expectedArgumentCount());
 		}
 	}
 	
