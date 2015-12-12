@@ -32,6 +32,42 @@ public interface funkListener extends ParseTreeListener {
 	 */
 	void exitUnaryOp(funkParser.UnaryOpContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code BooleanLiteral}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterBooleanLiteral(funkParser.BooleanLiteralContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code BooleanLiteral}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitBooleanLiteral(funkParser.BooleanLiteralContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code Constructor}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterConstructor(funkParser.ConstructorContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code Constructor}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitConstructor(funkParser.ConstructorContext ctx);
+	/**
+	 * Enter a parse tree produced by the {@code IndexAccess}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterIndexAccess(funkParser.IndexAccessContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code IndexAccess}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitIndexAccess(funkParser.IndexAccessContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code StringLiteral}
 	 * labeled alternative in {@link funkParser#expr}.
 	 * @param ctx the parse tree
@@ -56,29 +92,17 @@ public interface funkListener extends ParseTreeListener {
 	 */
 	void exitMemberAccess(funkParser.MemberAccessContext ctx);
 	/**
-	 * Enter a parse tree produced by the {@code BooleanLiteral}
+	 * Enter a parse tree produced by the {@code IndexAssign}
 	 * labeled alternative in {@link funkParser#expr}.
 	 * @param ctx the parse tree
 	 */
-	void enterBooleanLiteral(funkParser.BooleanLiteralContext ctx);
+	void enterIndexAssign(funkParser.IndexAssignContext ctx);
 	/**
-	 * Exit a parse tree produced by the {@code BooleanLiteral}
+	 * Exit a parse tree produced by the {@code IndexAssign}
 	 * labeled alternative in {@link funkParser#expr}.
 	 * @param ctx the parse tree
 	 */
-	void exitBooleanLiteral(funkParser.BooleanLiteralContext ctx);
-	/**
-	 * Enter a parse tree produced by the {@code Constructor}
-	 * labeled alternative in {@link funkParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void enterConstructor(funkParser.ConstructorContext ctx);
-	/**
-	 * Exit a parse tree produced by the {@code Constructor}
-	 * labeled alternative in {@link funkParser#expr}.
-	 * @param ctx the parse tree
-	 */
-	void exitConstructor(funkParser.ConstructorContext ctx);
+	void exitIndexAssign(funkParser.IndexAssignContext ctx);
 	/**
 	 * Enter a parse tree produced by the {@code Assign}
 	 * labeled alternative in {@link funkParser#expr}.

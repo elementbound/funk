@@ -32,8 +32,10 @@ expr: '(' expr ')' 					# EnclosedExpr
 	 | expr '.' ID 					# MemberAccess
 	 | OP expr 						# UnaryOp
 	 | expr OP expr 				# BinaryOp
+	 | expr '[' expr ']' 			# IndexAccess
 	 | expr '.' ID '=' expr 		# MemberAssign
 	 | LOCAL? ID '=' expr 			# Assign
+	 | expr '[' expr? ']' '=' expr	# IndexAssign
 	 | ID 							# ID
 	 ;
 

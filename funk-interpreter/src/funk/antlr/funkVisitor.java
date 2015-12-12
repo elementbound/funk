@@ -25,6 +25,27 @@ public interface funkVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitUnaryOp(funkParser.UnaryOpContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code BooleanLiteral}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitBooleanLiteral(funkParser.BooleanLiteralContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code Constructor}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitConstructor(funkParser.ConstructorContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code IndexAccess}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIndexAccess(funkParser.IndexAccessContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code StringLiteral}
 	 * labeled alternative in {@link funkParser#expr}.
 	 * @param ctx the parse tree
@@ -39,19 +60,12 @@ public interface funkVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMemberAccess(funkParser.MemberAccessContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code BooleanLiteral}
+	 * Visit a parse tree produced by the {@code IndexAssign}
 	 * labeled alternative in {@link funkParser#expr}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitBooleanLiteral(funkParser.BooleanLiteralContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code Constructor}
-	 * labeled alternative in {@link funkParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitConstructor(funkParser.ConstructorContext ctx);
+	T visitIndexAssign(funkParser.IndexAssignContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code Assign}
 	 * labeled alternative in {@link funkParser#expr}.

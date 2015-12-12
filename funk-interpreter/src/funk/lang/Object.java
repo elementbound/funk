@@ -38,6 +38,15 @@ abstract public class Object implements Cloneable {
 	
 	public abstract Object opNegate();
 	
+	//Array access and assign operators; Objects don't have these by default 
+	public Object accessIndex(Object index) {
+		return StandardErrors.IllegalOperation("accessIndex", this, index);
+	}
+	
+	public Object assignIndex(Object index, Object value) {
+		return StandardErrors.IllegalOperation("accessIndex", this, index);
+	}
+	
 	//Relational functions
 	public abstract boolean equals(Object rhs);
 	public abstract boolean lowerThan(Object rhs); 
