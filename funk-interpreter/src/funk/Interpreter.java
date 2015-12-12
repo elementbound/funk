@@ -634,14 +634,16 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	@Override 
 	public Object visitMemberAccess(funkParser.MemberAccessContext ctx) {
 		Object self = visit(ctx.expr());
+		String id = ctx.ID().getText();
+		IFunction functionCandidate = this.lookupFunction(id, self, 0);
 		
 		if(!(self instanceof Aggregate))
-			return StandardErrors.IllegalOperation("memberAccess", self);
-		
-		String id = ctx.ID().getText();
+			if(functionCandidate != null)
+				return functionCandidate.call(this, self);
+			else
+				return StandardErrors.IllegalOperation("memberAccess", self);
 
 		Aggregate selfCast = (Aggregate) self;
-		IFunction functionCandidate = this.lookupFunction(id, selfCast, 0);
 		
 		if(selfCast.hasField(id)) 
 			return selfCast.getField(id);
@@ -655,13 +657,17 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	public Object visitMemberAssign(funkParser.MemberAssignContext ctx) {
 		Object self = visit(ctx.expr(0));
 		String id = ctx.ID().getText();
+		IFunction functionCandidate = this.lookupFunction(id, self, 1);
+		Object assign = visit(ctx.expr(1));
 		
 		if(!(self instanceof Aggregate))
-			return StandardErrors.IllegalOperation("memberAssign", self);
+			if(functionCandidate != null)
+				return functionCandidate.call(this, self, assign);
+			else
+				return StandardErrors.IllegalOperation("memberAssign", self);
 		
 		Aggregate selfCast = (Aggregate) self; 
-		IFunction functionCandidate = this.lookupFunction(id, selfCast, 1);
-		Object assign = visit(ctx.expr(1));
+		
 		
 		
 		if(selfCast.hasField(id))

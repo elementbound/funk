@@ -76,7 +76,7 @@ public class Library implements ILibrary {
 				Random self = (Random) baseSelf;
 				int length = (int) ((Number)args[0]).value;
 				
-				return new funk.lang.types.String(self.randomString(length));
+				return new funk.lang.types.String(self.randomString(length, 32, 125));
 			}
 		}, Number.class));
 		
