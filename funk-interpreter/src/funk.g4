@@ -30,12 +30,12 @@ expr: '(' expr ')' 					# EnclosedExpr
 	 | '!' '.' ID '(' args ')'		# Constructor
 	 | expr '.' ID '(' args ')' 	# MemberCall
 	 | expr '.' ID 					# MemberAccess
+	 | expr '[' expr ']' 			# IndexAccess
 	 | OP expr 						# UnaryOp
 	 | expr OP expr 				# BinaryOp
-	 | expr '[' expr ']' 			# IndexAccess
+	 | expr '[' expr? ']' '=' expr	# IndexAssign
 	 | expr '.' ID '=' expr 		# MemberAssign
 	 | LOCAL? ID '=' expr 			# Assign
-	 | expr '[' expr? ']' '=' expr	# IndexAssign
 	 | ID 							# ID
 	 ;
 

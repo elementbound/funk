@@ -443,7 +443,7 @@ public class funkParser extends Parser {
 				setState(31);
 				match(T__6);
 				setState(32);
-				expr(3);
+				expr(2);
 				}
 				break;
 			case 3:
@@ -540,43 +540,43 @@ public class funkParser extends Parser {
 						break;
 					case 2:
 						{
-						_localctx = new MemberAssignContext(new ExprContext(_parentctx, _parentState));
+						_localctx = new IndexAssignContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
 						setState(53);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
 						setState(54);
-						match(T__3);
-						setState(55);
-						match(ID);
+						match(T__4);
 						setState(56);
+						_la = _input.LA(1);
+						if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__0) | (1L << T__2) | (1L << NUMBER) | (1L << STRING) | (1L << BOOLEAN) | (1L << ID) | (1L << OP) | (1L << LOCAL))) != 0)) {
+							{
+							setState(55);
+							expr(0);
+							}
+						}
+
+						setState(58);
+						match(T__5);
+						setState(59);
 						match(T__6);
-						setState(57);
+						setState(60);
 						expr(5);
 						}
 						break;
 					case 3:
 						{
-						_localctx = new IndexAssignContext(new ExprContext(_parentctx, _parentState));
+						_localctx = new MemberAssignContext(new ExprContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_expr);
-						setState(58);
-						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
-						setState(59);
-						match(T__4);
 						setState(61);
-						_la = _input.LA(1);
-						if ((((_la) & ~0x3f) == 0 && ((1L << _la) & ((1L << T__0) | (1L << T__2) | (1L << NUMBER) | (1L << STRING) | (1L << BOOLEAN) | (1L << ID) | (1L << OP) | (1L << LOCAL))) != 0)) {
-							{
-							setState(60);
-							expr(0);
-							}
-						}
-
+						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
+						setState(62);
+						match(T__3);
 						setState(63);
-						match(T__5);
+						match(ID);
 						setState(64);
 						match(T__6);
 						setState(65);
-						expr(3);
+						expr(4);
 						}
 						break;
 					case 4:
@@ -1654,7 +1654,7 @@ public class funkParser extends Parser {
 		case 1:
 			return precpred(_ctx, 4);
 		case 2:
-			return precpred(_ctx, 2);
+			return precpred(_ctx, 3);
 		case 3:
 			return precpred(_ctx, 9);
 		case 4:
@@ -1670,7 +1670,7 @@ public class funkParser extends Parser {
 		"\4\3\t\3\4\4\t\4\4\5\t\5\4\6\t\6\4\7\t\7\4\b\t\b\4\t\t\t\4\n\t\n\4\13"+
 		"\t\13\4\f\t\f\4\r\t\r\3\2\3\2\3\2\3\2\5\2\37\n\2\3\2\3\2\3\2\3\2\3\2\3"+
 		"\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5\2\63\n\2\3\2\3\2"+
-		"\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\5\2@\n\2\3\2\3\2\3\2\3\2\3\2\3\2"+
+		"\3\2\3\2\3\2\3\2\5\2;\n\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2"+
 		"\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\3\2\7\2T\n\2\f\2\16\2W\13"+
 		"\2\3\3\3\3\3\3\7\3\\\n\3\f\3\16\3_\13\3\3\3\5\3b\n\3\3\4\3\4\3\4\3\4\3"+
 		"\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\3\4\5\4s\n\4\3\5\3\5\3\5\3\5\3"+
@@ -1685,16 +1685,16 @@ public class funkParser extends Parser {
 		"\2\16\u008f\3\2\2\2\20\u00a9\3\2\2\2\22\u00af\3\2\2\2\24\u00b4\3\2\2\2"+
 		"\26\u00bd\3\2\2\2\30\u00c8\3\2\2\2\32\33\b\2\1\2\33\34\7\34\2\2\34\63"+
 		"\5\2\2\t\35\37\7\36\2\2\36\35\3\2\2\2\36\37\3\2\2\2\37 \3\2\2\2 !\7\33"+
-		"\2\2!\"\7\t\2\2\"\63\5\2\2\5#$\7\3\2\2$%\5\2\2\2%&\7\4\2\2&\63\3\2\2\2"+
+		"\2\2!\"\7\t\2\2\"\63\5\2\2\4#$\7\3\2\2$%\5\2\2\2%&\7\4\2\2&\63\3\2\2\2"+
 		"\'\63\7\32\2\2(\63\7\30\2\2)\63\7\31\2\2*+\7\5\2\2+,\7\6\2\2,-\7\33\2"+
 		"\2-.\7\3\2\2./\5\4\3\2/\60\7\4\2\2\60\63\3\2\2\2\61\63\7\33\2\2\62\32"+
 		"\3\2\2\2\62\36\3\2\2\2\62#\3\2\2\2\62\'\3\2\2\2\62(\3\2\2\2\62)\3\2\2"+
 		"\2\62*\3\2\2\2\62\61\3\2\2\2\63U\3\2\2\2\64\65\f\b\2\2\65\66\7\34\2\2"+
-		"\66T\5\2\2\t\678\f\6\2\289\7\6\2\29:\7\33\2\2:;\7\t\2\2;T\5\2\2\7<=\f"+
-		"\4\2\2=?\7\7\2\2>@\5\2\2\2?>\3\2\2\2?@\3\2\2\2@A\3\2\2\2AB\7\b\2\2BC\7"+
-		"\t\2\2CT\5\2\2\5DE\f\13\2\2EF\7\6\2\2FG\7\33\2\2GH\7\3\2\2HI\5\4\3\2I"+
+		"\66T\5\2\2\t\678\f\6\2\28:\7\7\2\29;\5\2\2\2:9\3\2\2\2:;\3\2\2\2;<\3\2"+
+		"\2\2<=\7\b\2\2=>\7\t\2\2>T\5\2\2\7?@\f\5\2\2@A\7\6\2\2AB\7\33\2\2BC\7"+
+		"\t\2\2CT\5\2\2\6DE\f\13\2\2EF\7\6\2\2FG\7\33\2\2GH\7\3\2\2HI\5\4\3\2I"+
 		"J\7\4\2\2JT\3\2\2\2KL\f\n\2\2LM\7\6\2\2MT\7\33\2\2NO\f\7\2\2OP\7\7\2\2"+
-		"PQ\5\2\2\2QR\7\b\2\2RT\3\2\2\2S\64\3\2\2\2S\67\3\2\2\2S<\3\2\2\2SD\3\2"+
+		"PQ\5\2\2\2QR\7\b\2\2RT\3\2\2\2S\64\3\2\2\2S\67\3\2\2\2S?\3\2\2\2SD\3\2"+
 		"\2\2SK\3\2\2\2SN\3\2\2\2TW\3\2\2\2US\3\2\2\2UV\3\2\2\2V\3\3\2\2\2WU\3"+
 		"\2\2\2XY\5\2\2\2YZ\7\n\2\2Z\\\3\2\2\2[X\3\2\2\2\\_\3\2\2\2][\3\2\2\2]"+
 		"^\3\2\2\2^`\3\2\2\2_]\3\2\2\2`b\5\2\2\2a]\3\2\2\2ab\3\2\2\2b\5\3\2\2\2"+
@@ -1728,7 +1728,7 @@ public class funkParser extends Parser {
 		"\u00c5\5\20\t\2\u00c5\u00c6\7\4\2\2\u00c6\u00c7\5\6\4\2\u00c7\27\3\2\2"+
 		"\2\u00c8\u00c9\7\25\2\2\u00c9\u00ca\7\26\2\2\u00ca\u00cb\7\6\2\2\u00cb"+
 		"\u00cc\7\33\2\2\u00cc\u00cd\7\3\2\2\u00cd\u00ce\5\20\t\2\u00ce\u00cf\7"+
-		"\4\2\2\u00cf\u00d0\5\6\4\2\u00d0\31\3\2\2\2\21\36\62?SU]ar{\u008b\u0093"+
+		"\4\2\2\u00cf\u00d0\5\6\4\2\u00d0\31\3\2\2\2\21\36\62:SU]ar{\u008b\u0093"+
 		"\u009a\u00a5\u00a9\u00af";
 	public static final ATN _ATN =
 		new ATNDeserializer().deserialize(_serializedATN.toCharArray());

@@ -679,6 +679,31 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	}
 	
 	@Override 
+	public Object visitIndexAccess(funkParser.IndexAccessContext ctx) {
+		Object self = this.visit(ctx.expr(0));
+		Object index = this.visit(ctx.expr(1));
+		
+		return self.accessIndex(index);
+	}
+	
+	@Override 
+	public Object visitIndexAssign(funkParser.IndexAssignContext ctx) {
+		Object self = this.visit(ctx.expr(0));
+
+		if(ctx.expr().size() == 2) {
+			Object assign = this.visit(ctx.expr(1));
+			
+			return self.assignEmptyIndex(assign);
+		}
+		else {
+			Object index = this.visit(ctx.expr(1));
+			Object assign = this.visit(ctx.expr(2));
+			
+			return self.assignIndex(index, assign);
+		}
+	}
+	
+	@Override 
 	public Object visitSingleTypeFunctionDecl(funkParser.SingleTypeFunctionDeclContext ctx) {
 		String typeName = ctx.ID(0).getText();
 		String functionName = ctx.ID(1).getText();

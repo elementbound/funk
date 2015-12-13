@@ -44,7 +44,11 @@ abstract public class Object implements Cloneable {
 	}
 	
 	public Object assignIndex(Object index, Object value) {
-		return StandardErrors.IllegalOperation("accessIndex", this, index);
+		return StandardErrors.IllegalOperation("assignIndex", this, index);
+	}
+	
+	public Object assignEmptyIndex(Object value) {
+		return StandardErrors.IllegalOperation("assignEmptyIndex", this);
 	}
 	
 	//Relational functions
