@@ -13,6 +13,8 @@ public class Collection extends Object {
 	private List<Entry<Object, Object>> collection = new ArrayList<>();
 	private int iterator=0;
 	private boolean isArray = true; 
+	
+	private boolean clearOnWrite = false; 
 	private static Random rng = new Random();
 	
 	public Collection() {
@@ -21,6 +23,8 @@ public class Collection extends Object {
 			this.add(new funk.lang.types.String("not the collections"));
 			this.add(new funk.lang.types.String("you are looking for"));
 			this.add(new funk.lang.types.String("¿ⓧ_ⓧﮌ"));
+			
+			this.clearOnWrite = true;
 		}
 	}
 	
@@ -61,15 +65,26 @@ public class Collection extends Object {
 	@Override
 	public java.lang.String asString() {
 		StringBuilder strb = new StringBuilder();
-		strb.append("{ Collection | ");
 		
-		for(Entry<Object, Object> f : collection) 
-			strb.append(f.getKey().toString())
-				.append(": ")
-				.append(f.getValue().toString())
-				.append("; ");
+		if(!this.isArray()) {
+			strb.append("{ Collection | ");
+			
+			for(Entry<Object, Object> f : collection) 
+				strb.append(f.getKey().toString())
+					.append(": ")
+					.append(f.getValue().toString())
+					.append("; ");
+		}
+		else {
+			strb.append("{ Array | ");
+			
+			for(Entry<Object, Object> f : collection) 
+				strb.append(f.getValue().toString())
+					.append("; ");
+		}
 		
-		return strb.append('}').toString();
+		return strb.reverse().delete(1, 2).reverse()
+					.append('}').toString();
 	}
 	
 	private boolean incrementalArraynessValidation(Object newKey) {
@@ -94,6 +109,9 @@ public class Collection extends Object {
 	}
 	
 	public void put(Object key, Object value) {
+		if(this.clearOnWrite)
+			collection.clear();
+		
 		for(Entry<Object, Object> f : collection) 
 			if(f.getKey().equals(key)) {
 				f.setValue(value);
@@ -106,6 +124,9 @@ public class Collection extends Object {
 	}
 	
 	public void add(Object value) {
+		if(this.clearOnWrite)
+			collection.clear();
+		
 		int maxVal = -1;
 		for(Entry<Object,Object> entry : collection)
 			if(entry.getKey() instanceof Number){ 
