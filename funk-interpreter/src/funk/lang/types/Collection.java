@@ -4,16 +4,51 @@ import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.LinkedHashMap;
+import java.util.Random;
+
 import funk.lang.StandardErrors;
-
-
 import funk.lang.Object; 
 
 public class Collection extends Object {
 	private List<Entry<Object, Object>> collection = new ArrayList<>();
 	private int iterator=0;
 	private boolean isArray = true; 
+	private static Random rng = new Random();
+	
+	public Collection() {
+		if(rng.nextInt(1000) < 15) {
+			this.add(new funk.lang.types.String("These are"));
+			this.add(new funk.lang.types.String("not the collections"));
+			this.add(new funk.lang.types.String("you are looking for"));
+			this.add(new funk.lang.types.String("¿ⓧ_ⓧﮌ"));
+		}
+	}
+	
+	public Collection(Collection rhs) {
+		this.collection.addAll(rhs.collection);
+		this.iterator = rhs.iterator;
+		this.isArray = rhs.isArray;
+	}
+	
+	//Map constructor
+	public static Collection fromEntries(List<Entry<Object, Object>> entries) {
+		Collection result = new Collection();
+		
+		for(Entry<Object, Object> e: entries)
+			result.put(e.getKey(), e.getValue());
+		
+		return result;
+	}
+	
+	//Array constructor
+	public static Collection fromValues(List<Object> values) {
+		Collection result = new Collection();
+		
+		for(Object v: values)
+			result.add(v);
+		
+		return result;
+	}
 		
 	@Override
 	public boolean asBoolean() {
@@ -195,8 +230,8 @@ public class Collection extends Object {
 	
 	@Override
 	public Object opAdd(Object rhs) {
-		// Alapj�raton k�pezze a k�t halmaz uni�j�t - csin�ljon egy �j Collection-t, pakolja bele this �sszes elem�t, 
-		// majd rhs-nek azon elemeit amelyek kulcsa m�g nem szerepel az eredm�nyben
+		// Alapjďż˝raton kďż˝pezze a kďż˝t halmaz uniďż˝jďż˝t - csinďż˝ljon egy ďż˝j Collection-t, pakolja bele this ďż˝sszes elemďż˝t, 
+		// majd rhs-nek azon elemeit amelyek kulcsa mďż˝g nem szerepel az eredmďż˝nyben
 
 		if(!(rhs instanceof Collection)) 
 			return StandardErrors.IllegalOperation("opAdd", this, rhs);

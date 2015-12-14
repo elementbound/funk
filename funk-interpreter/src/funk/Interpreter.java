@@ -88,16 +88,17 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		
 		this.enterScope(); //variableTable.push(new SymbolTable());
 		
-		typeTable.put("?", Generic.instance); 
-		typeTable.put("Boolean", new Boolean());
-		typeTable.put("Number", new Number()); 
-		typeTable.put("String", new funk.lang.types.String());
-		typeTable.put("Error", new Error("void")); 
+		registerType("?", Generic.instance); 
+		registerType("Boolean", new Boolean());
+		registerType("Number", new Number()); 
+		registerType("String", new funk.lang.types.String());
+		registerType("Error", new Error("void")); 
 		registerType("Collection", new Collection());
 		
 		castRules.add(new BooleanToNumber());
 		
 		this.loadLibrary(new funk.lib.Random.Library());
+		this.loadLibrary(new funk.lib.lang.CollectionLibrary());
 		
 		this.dumpFunctions(dbgStream);
 	}
