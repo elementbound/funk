@@ -136,6 +136,18 @@ public class funkBaseListener implements funkListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterCorporalLiteral(funkParser.CorporalLiteralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitCorporalLiteral(funkParser.CorporalLiteralContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterID(funkParser.IDContext ctx) { }
 	/**
 	 * {@inheritDoc}

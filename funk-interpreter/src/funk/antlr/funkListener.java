@@ -128,6 +128,18 @@ public interface funkListener extends ParseTreeListener {
 	 */
 	void exitMemberAssign(funkParser.MemberAssignContext ctx);
 	/**
+	 * Enter a parse tree produced by the {@code CorporalLiteral}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void enterCorporalLiteral(funkParser.CorporalLiteralContext ctx);
+	/**
+	 * Exit a parse tree produced by the {@code CorporalLiteral}
+	 * labeled alternative in {@link funkParser#expr}.
+	 * @param ctx the parse tree
+	 */
+	void exitCorporalLiteral(funkParser.CorporalLiteralContext ctx);
+	/**
 	 * Enter a parse tree produced by the {@code ID}
 	 * labeled alternative in {@link funkParser#expr}.
 	 * @param ctx the parse tree

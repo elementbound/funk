@@ -87,6 +87,13 @@ public class funkBaseVisitor<T> extends AbstractParseTreeVisitor<T> implements f
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitCorporalLiteral(funkParser.CorporalLiteralContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitID(funkParser.IDContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}

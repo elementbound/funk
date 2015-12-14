@@ -52,8 +52,6 @@ public class Collection extends Object {
 				
 		collection.put(maxNumber, value);
 		
-		//Visszaadja value-t 
-		
 	}
 	
 	public Object get(Object key) {
