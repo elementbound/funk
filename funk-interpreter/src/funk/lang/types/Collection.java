@@ -3,6 +3,7 @@ package funk.lang.types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.LinkedHashMap;
 import funk.lang.StandardErrors;
 
@@ -28,9 +29,16 @@ public class Collection extends Object {
 
 	@Override
 	public java.lang.String asString() {
-		// { Collection | kulcs: �rt�k, kulcs: �rt�k, ... }
-		// Ha van kedved, �rd meg az isArray-t, �s ha array akkor csak sorolja fel az �rt�keket
-		return "{ Collection }";
+		StringBuilder strb = new StringBuilder();
+		strb.append("{ Collection | ");
+		
+		for(Entry<Object, Object> f : collection.entrySet()) 
+			strb.append(f.getKey().toString())
+				.append(": ")
+				.append(f.getValue().toString())
+				.append("; ");
+		
+		return strb.append('}').toString();
 	}
 	
 	public void put(Object key, Object value) {
@@ -41,21 +49,19 @@ public class Collection extends Object {
 	public void add(Object value) {
 		// Ugyanazt csin�lja mint assignEmptyIndex
 		
-		Number maxNumber= new Number(0);
+		int maxVal = -1;
 		for(Map.Entry<Object,Object> entry : collection.entrySet())
-				if(entry.getKey() instanceof Number ){ 
-					Number num= (Number )entry.getKey();
-					
-					if(num.value>maxNumber.value)
-						maxNumber=(Number) entry.getKey();
-				}
+			if(entry.getKey() instanceof Number){ 
+				Number num = (Number) entry.getKey();
 				
-		collection.put(maxNumber, value);
-		
+				if(num.value>maxVal)
+					maxVal = (int) ((Number) entry.getKey()).value;
+			}
+				
+		collection.put(new Number(maxVal + 1), value);
 	}
 	
 	public Object get(Object key) {
-		
 		return collection.get(key); 
 	}
 	

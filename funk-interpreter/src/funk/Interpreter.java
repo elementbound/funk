@@ -43,7 +43,8 @@ import funk.lang.types.Error;
 import funk.lang.types.Number;
 import funk.lang.types.Aggregate;
 import funk.lang.types.Generic;
-import funk.lang.types.Boolean; 
+import funk.lang.types.Boolean;
+import funk.lang.types.Collection; 
 
 public class Interpreter extends funkBaseVisitor<Object> {
 	public boolean local=false;
@@ -92,6 +93,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		typeTable.put("Number", new Number()); 
 		typeTable.put("String", new funk.lang.types.String());
 		typeTable.put("Error", new Error("void")); 
+		registerType("Collection", new Collection());
 		
 		castRules.add(new BooleanToNumber());
 		
