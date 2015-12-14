@@ -9,6 +9,7 @@ public class StandardErrors {
 				.addField("to", to.getSimpleName());
 	}
 	
+	
 	public static Error IllegalOperation(String op, Object self) {
 		return new Error("IllegalOperation")
 				.addField("op", op)
@@ -53,6 +54,12 @@ public class StandardErrors {
 		return new Error("UnknownField", "field", field, "self", self.toString());
 	}
 	
+	public static Error UnknownIndexError(Object index, Object self) {
+		return new Error("UnknownIndex")
+				.addField("index", index.toString())
+				.addField("to", self.toString());
+	}
+	
 	public static Error WrongLiteral(String type, String literal) {
 		return new Error("WrongBooleanLiteral")
 					.addField("literal", literal)
@@ -75,4 +82,6 @@ public class StandardErrors {
 		return new Error("InvalidInheritance")
 				.addField("notAggregateType", baseTypeName);
 	}
+	
+
 }

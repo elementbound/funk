@@ -1,175 +1,269 @@
 package funk.lang.types;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
+import funk.lang.StandardErrors;
+
 
 import funk.lang.Object; 
 
 public class Collection extends Object {
-	//A Collection tulajdonképpen egy Map, csak meg van adva hogy milyen sorrendben tartja a kulcs-érték párjait
-	//Elsõre úgy ahogy belepakolod Funk-ból, aztán lehet rendezgetni meg ilyesmi
-	
-	//A Collection tart magában egy mutatót is, iterálgatáshoz. Lásd a példában a for loopot rá. 
-	//Valószínûleg csak elég egy index hogy hányadik kulcs-érték párnál tart. 
-	//Ha közben módosul a tömb, nem baj ha a mutató fura helyekre mutat, ezt megoldani a user dolga. 
+	//A Collection tulajdonkï¿½ppen egy Map, csak meg van adva hogy milyen sorrendben tartja a kulcs-ï¿½rtï¿½k pï¿½rjait
+	//Elsï¿½re ï¿½gy ahogy belepakolod Funk-bï¿½l, aztï¿½n lehet rendezgetni meg ilyesmi
+	Map<Object,Object> collection = new TreeMap<Object,Object>();
+	int iterator=0;
+	//A Collection tart magï¿½ban egy mutatï¿½t is, iterï¿½lgatï¿½shoz. Lï¿½sd a pï¿½ldï¿½ban a for loopot rï¿½. 
+	//Valï¿½szï¿½nï¿½leg csak elï¿½g egy index hogy hï¿½nyadik kulcs-ï¿½rtï¿½k pï¿½rnï¿½l tart. 
+	//Ha kï¿½zben mï¿½dosul a tï¿½mb, nem baj ha a mutatï¿½ fura helyekre mutat, ezt megoldani a user dolga. 
 	
 	@Override
 	public boolean asBoolean() {
-		// Ha üres akkor false, amúgy true
+		if(!collection.isEmpty())
+			return true;
+		
 		return false;
 	}
 
 	@Override
 	public java.lang.String asString() {
-		// { Collection | kulcs: érték, kulcs: érték, ... }
-		// Ha van kedved, írd meg az isArray-t, és ha array akkor csak sorolja fel az értékeket  
+		// { Collection | kulcs: ï¿½rtï¿½k, kulcs: ï¿½rtï¿½k, ... }
+		// Ha van kedved, ï¿½rd meg az isArray-t, ï¿½s ha array akkor csak sorolja fel az ï¿½rtï¿½keket
 		return "{ Collection }";
 	}
 	
 	public void put(Object key, Object value) {
 		// Elteszi key-hez value-t 
+		collection.put(key, value);
 	}
 	
 	public void add(Object key, Object value) {
-		// Ugyanazt csinálja mint assignEmptyIndex
+		// Ugyanazt csinï¿½lja mint assignEmptyIndex
 	}
 	
 	public Object get(Object key) {
-		// Visszaadja kulcshoz tartozó Object-et, vagy null-t ha nincs 
-		return null; 
+		
+		return collection.get(key); 
 	}
 	
 	public List<Object> keys() {
 		// Visszaadja a kulcsokat
-		return null;
+		List<Object> returnList= new ArrayList<Object>();
+		
+		for(Map.Entry<Object,Object> entry : collection.entrySet())
+			returnList.add(entry.getKey());
+			
+		return returnList;
 	}
 	
 	public List<Object> values() {
-		// Visszaadja az értékeket
-		return null; 
+		// Visszaadja az ï¿½rtï¿½keket
+		List<Object> returnList= new ArrayList<Object>();
+		
+		for(Map.Entry<Object,Object> entry : collection.entrySet())
+			returnList.add(entry.getValue());
+		
+		return returnList; 
 	}
 	
 	public int size() { 
-		// Visszaadja hogy hány kulcs-érték páros van a Collection-ben 
-		return 0;
+		// Visszaadja hogy hï¿½ny kulcs-ï¿½rtï¿½k pï¿½ros van a Collection-ben 
+		return collection.size();
 	}
 	
 	public boolean has(Object key) {
 		// True ha van ilyen kulcs
-		return false; 
+		return collection.containsKey(key); 
 	}
 	
 	public boolean hasValue(Object value) {
-		//True ha van ilyen érték
-		return false; 
+		//True ha van ilyen ï¿½rtï¿½k
+		return collection.containsValue(value); 
 	}
 	
 	public void rewind() {
-		// Visszaállítja a mutatót nullára 
+		// Visszaï¿½llï¿½tja a mutatï¿½t nullï¿½ra 
+		iterator=0;
 	}
 	
 	public boolean pastEnd() {
-		// True-t ad ha már végigiteráltunk a kollekción és most épp egyel az utolsó kulcs-érték pár után vagyunk. 
-		// Olyan mint C++-ban az end() függvény az utolsó utáni elemre ad iterátort 
+		// True-t ad ha mï¿½r vï¿½gigiterï¿½ltunk a kollekciï¿½n ï¿½s most ï¿½pp egyel az utolsï¿½ kulcs-ï¿½rtï¿½k pï¿½r utï¿½n vagyunk. 
+		// Olyan mint C++-ban az end() fï¿½ggvï¿½ny az utolsï¿½ utï¿½ni elemre ad iterï¿½tort 
+		if(iterator>collection.size()-1)
+			return true;
+		
 		return false; 
 	}
 	
 	public void next() {
-		// Egyel odébb rakja a mutatót 
+		// Egyel odï¿½bb rakja a mutatï¿½t 
+		iterator++;
 	}
 	
 	public Object key() {
-		// Visszaadja a kulcsot a mutató alatt
-		return null;
+		// Visszaadja a kulcsot a mutatï¿½ alatt
+		Object key = (Object) collection.keySet().toArray()[iterator];
+
+		return key;
 	}
 	
 	public Object value() {
-		// Visszaadja az értéket a mutató alatt
-		return null; 
+		// Visszaadja az ï¿½rtï¿½ket a mutatï¿½ alatt
+		Object key = (Object) collection.keySet().toArray()[iterator];
+		Object value=collection.get(key);
+		
+		return value; 
 	}
 	
 	@Override 
 	public Object accessIndex(Object index) {
-		// Kulcshoz tartozó érték, vagy UnknownIndex error ha nincs ilyen kulcs. 
-		// Az UnknownIndex-et írd bele StandardErrors-ba, mint a többi error. 
-		// Kapjon egy self és egy index mezõt. 
-		return null;
+		// Kulcshoz tartozï¿½ ï¿½rtï¿½k, vagy UnknownIndex error ha nincs ilyen kulcs. 
+		// Az UnknownIndex-et ï¿½rd bele StandardErrors-ba, mint a tï¿½bbi error. 
+		// Kapjon egy self ï¿½s egy index mezï¿½t. 
+		if(!has(index))
+			return StandardErrors.UnknownIndexError(index, this);
+		
+		return collection.get(index);
 	}
 
 	@Override 
 	public Object assignIndex(Object index, Object value) {
-		//Csak simán elteszi index-hez value-t 
-		return null;
+		//Csak simï¿½n elteszi index-hez value-t 
+		collection.put(index, value);
+		
+		return value;// I dk
 	}
 	
 	@Override 
 	public Object assignEmptyIndex(Object value) {
-		//Ha üres a Collection, adja hozzá Number(0)-s indexszel
-		//Ha nem, keresse meg a legnagyobb Number kulcsot, adjon hozzá egyet és azzal a kulccsal tegye el
+		//Ha ï¿½res a Collection, adja hozzï¿½ Number(0)-s indexszel
+		//Ha nem, keresse meg a legnagyobb Number kulcsot, adjon hozzï¿½ egyet ï¿½s azzal a kulccsal tegye el
 		//Ha nincs Number kulcs, rakja el Number(0)-val. 
+	
+		Number maxNumber= new Number(0);
+		for(Map.Entry<Object,Object> entry : collection.entrySet())
+				if(entry.getKey() instanceof Number ){ 
+					Number num= (Number )entry.getKey();
+					
+					if(num.value>maxNumber.value)
+						maxNumber=(Number) entry.getKey();
+				}
+				
+		collection.put(maxNumber, value);
 		
 		//Visszaadja value-t 
-		return null; 
+		return value; 
 	}
 	
 	@Override
 	public Object opAdd(Object rhs) {
-		// Alapjáraton képezze a két halmaz unióját - csináljon egy új Collection-t, pakolja bele this összes elemét, 
-		// majd rhs-nek azon elemeit amelyek kulcsa még nem szerepel az eredményben
+		// Alapjï¿½raton kï¿½pezze a kï¿½t halmaz uniï¿½jï¿½t - csinï¿½ljon egy ï¿½j Collection-t, pakolja bele this ï¿½sszes elemï¿½t, 
+		// majd rhs-nek azon elemeit amelyek kulcsa mï¿½g nem szerepel az eredmï¿½nyben
+		Collection result = this;
 		
-		// Ha van isArray(), akkor ha tömb, másolja le this-t és fûzze rhs-t a végére
-		return null;
+		if(rhs instanceof Collection){
+			Collection rColl= (Collection) rhs;
+			if(rColl.isArray()){
+				result=this;
+				for(Map.Entry<Object,Object> entry : rColl.collection.entrySet())
+					result.add(entry.getKey(), entry.getValue());
+			}
+			else
+				for(Map.Entry<Object,Object> entry : rColl.collection.entrySet()){
+					if(result.hasValue(entry.getKey()))
+						result.add(entry.getKey(), entry.getValue());
+			}
+			
+		}else 
+			return StandardErrors.IllegalOperation("opAdd", this);
+		
+		// Ha van isArray(), akkor ha tï¿½mb, mï¿½solja le this-t ï¿½s fï¿½zze rhs-t a vï¿½gï¿½re
+		
+		return result;
 	}
 
 	@Override
 	public Object opSubtract(Object rhs) {
 		// Meh. Csak adjon vissza egy IllegalOperation error-t. 
-		return null;
+		return StandardErrors.IllegalOperation("opAdd", this);
 	}
 
 	@Override
 	public Object opMultiply(Object rhs) {
 		// IllegalOperation error
-		return null;
+		return StandardErrors.IllegalOperation("opAdd", this);
 	}
 
 	@Override
 	public Object opDivide(Object rhs) {
 		// IllegalOperation error
-		return null;
+		return StandardErrors.IllegalOperation("opAdd", this);
 	}
 
 	@Override
 	public Object opNegate() {
 		// IllegalOperation error
-		return null;
+		return StandardErrors.IllegalOperation("opAdd", this);
 	}
 
 	@Override
 	public boolean equals(Object rhs) {
-		// Ha minden kulcs-érték pár egyezik, true, amúgy false. 
+		// Ha minden kulcs-ï¿½rtï¿½k pï¿½r egyezik, true, amï¿½gy false. 
+		if(rhs instanceof Collection){
+			Collection rColl= (Collection)rhs;
+			//THIS
+			for(Map.Entry<Object,Object> entry : rColl.collection.entrySet())
+				if(!collection.containsKey(entry.getKey()) || 
+						!collection.get(entry.getKey()).equals(entry.getValue()))
+					return false;
+			
+			for(Map.Entry<Object,Object> entry : collection.entrySet())
+				if(!rColl.collection.containsKey(entry.getKey()) || 
+						!rColl.collection.get(entry.getKey()).equals(entry.getValue()))
+					return false;
+			
+			return true;
+		}
+			
 		return false;
 	}
 
 	@Override
 	public boolean lowerThan(Object rhs) {
-		// Rendezzen hossz szerint vagy csak simán false mert nincs értelmezve. Amelyik szimpi. 
+		// Rendezzen hossz szerint vagy csak simï¿½n false mert nincs ï¿½rtelmezve. Amelyik szimpi. 
+		if(rhs instanceof Collection){
+			Collection rColl=(Collection) rhs;
+			if(collection.size()<rColl.collection.size())
+				return true;
+		}
+		
 		return false;
 	}
 
 	@Override
 	public boolean greaterThan(Object rhs) {
-		// Rendezzen hossz szerint vagy csak simán false mert nincs értelmezve. Amelyik szimpi. 
+		// Rendezzen hossz szerint vagy csak simï¿½n false mert nincs ï¿½rtelmezve. Amelyik szimpi.
+		if(rhs instanceof Collection){//azert nem a lowerthant hivom mert lehet egyenlo is
+			Collection rColl=(Collection) rhs;
+			
+			if(collection.size()>rColl.collection.size())
+				return true;
+		}
+		
 		return false;
 	}
 
 	public boolean isArray() {
-		// Ha odaérsz :D Akkor számít egy Collection tömbnek, ha a kulcsai csakis természetes számok ( nulla beleszámítva )
-		// és nincsen köztük kihagyás 
-		// Ezt igazából helyben is le lehet ellenõrizni, de azt is csinálhatod h tartasz egy boolean változót, és ha változtatják 
-		// a collection-t, állítod a flag-et. Igazából csak assignIndex-nél kell ezt elvégezni, hogy számot pakolnak-e bele, 
-		// természetes szám-e, és hogy az új indexszel nincs-e kihagyás. 
-		// Szal ha az n kulcs amire assign-ol, az természetes szám, akkor meg kell nézni hogy az nulla, vagy létezik-e az n-1 
-		// kulcsra érték. 
+		// Ha odaï¿½rsz :D Akkor szï¿½mï¿½t egy Collection tï¿½mbnek, ha a kulcsai csakis termï¿½szetes szï¿½mok ( nulla beleszï¿½mï¿½tva )
+		// ï¿½s nincsen kï¿½ztï¿½k kihagyï¿½s 
+		// Ezt igazï¿½bï¿½l helyben is le lehet ellenï¿½rizni, de azt is csinï¿½lhatod h tartasz egy boolean vï¿½ltozï¿½t, ï¿½s ha vï¿½ltoztatjï¿½k 
+		// a collection-t, ï¿½llï¿½tod a flag-et. Igazï¿½bï¿½l csak assignIndex-nï¿½l kell ezt elvï¿½gezni, hogy szï¿½mot pakolnak-e bele, 
+		// termï¿½szetes szï¿½m-e, ï¿½s hogy az ï¿½j indexszel nincs-e kihagyï¿½s. 
+		// Szal ha az n kulcs amire assign-ol, az termï¿½szetes szï¿½m, akkor meg kell nï¿½zni hogy az nulla, vagy lï¿½tezik-e az n-1 
+		// kulcsra ï¿½rtï¿½k. 
+		
+		
 		return false; 
 	}
 }
