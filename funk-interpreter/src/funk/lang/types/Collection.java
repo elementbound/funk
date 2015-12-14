@@ -3,7 +3,7 @@ package funk.lang.types;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeMap;
+import java.util.LinkedHashMap;
 import funk.lang.StandardErrors;
 
 
@@ -12,7 +12,7 @@ import funk.lang.Object;
 public class Collection extends Object {
 	//A Collection tulajdonk�ppen egy Map, csak meg van adva hogy milyen sorrendben tartja a kulcs-�rt�k p�rjait
 	//Els�re �gy ahogy belepakolod Funk-b�l, azt�n lehet rendezgetni meg ilyesmi
-	Map<Object,Object> collection = new TreeMap<Object,Object>();
+	Map<Object,Object> collection = new LinkedHashMap<Object,Object>();
 	int iterator=0;
 	//A Collection tart mag�ban egy mutat�t is, iter�lgat�shoz. L�sd a p�ld�ban a for loopot r�. 
 	//Val�sz�n�leg csak el�g egy index hogy h�nyadik kulcs-�rt�k p�rn�l tart. 
@@ -38,8 +38,22 @@ public class Collection extends Object {
 		collection.put(key, value);
 	}
 	
-	public void add(Object key, Object value) {
+	public void add(Object value) {
 		// Ugyanazt csin�lja mint assignEmptyIndex
+		
+		Number maxNumber= new Number(0);
+		for(Map.Entry<Object,Object> entry : collection.entrySet())
+				if(entry.getKey() instanceof Number ){ 
+					Number num= (Number )entry.getKey();
+					
+					if(num.value>maxNumber.value)
+						maxNumber=(Number) entry.getKey();
+				}
+				
+		collection.put(maxNumber, value);
+		
+		//Visszaadja value-t 
+		
 	}
 	
 	public Object get(Object key) {
@@ -141,19 +155,8 @@ public class Collection extends Object {
 		//Ha nem, keresse meg a legnagyobb Number kulcsot, adjon hozz� egyet �s azzal a kulccsal tegye el
 		//Ha nincs Number kulcs, rakja el Number(0)-val. 
 	
-		Number maxNumber= new Number(0);
-		for(Map.Entry<Object,Object> entry : collection.entrySet())
-				if(entry.getKey() instanceof Number ){ 
-					Number num= (Number )entry.getKey();
-					
-					if(num.value>maxNumber.value)
-						maxNumber=(Number) entry.getKey();
-				}
-				
-		collection.put(maxNumber, value);
-		
-		//Visszaadja value-t 
-		return value; 
+		add(value);
+		return value;
 	}
 	
 	@Override
@@ -167,12 +170,12 @@ public class Collection extends Object {
 			if(rColl.isArray()){
 				result=this;
 				for(Map.Entry<Object,Object> entry : rColl.collection.entrySet())
-					result.add(entry.getKey(), entry.getValue());
+					result.put(entry.getKey(), entry.getValue());
 			}
 			else
 				for(Map.Entry<Object,Object> entry : rColl.collection.entrySet()){
 					if(result.hasValue(entry.getKey()))
-						result.add(entry.getKey(), entry.getValue());
+						result.put(entry.getKey(), entry.getValue());
 			}
 			
 		}else 
@@ -186,25 +189,24 @@ public class Collection extends Object {
 	@Override
 	public Object opSubtract(Object rhs) {
 		// Meh. Csak adjon vissza egy IllegalOperation error-t. 
-		return StandardErrors.IllegalOperation("opAdd", this);
+		return StandardErrors.IllegalOperation("opSubtract", this);
 	}
 
-	@Override
 	public Object opMultiply(Object rhs) {
 		// IllegalOperation error
-		return StandardErrors.IllegalOperation("opAdd", this);
+		return StandardErrors.IllegalOperation("opMultiply", this);
 	}
 
 	@Override
 	public Object opDivide(Object rhs) {
 		// IllegalOperation error
-		return StandardErrors.IllegalOperation("opAdd", this);
+		return StandardErrors.IllegalOperation("opDivide", this);
 	}
 
 	@Override
 	public Object opNegate() {
 		// IllegalOperation error
-		return StandardErrors.IllegalOperation("opAdd", this);
+		return StandardErrors.IllegalOperation("opNegate", this);
 	}
 
 	@Override
