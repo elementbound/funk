@@ -15,8 +15,7 @@ grammar funk;
 
 WS: [ \t\r\n] -> skip; 
 
-NUMBER: [0-9]+;
-CORPORAL: NUMBER '.' NUMBER;
+NUMBER: [0-9]+ | [0-9]+ '.' [0-9]+;
 STRING: '\'' (~'\'')* '\'' | '\"' (~'\"')* '\"';
 BOOLEAN: 'True' | 'False';
 ID: [_a-zA-Z][a-zA-Z0-9]*;
@@ -27,7 +26,6 @@ LOCAL: '$';
 expr: '(' expr ')' 					# EnclosedExpr 
 	 | BOOLEAN 						# BooleanLiteral
 	 | NUMBER 						# NumberLiteral
-	 | CORPORAL						# CorporalLiteral
 	 | STRING 						# StringLiteral
 	 | '!' '.' ID '(' args ')'		# Constructor
 	 | expr '.' ID '(' args ')' 	# MemberCall

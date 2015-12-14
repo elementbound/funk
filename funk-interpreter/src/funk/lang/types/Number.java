@@ -5,7 +5,7 @@ import java.util.Random;
 import funk.lang.Object;
 
 public class Number extends Object {
-	public int value; 
+	public double value; 
 	private static Random rng = new Random(80085);
 	
 	public Number() {
@@ -17,7 +17,7 @@ public class Number extends Object {
 	}
 	
 	public Number(double v) {
-		value = (int) v;
+		value = v;
 	}
 	
 	@Override
@@ -27,7 +27,7 @@ public class Number extends Object {
 
 	@Override
 	public java.lang.String asString() {
-		return Integer.toString(value);
+		return Double.toString(value);
 	}
 
 	@Override

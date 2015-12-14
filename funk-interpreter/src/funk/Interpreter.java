@@ -41,7 +41,6 @@ import funk.lang.func.TypeString;
 import funk.lang.func.UserFunc;
 import funk.lang.types.Error;
 import funk.lang.types.Number;
-import funk.lang.types.Corporal;
 import funk.lang.types.Aggregate;
 import funk.lang.types.Generic;
 import funk.lang.types.Boolean; 
@@ -91,7 +90,6 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		typeTable.put("?", Generic.instance); 
 		typeTable.put("Boolean", new Boolean());
 		typeTable.put("Number", new Number()); 
-		typeTable.put("Corporal", new Corporal()); 
 		typeTable.put("String", new funk.lang.types.String());
 		typeTable.put("Error", new Error("void")); 
 		
@@ -406,13 +404,8 @@ public class Interpreter extends funkBaseVisitor<Object> {
 	@Override 
 	public Object visitNumberLiteral(funkParser.NumberLiteralContext ctx) {
 		dbgStream.printf("Number literal: %s\n", ctx.getText());
-		return new Number(Integer.parseInt(ctx.NUMBER().getText()));
-	}
-	
-	@Override 
-	public Object visitCorporalLiteral(funkParser.CorporalLiteralContext ctx) {
-		dbgStream.printf("Corporal literal: %s\n", ctx.getText());
-		return new Corporal(Double.parseDouble(ctx.CORPORAL().getText()));
+		
+		return new Number(Double.parseDouble(ctx.NUMBER().getText()));
 	}
 	
 	@Override

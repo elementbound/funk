@@ -14,7 +14,7 @@ public class Reverse implements IFunction {
 			strb.append(self.asString());
 			strb.reverse();
 			
-			return new Number(Integer.parseInt(strb.toString()));
+			return new Number(Double.parseDouble(strb.toString()));
 		}
 
 		StringBuilder strb = new StringBuilder();

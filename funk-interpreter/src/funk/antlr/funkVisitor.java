@@ -81,13 +81,6 @@ public interface funkVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitMemberAssign(funkParser.MemberAssignContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code CorporalLiteral}
-	 * labeled alternative in {@link funkParser#expr}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCorporalLiteral(funkParser.CorporalLiteralContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code ID}
 	 * labeled alternative in {@link funkParser#expr}.
 	 * @param ctx the parse tree

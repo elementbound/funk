@@ -33,7 +33,7 @@ public class Pow implements IFunction {
 		else {
 			Object result = self;
 			Number p = (Number) funk.cast(args[0], Number.class);
-			int exponent = p.value;
+			double exponent = p.value;
 			
 			for(int i = 1; i < exponent; i++) 
 				result = result.opMultiply(self);

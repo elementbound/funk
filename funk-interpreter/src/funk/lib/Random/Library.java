@@ -26,7 +26,7 @@ public class Library implements ILibrary {
 			@Override
 			public Object call(Object baseSelf, Object... args) {
 				Random self = (Random) baseSelf;
-				int seed = ((Number)args[0]).value; 
+				int seed =(int) ((Number)args[0]).value; 
 				
 				self.seed(seed);
 				return self;
@@ -50,8 +50,8 @@ public class Library implements ILibrary {
 			@Override
 			public Object call(Object baseSelf, Object... args) {
 				Random self = (Random) baseSelf;
-				int min = ((Number)args[0]).value;
-				int max = ((Number)args[1]).value; 
+				double min = ((Number)args[0]).value;
+				double max = ((Number)args[1]).value; 
 				
 				return new Number(self.randomNumber(min, max));
 			}

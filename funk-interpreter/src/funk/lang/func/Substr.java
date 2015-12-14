@@ -32,11 +32,11 @@ public class Substr implements IFunction {
 		int to = ret.length();
 		
 		if(args.length==1){
-			to=((Number)args[0]).value;
+			to=(int)((Number)args[0]).value;//this
 		}
 		else if(args.length > 1) {
-			from = ((Number)args[0]).value;
-			to = ((Number)args[1]).value;
+			from =(int) ((Number)args[0]).value;
+			to = (int)((Number)args[1]).value;
 		}
 		
 		if(from < 0)
