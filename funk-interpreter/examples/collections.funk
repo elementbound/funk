@@ -1,0 +1,90 @@
+/* Collections in Funk */
+
+/* Missing arrays? Lists? Maps? Tuples? 
+No more tears need to be shed, fam! Funk got you covered! 
+Here, take a look at Funk Laboratories' new scientific achievement:
+
+Collections 
+
+Collections can be almost anything you want. For example, arrays: */
+
+array = !.Collection();
+array[] = "fam";
+array[] = "son";
+array[] = "boy";
+
+rng = !.Random(); 
+end = rng.number(0, array.size()-1).round();
+end = array[end];
+
+("Funk got you covered, " + end + "!").println();
+"Here's your array: ".print();
+array.println(); 
+
+/* Collections can be maps: */
+
+orcish = !.Collection(); 
+orcish["Aka'magosh"] = "A blessing on you and yours.";
+orcish["Dabu"] = "I obey.";
+orcish["Gol'kosh!"] = "By my axe!";
+orcish["Lok-Narash!"] = "Arm yourselves!";
+orcish["Lok-Tar!"] = "Victory!";
+orcish["Lok-Tar Ogar!"] = "Victory or death!";
+orcish["Swobu"] = "As you command.";
+orcish["Throm-Ka"] = "Well met.";
+orcish["Zug-zug"] = "Okay.";
+/* Source: http://us.battle.net/wow/en/forum/topic/3881722211 */
+
+/* Collections are basically a list of key-value pairs. A key or a value can be any kind of 
+Funk object. */
+
+/* You can iterate through your collections. Let's print our orcish dictionary. */
+"Known orcish phrases: ".println(); 
+for(orcish.rewind(); orcish.pastEnd() == False; orcish.next()) {
+	"    ".print();
+	orcish.key.print();
+	": ".print();
+	orcish.value.println();
+}
+"".println();
+
+/* Iterating through collections work pretty much like watching a video tape: 
+You rewind it, watch the whole thing, and finish once you are at the tape's end */
+
+/* You can also check if a collection qualifies as an array: */
+("array.isArray(): " + array.isArray()).println(); /* True */
+("orcish.isArray(): " + orcish.isArray()).println(); /* False */ 
+"".println();
+
+/* A collection qualifies as an array if it has ONLY natural numbers ( including zero ) as keys
+and the keys have no holes inbetween */
+
+/* If your collection is an array, you can loop through it without the 
+rewind-pastEnd-next combo: */
+
+for(i = 0; i < array.size(); i = i+1)
+	("Funk got you covered, " + array[i]).println();
+	
+"".println();
+
+/* You can also check if a collection has a certain key or value: */
+("Array has 'boy': " + array.hasValue("boy")).println(); /* True */
+("Orcish knows 'Quel': " + orcish.has("Quel")).println(); /* False; silly, that's night elf for 'high' */
+"".println();
+
+/* You can also query a collection's keys or values as an array. Let's use this to create 
+a reverse of our orcish collection: */
+orcishKeys = orcish.keys;
+orcishVals = orcish.values;
+phrases = !.Collection();
+
+for(i = 0; i < orcish.size(); i = i+1) 
+	phrases[orcishVals[i]] = orcishKeys[i]; 
+	
+"Some phrases translated into orcish: ".println();
+for(phrases.rewind(); phrases.pastEnd() == False; phrases.next())
+	(phrases.key + ": " + phrases.value).println();
+"".println();
+
+/* Note that collections retain their entries in the order you add them. This means you can 
+sort them by keys or by values, once somebody implements that. */

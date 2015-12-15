@@ -27,21 +27,6 @@ function Date.nextMonth() {
 	}
 }
 
-function Date.nextDay() {
-	self.day = self.day + 1;
-	if(self.day > self.daysInMonth(self.month)) {
-		self.day = 1;
-		self.nextMonth();
-	}
-}
-
-/*function Date.daysInMonth(month) {
-	if(self.month == 2) 
-		return 28; 
-	else 
-		return 30; 
-}*/
-
 function Date.print() {
 	(("" + self.day) + "." + self.month + "." + self.year).print();
 }
