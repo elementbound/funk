@@ -15,8 +15,6 @@ public class Main {
 			batch(args[0], funk);
 		else
 			interactive(funk);
-		
-		funk.dumpVariables(System.out);
 	}
 	
 	public static void interactive(Interpreter funk) {

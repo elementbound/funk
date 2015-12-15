@@ -27,7 +27,10 @@ public class Number extends Object {
 
 	@Override
 	public java.lang.String asString() {
-		return Double.toString(value);
+	    if(value == (long) value)
+	        return java.lang.String.format("%d",(long)value);
+	    else
+	        return java.lang.String.format("%s",value);
 	}
 
 	@Override

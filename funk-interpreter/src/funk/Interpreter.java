@@ -95,9 +95,10 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		
 		castRules.add(new BooleanToNumber());
 		
-		this.loadLibrary(new funk.lib.Random.Library());
+		this.loadLibrary(new funk.lib.lang.MathLibrary());
 		this.loadLibrary(new funk.lib.lang.CollectionLibrary());
 		this.loadLibrary(new funk.lib.lang.RuntimeLibrary());
+		this.loadLibrary(new funk.lib.Random.Library());
 		
 		this.dumpFunctions(dbgStream);
 	}

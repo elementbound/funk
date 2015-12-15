@@ -35,15 +35,20 @@ function Date.nextDay() {
 	}
 }
 
-function Date.daysInMonth(month) {
-	if(month == 2) 
-		return 28; /* TODO: modulo operator */
+/*function Date.daysInMonth(month) {
+	if(self.month == 2) 
+		return 28; 
 	else 
-		return 30; /* TODO: please, a modulo operator */
-}
+		return 30; 
+}*/
 
 function Date.print() {
 	(("" + self.day) + "." + self.month + "." + self.year).print();
+}
+
+function Date.println() {
+	self.print();
+	"".println();
 }
 
 /* We got a really basic Date class fleshed out. We'd like to add a time to this class, so we 
@@ -65,7 +70,7 @@ function DateTime.print() {
 
 whenever = !.DateTime(); 
 
-whenever.year = !.Number();
+whenever.year = !.Random().number(2000, 3000).round();
 whenever.month = 6;
 whenever.day = 4;
 
@@ -76,5 +81,4 @@ whenever.second = 11;
 /* And voi'la, you can use Date functions on DateTimes: */
 
 whenever.nextYear();
-"Date commencing: ".println();
-whenever.print(); 
+whenever.println(); 
