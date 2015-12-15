@@ -9,5 +9,5 @@ alphabet = alphabet + "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 alphabet = alphabet + "0123456789";
 alphabet = alphabet + "!@#";
 
-for(i = 0; i < 512; i = i+1) 
+for(i = 0; i < 8; i = i+1) 
 	rng.string(8,alphabet).println(); 

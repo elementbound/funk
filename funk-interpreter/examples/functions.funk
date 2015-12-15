@@ -5,7 +5,7 @@ function Number.intensify(intensity)
 	self = self * ( self + intensity );
 	
 /* You can write functions which don't care about type: */
-function *.isCool() 
+function ?.isCool() 
 	if(self.asString().contains("cool"))
 		return True;
 	else 
@@ -41,10 +41,10 @@ of the accepted statement types:
 
 /* According to the above, some fun functions: */ 
 
-function *.nope()
+function ?.nope()
 	/* Nope */
 	
-function *.fuckMyTypesUpFam()
+function ?.fuckMyTypesUpFam()
 	aggregate Number {}
 	
 /* When the function body does not contain a return statement, self is returned. */

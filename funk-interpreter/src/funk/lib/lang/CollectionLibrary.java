@@ -17,7 +17,7 @@ public class CollectionLibrary implements ILibrary {
 		funk.registerFunction("keys", new FunctionTemplate(new Collection(), new IFunclet() {
 			
 			@Override
-			public Object call(Object baseSelf, Object... args) {
+			public Object call(Interpreter funk, Object baseSelf, Object... args) {
 				Collection self = (Collection) baseSelf;
 				
 				return Collection.fromValues(self.keys());
@@ -28,7 +28,7 @@ public class CollectionLibrary implements ILibrary {
 		funk.registerFunction("values", new FunctionTemplate(new Collection(), new IFunclet() {
 			
 			@Override
-			public Object call(Object baseSelf, Object... args) {
+			public Object call(Interpreter funk, Object baseSelf, Object... args) {
 				Collection self = (Collection) baseSelf;
 				
 				return Collection.fromValues(self.values());
@@ -39,7 +39,7 @@ public class CollectionLibrary implements ILibrary {
 		funk.registerFunction("size", new FunctionTemplate(new Collection(), new IFunclet() {
 			
 			@Override
-			public Object call(Object baseSelf, Object... args) {
+			public Object call(Interpreter funk, Object baseSelf, Object... args) {
 				Collection self = (Collection) baseSelf;
 				
 				return new Number(self.size());
@@ -50,7 +50,7 @@ public class CollectionLibrary implements ILibrary {
 		funk.registerFunction("has", new FunctionTemplate(new Collection(), new IFunclet() {
 			
 			@Override
-			public Object call(Object baseSelf, Object... args) {
+			public Object call(Interpreter funk, Object baseSelf, Object... args) {
 				Collection self = (Collection) baseSelf;
 				
 				return new Boolean(self.has(args[0]));
@@ -61,7 +61,7 @@ public class CollectionLibrary implements ILibrary {
 		funk.registerFunction("hasValue", new FunctionTemplate(new Collection(), new IFunclet() {
 			
 			@Override
-			public Object call(Object baseSelf, Object... args) {
+			public Object call(Interpreter funk, Object baseSelf, Object... args) {
 				Collection self = (Collection) baseSelf;
 				
 				return new Boolean(self.hasValue(args[0]));
@@ -72,7 +72,7 @@ public class CollectionLibrary implements ILibrary {
 		funk.registerFunction("rewind", new FunctionTemplate(new Collection(), new IFunclet() {
 			
 			@Override
-			public Object call(Object baseSelf, Object... args) {
+			public Object call(Interpreter funk, Object baseSelf, Object... args) {
 				Collection self = (Collection) baseSelf;
 				
 				self.rewind();
@@ -84,7 +84,7 @@ public class CollectionLibrary implements ILibrary {
 		funk.registerFunction("next", new FunctionTemplate(new Collection(), new IFunclet() {
 			
 			@Override
-			public Object call(Object baseSelf, Object... args) {
+			public Object call(Interpreter funk, Object baseSelf, Object... args) {
 				Collection self = (Collection) baseSelf;
 				
 				self.next();
@@ -96,7 +96,7 @@ public class CollectionLibrary implements ILibrary {
 		funk.registerFunction("pastEnd", new FunctionTemplate(new Collection(), new IFunclet() {
 			
 			@Override
-			public Object call(Object baseSelf, Object... args) {
+			public Object call(Interpreter funk, Object baseSelf, Object... args) {
 				Collection self = (Collection) baseSelf;
 				
 				return new Boolean(self.pastEnd());
@@ -107,7 +107,7 @@ public class CollectionLibrary implements ILibrary {
 		funk.registerFunction("key", new FunctionTemplate(new Collection(), new IFunclet() {
 			
 			@Override
-			public Object call(Object baseSelf, Object... args) {
+			public Object call(Interpreter funk, Object baseSelf, Object... args) {
 				Collection self = (Collection) baseSelf;
 				
 				return self.key();
@@ -118,7 +118,7 @@ public class CollectionLibrary implements ILibrary {
 		funk.registerFunction("value", new FunctionTemplate(new Collection(), new IFunclet() {
 			
 			@Override
-			public Object call(Object baseSelf, Object... args) {
+			public Object call(Interpreter funk, Object baseSelf, Object... args) {
 				Collection self = (Collection) baseSelf;
 				
 				return self.value();
@@ -129,7 +129,7 @@ public class CollectionLibrary implements ILibrary {
 		funk.registerFunction("isArray", new FunctionTemplate(new Collection(), new IFunclet() {
 			
 			@Override
-			public Object call(Object baseSelf, Object... args) {
+			public Object call(Interpreter funk, Object baseSelf, Object... args) {
 				Collection self = (Collection) baseSelf;
 				
 				return new Boolean(self.isArray());

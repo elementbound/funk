@@ -6,7 +6,6 @@ import funk.lang.Object;
 import funk.lang.StandardErrors;
 import funk.lang.types.Number;
 import funk.lang.types.Generic;
-import funk.lang.types.Error;
 
 public class Pow implements IFunction {
 

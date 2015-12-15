@@ -9,6 +9,7 @@ public class Println implements IFunction {
 	@Override
 	public Object call(Interpreter funk, Object self, Object... args) {
 		System.out.println(self.asString());
+		
 		return self;
 	}
 

@@ -4,11 +4,9 @@ import java.io.PrintStream;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Stack;
 
 import org.antlr.v4.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
@@ -25,9 +23,9 @@ import funk.antlr.funkParser.ArgsContext;
 import funk.antlr.funkParser.ConstructorContext;
 import funk.antlr.funkParser.ExprContext;
 import funk.antlr.funkParser.StatementContext;
+import funk.lang.ICastRule;
 import funk.lang.IFunction;
 import funk.lang.ILibrary;
-import funk.lang.ICastRule;
 import funk.lang.Object;
 import funk.lang.StandardErrors;
 import funk.lang.cast.BooleanToNumber;
@@ -39,12 +37,12 @@ import funk.lang.func.Substr;
 import funk.lang.func.TypeMatch;
 import funk.lang.func.TypeString;
 import funk.lang.func.UserFunc;
-import funk.lang.types.Error;
-import funk.lang.types.Number;
 import funk.lang.types.Aggregate;
-import funk.lang.types.Generic;
 import funk.lang.types.Boolean;
-import funk.lang.types.Collection; 
+import funk.lang.types.Collection;
+import funk.lang.types.Error;
+import funk.lang.types.Generic;
+import funk.lang.types.Number; 
 
 public class Interpreter extends funkBaseVisitor<Object> {
 	public boolean local=false;
@@ -99,16 +97,20 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		
 		this.loadLibrary(new funk.lib.Random.Library());
 		this.loadLibrary(new funk.lib.lang.CollectionLibrary());
+		this.loadLibrary(new funk.lib.lang.RuntimeLibrary());
 		
 		this.dumpFunctions(dbgStream);
 	}
 	
-	public void registerFunction(String name, IFunction func) {
-		functionTable.add(new SimpleEntry<>(name, func));
-	}
-	
 	public void loadLibrary(ILibrary lib) {
 		lib.inject(this);
+	}
+	
+	//=========================================================================================
+	//Functions 
+
+	public void registerFunction(String name, IFunction func) {
+		functionTable.add(new SimpleEntry<>(name, func));
 	}
 	
 	public void dumpFunctions(PrintStream out) {
@@ -121,9 +123,6 @@ public class Interpreter extends funkBaseVisitor<Object> {
 			out.printf("\t %s . %s ( %d )\n", func.expectedSelfType().typeString(), name, func.expectedArgumentCount());
 		}
 	}
-	
-	//=========================================================================================
-	//Functions 
 	
 	public boolean hasFunction(String name, Object selfType, int argCount) {
 		for(Entry<String, IFunction> e : functionTable) {
@@ -184,6 +183,15 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		return null;
 	}
 	
+	public List<String> listFunctionNames() {
+		List<String> result = new ArrayList<>();
+		
+		for(Entry<String, IFunction> e : functionTable)
+			result.add(e.getKey());
+		
+		return result;
+	}
+	
 	public boolean hasReturn() {
 		return queuedReturn != null;
 	}
@@ -226,6 +234,10 @@ public class Interpreter extends funkBaseVisitor<Object> {
 			}
 	}
 	
+	public List<String> listTypeNames() {
+		return new ArrayList<>(typeTable.keySet());
+	}
+	
 	//=========================================================================================
 	//Variables
 	
@@ -238,7 +250,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		return temp;
 	}
 	
-	boolean exists(String key){
+	public boolean hasVariable(String key){
 		Map<String, Object> temp= getAllTable();
 		
 		return temp.containsKey(key);
@@ -275,6 +287,10 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		}
 		else 
 			return false; 
+	}
+	
+	public List<String> listVariableNames() {
+		return new ArrayList<>(getAllTable().keySet());
 	}
 	
 	public void dumpVariables(PrintStream out) {
@@ -398,7 +414,7 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		
 		dbgStream.printf("id: %s\n", id);
 		
-		if(!exists(id))
+		if(!this.hasVariable(id))
 			return StandardErrors.UnknownVariable(id); 
 		
 		return getVariable(id);
@@ -464,12 +480,21 @@ public class Interpreter extends funkBaseVisitor<Object> {
 		
 		Object lhs = visit(lhsExpr);
 		Object rhs = visit(rhsExpr);
+
+		//Try applying operator with original types
+		Object result = this.evalBinaryOp(operator, lhs, rhs);
+		if(!(result instanceof Error))
+			return result; 
+		
+		//If that fails, try casting to lhs type 
 		rhs = this.cast(rhs, lhs.getClass());
-		
 		if(rhs instanceof Error)
-			return rhs;
+			return rhs; 
 		
-		//A ket kapott Object-re alkalmazni a megfelelo operatort
+		return this.evalBinaryOp(operator, lhs, rhs);
+	}
+	
+	public Object evalBinaryOp(String operator, Object lhs, Object rhs) {
 		if(operator.equals("+")) 
 			return lhs.opAdd(rhs);
 		else if(operator.equals("-")) 

@@ -42,6 +42,7 @@ Funk error: IllegalOperation
 /* 
 As you see, the error mentions two *strings* being subtracted, while you wanted to subtract 
 a *number* from a string. 
-This happens according to Funk's rule: On binary operations, cast everything to the left 
-operand's type. 
+This happens according to Funk's rule: 
+	Try applying the operator to the original types; 
+	if that fails try casting the right hand side to the left hand side's type and return that
 */

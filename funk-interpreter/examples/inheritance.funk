@@ -76,4 +76,5 @@ whenever.second = 11;
 /* And voi'la, you can use Date functions on DateTimes: */
 
 whenever.nextYear();
-whenever.println(); 
+"Date commencing: ".println();
+whenever.print(); 

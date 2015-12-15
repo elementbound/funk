@@ -1,13 +1,11 @@
 package funk.lang.func;
 
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.antlr.v4.runtime.tree.ParseTree;
 
 import funk.Interpreter;
-import funk.NullOutputStream;
 import funk.lang.IFunction;
 import funk.lang.Object;
 

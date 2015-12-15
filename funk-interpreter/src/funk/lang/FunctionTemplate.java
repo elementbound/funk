@@ -38,7 +38,7 @@ public class FunctionTemplate implements IFunction {
 			}
 		}
 		
-		return implementation.call(self, (Object[]) castArgs.toArray(new Object[castArgs.size()]));
+		return implementation.call(funk, self, (Object[]) castArgs.toArray(new Object[castArgs.size()]));
 	}
 
 	@Override

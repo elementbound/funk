@@ -23,6 +23,9 @@ abstract public class Object implements Cloneable {
 	}
 	
 	public boolean typesMatch(Object rhs) {
+		//if(rhs == null)
+		//	return false;
+		
 		return this.getClass().equals(rhs.getClass());
 	}
 	

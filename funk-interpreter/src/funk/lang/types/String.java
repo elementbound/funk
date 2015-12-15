@@ -36,7 +36,7 @@ public class String extends Object {
 
 	@Override
 	public Object opAdd(Object rhs) {
-		return new String(value + ((String)rhs).value);
+		return new String(value + rhs.asString());
 	}
 
 	@Override
@@ -46,7 +46,14 @@ public class String extends Object {
 
 	@Override
 	public Object opMultiply(Object rhs) {
-		return StandardErrors.IllegalOperation("multiply", this, rhs);
+		if(!(rhs instanceof Number))
+			return StandardErrors.IllegalOperation("multiply", this, rhs);
+		
+		StringBuilder strb = new StringBuilder();
+		for(int i = 0; i < (int) ((Number)rhs).value; i++)
+			strb.append(this.value);
+			
+		return new String(strb.toString());
 	}
 
 	@Override
